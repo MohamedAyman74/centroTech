@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="/stylesheets/instructorApp.css">
+<% layout("layouts/boilerplate") %>
+    <section>
+        <div class="login-card">
+            <h2>Welcome to CentroTech</h2>
+            <form action="/instructor/apply" method="POST">
+                <div>
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" name="fullname">
+                </div>
+                <div id="email-div">
+                    <label for="email" id="email-label">Email</label>
+                    <input type="email" id="email" name="email">
+                </div>
+                <!-- <div>
+                    <label for="username">User Name <small>(That will be shown to others, must be
+                            unique)</small></label>
+                    <input type="text" id="username" name="username">
+                </div> -->
+                <div>
+                    <label for="number">Phone Number</label>
+                    <input type="number" id="number" name="phone">
+                </div>
+                <div>
+                    <label for="field">Field Of Specialization</label>
+                    <input type="text" id="field" name="specialization">
+                </div>
+                <div>
+                    <label for="reason">Why do you want to teach with us?</label>
+                    <textarea id="reason" name="appReason"></textarea>
+                </div>
+                <!-- <div class="upload-group"> -->
+                <!-- <label for="actual-btn">Upload CV</label> -->
+                <!-- <input type="file" id="actual-btn" name="cv" hidden> -->
+                <!-- <span id="file-chosen">No File Chosen</span> -->
+                <!-- <button type="submit">Upload</button> -->
+
+                <!-- </div> -->
+                <button type="submit">Submit Application</button>
+            </form>
+            <div class="signup-redirect">
+                <p>Already have an account?</p>
+                <a href="/login">Sign in</a>
+            </div>
+        </div>
+        <div class="login-img">
+            <img src="/images/loginimg.png" alt="">
+        </div>
+    </section>
+    <script src="/javascripts/instructorApp.js"></script>

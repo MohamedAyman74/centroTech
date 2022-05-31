@@ -1,0 +1,85 @@
+<% layout("layouts/boilerplate") %>
+    <link rel="stylesheet" href="/stylesheets/showApplications.css">
+    <section>
+        <div class="accept-popup">
+            <form action="">
+                <label for="text">Enter password</label>
+                <input type="text">
+                <button>Send Mail</button>
+            </form>
+        </div>
+        <h1>Rejected Applications</h1>
+        <table id="usersTable">
+            <thead>
+                <tr class="headers">
+                    <th></th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Number</th>
+                    <th>Field</th>
+                    <th>Application</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <% rejectedApps.forEach(app=> { %>
+                    <div>
+                        <tr class="data">
+                            <td class="info">
+                                <div class="popup">
+                                    <h2>
+                                        <%= app.fullname %> 's Application
+                                    </h2>
+                                    <div>
+                                        <p>Fullname:</p>
+                                        <p>
+                                            <%= app.fullname %>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p>Email:</p>
+                                        <p>
+                                            <%= app.email %>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p>Mobile Number:</p>
+                                        <p>
+                                            <%= app.phone %>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p>Speciality:</p>
+                                        <p>
+                                            <%= app.specialization %>
+                                        </p>
+                                    </div>
+                                    <p id="textarea">
+                                        <%= app.appReason %>
+                                    </p>
+                            </td>
+                            <td>
+                                <%= app.fullname %>
+                            </td>
+                            <td>
+                                <%= app.email %>
+                            </td>
+                            <td>
+                                <%= app.phone %>
+                            </td>
+                            <td>
+                                <%= app.specialization %>
+                            </td>
+                            <td>
+                                <button class="infobtn" id="popup-btn">View Application</button>
+                            </td>
+                        </tr>
+                    </div>
+                    <% }); %>
+
+            </tbody>
+        </table>
+    </section>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="/javascripts/showApplications.js"></script>

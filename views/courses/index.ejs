@@ -1,0 +1,61 @@
+<% layout("layouts/boilerplate") %>
+    <script src="https://kit.fontawesome.com/62a2a279f8.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/stylesheets/coursesIndex.css">
+    <section>
+        <div class="courses-nav">
+            <div>
+                <a href="/"><img class="logo" src="/svgs/logo.svg" alt=""></a>
+            </div>
+            <div>
+                <ul class="nav-links">
+                    <% if(currentUser){ %>
+                        <li><a href="/logout">Logout</a></li>
+                        <li><a href="/profile/<%= currentUser %>">Profile</a></li>
+                        <% }else{ %>
+                            <li><a href="/login">Login</a></li>
+                            <li><a href="/register">Register</a></li>
+                            <% } %>
+                </ul>
+            </div>
+        </div>
+        <div class="sidebar">
+            <h1>All Courses</h1>
+            <form action="/courses" method="POST" id="courseSearch">
+                <input type="search" name="searched" id="searchInput" placeholder="Subject/teacher name">
+                <h2>Filter by subject</h2>
+                <button>Subject</button>
+            </form>
+        </div>
+        <div class="course-list">
+            <% courses.forEach(course=> { %>
+                <div class="course-card">
+                    <img src="/images/teacherimg.jpg" alt="">
+                    <h3>
+                        <%= course.name %>
+                    </h3>
+                    <h5>
+                        <%= course.instructor.fullname %>
+                    </h5>
+                    <div class="card-price">
+                        <p>
+                            <%= course.price %> L.E
+                        </p>
+                        <!-- <a href="/courses/wishlist/<%= course._id  %>"><i class="fa fa-solid fa-heart"></i></a> -->
+                        <form style="height: 5px; margin-bottom: 15px;"
+                            action="/courses/wishlist/<%= course._id %>?_method=PUT" method="POST">
+                            <button type="submit"><i class="fa fa-solid fa-heart"></i></button>
+                        </form>
+                        <form style="height: 5px; margin-bottom: 15px;" action="/courses/cart/<%= course._id %>"
+                            method="POST">
+                            <button type="submit"><i class="fa fa-solid fa-cart-arrow-down"></i></button>
+                        </form>
+                        <!-- <a href="/courses/cart/<%= course._id %>"><i class="fa fa-solid fa-cart-arrow-down"></i></a> -->
+                        <a href="/courses/show/<%= course._id %> "><button>View Course</button></a>
+                    </div>
+                </div>
+                <% }); %>
+        </div>
+    </section>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="/javascripts/coursesIndex.js"></script>

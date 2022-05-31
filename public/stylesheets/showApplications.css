@@ -1,0 +1,204 @@
+@import url('https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.navbar {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    margin-bottom: 3em;
+
+}
+
+ul {
+    list-style-type: none;
+    grid-column: 10/12;
+    display: flex;
+    align-self: center;
+    justify-content: flex-start;
+}
+
+ul li {
+    margin-right: 3em;
+}
+
+.navbar a {
+    grid-column: 2/3;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #407BFF;
+    font-family: 'Cabin', sans-serif;
+    font-weight: 500;
+}
+
+section {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+}
+
+section h1 {
+    font-size: 35px;
+    grid-column: 2/5;
+    margin-bottom: 1em;
+    color: #4e47ed;
+}
+table {
+    border-spacing: 0;
+    width: 100%;
+    grid-column: 1/13;
+  }
+  
+  table .headers {
+    background-color: #ccdcff;
+  }
+  table .headers th {
+    font-weight: 500;
+    padding: 1em 2em;
+  }
+  table .data td {
+    padding: 1em 2em;
+    border-bottom: 1px rgba(0, 0, 0, 0.2) solid;
+  }
+  
+  .suspend {
+    color: #407bff;
+  }
+  .suspend:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  #delete {
+    color: #407bff;
+  }
+  #delete:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+.data td {
+    text-align: center;
+}
+
+.data td button {
+    border: 1px #4e47ed solid;
+    background-color: white;
+    padding: 0.5em 1em;
+    transition: ease-in-out 0.2s;
+    color: #4e47ed;
+    border-radius: 10px;
+}
+.data td button:hover {
+   background-color: #4e47ed;
+   color: white;
+   cursor: pointer;
+}
+
+.popup {
+grid-column: 1/13;
+justify-self: center;
+position: absolute;
+border: 1px #4e47ed solid;
+border-radius: 15px;
+padding: 3em;
+background-color: white;
+width: 50%;
+text-align: center;
+display: none;
+}
+
+.popup h2 {
+    color: #4e47ed;
+    margin-bottom: 1em;
+}
+
+.popup div {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1em;
+}
+.popup div p:nth-child(1) {
+    color: #4e47ed;
+    margin-right: 0.3em;
+}
+
+
+
+#cv-btn {
+    margin-top: 1em;
+    color: white;
+    background-color: #4e47ed;
+    border: none;
+    border-radius: 10px;
+    padding: 1em 2em;
+    cursor: pointer;
+}
+
+#reject-btn {
+  margin-top: 1em;
+    color: white;
+    background-color: red;
+    border: none;
+    border-radius: 10px;
+    padding: 1em 2em;
+    cursor: pointer;
+}
+
+#accept-btn {
+  margin-top: 1em;
+    color: white;
+    background-color: green;
+    border: none;
+    border-radius: 10px;
+    padding: 1em 2em;
+    cursor: pointer;
+}
+
+#cv-btn, #accept-btn {
+  margin-right: 1em;
+}
+.popup.show {
+    display: block;
+}
+.accept-popup.show {
+  display: block;
+}
+.accept-popup {
+  grid-column: 1/13;
+justify-self: center;
+position: absolute;
+border: 1px #4e47ed solid;
+border-radius: 15px;
+padding: 3em;
+background-color: white;
+text-align: center;
+display: none;
+}
+
+.accept-popup form label {
+  display: block;
+  margin-bottom: 1em;
+
+}
+
+.accept-popup form input {
+  border: 1px rgba(0, 0, 0, 0.2) solid;
+  border-radius: 10px;
+  padding: 0.5em 1em;
+  display: block;
+}
+
+.accept-popup form button {
+  margin-top: 1em;
+  color: white;
+  background-color: #4e47ed;
+  border: none;
+  border-radius: 10px;
+  padding: 0.5em 2em;
+  cursor: pointer;
+}

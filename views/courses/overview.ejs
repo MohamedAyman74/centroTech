@@ -1,0 +1,75 @@
+<link rel="stylesheet" href="/stylesheets/overview.css">
+<% layout("layouts/boilerplate") %>
+    <div class="container">
+        <div class="banner">
+            <div class="data">
+                <h1>
+                    <%= course.name %>
+                </h1>
+                <div class="price">
+                    <h3>
+                        <%= course.instructor.fullname %>
+                    </h3>
+                    <p>
+                        <%= course.price %> EGP
+                    </p>
+
+                </div>
+                <p id="details">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quae, enim esse dicta libero
+                    mollitia ratione repellat neque fugit, quibusdam ipsam magni minus voluptatum. Maxime quisquam
+                    delectus adipisci ea ipsam esse.
+                    Recusandae repellat porro saepe itaque numquam at pariatur labore vitae dolores quia dolorem dolorum
+                    libero odio, harum ducimus accusantium unde nemo error adipisci in, consequuntur non! Sit iste
+                    voluptatibus eaque?</p>
+                <div class="purchase-div">
+                    <button id="purchase">Purchase</button>
+                </div>
+
+            </div>
+            <div class="course-img">
+                <img src="/images/teacherimg.png" alt="">
+            </div>
+        </div>
+        <h1 id="reviews-header">Course Reviews</h1>
+        <% reviews.slice().reverse().forEach((review, i)=> { %>
+            <div class="topic-container <%= i < 3 ? " active" : "" %>">
+                <div class="main-flex">
+                    <img src="/images/userimg.png" alt="">
+                    <div>
+                        <% if(review.reviewedBy){ %>
+                            <h4>
+                                <%= review.reviewedBy.fullname %>
+                            </h4>
+                            <% } else if(review.reviewedByOAuth){ %>
+                                <h4>
+                                    <%= review.reviewedByOAuth.fullname %>
+                                </h4>
+                                <% } %>
+                                    <p id="author">
+                                        <%= review.review %>
+                                    </p>
+                    </div>
+                    <p id="time">
+                        <%= review.date %>
+                    </p>
+                </div>
+            </div>
+            <% }); %>
+
+                <% if(reviews.length> 3){ %>
+                    <div class="show-more">
+                        <button class="show-more">Show more</button>
+                    </div>
+                    <% } %>
+                        <div class="give-review">
+
+                            <form action="/courses/show/<%= course._id %>" method="POST">
+                                <label for="feedback">Tell Us About Your Experience!</label>
+                                <textarea name="review" id="feedback" rows="10"></textarea>
+                                <button>Submit Review</button>
+                            </form>
+                        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+        integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <script src="/javascripts/courseOverview.js"></script>

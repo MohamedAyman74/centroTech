@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    row-gap: 1em;
+    padding: 0 5em;
+
+}
+
+.navbar {
+
+
+    grid-column: 1/13;
+
+    grid-row: auto;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+ul {
+    list-style-type: none;
+    grid-column: 10/12;
+    display: flex;
+    align-self: center;
+    justify-content: flex-start;
+}
+
+ul li {
+    margin-right: 3em;
+}
+
+.navbar>a {
+    grid-column: 2/3;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #407BFF;
+    font-family: 'Cabin', sans-serif;
+    font-weight: 500;
+}
+
+
+.main-flex {
+    grid-column: 1/13;
+    display: flex;
+    margin-top: 2em;
+}
+
+.main-flex img {
+    margin-right: 1em;
+}
+.main-flex p {
+    font-style: italic;
+}
+
+#reply {
+    grid-column: 1/13;
+    border-bottom: 1px rgba(78, 71, 237, 0.3) solid;
+    padding-bottom: 2em;
+}
+
+form {
+    grid-column: 1/6;
+}
+
+textarea {
+    width: 100%;
+    resize: none;
+    border: 1px rgba(78, 71, 237) solid ;
+    border-radius: 15px;
+    outline: none;
+    padding: 1em;
+}
+
+form button {
+    color: white;
+    background-color: #4e47ed;
+    border: none;
+    padding: 1em 3em;
+    border-radius: 15px;
+}

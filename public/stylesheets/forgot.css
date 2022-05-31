@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.navbar {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    margin-bottom: 3em;
+
+}
+
+ul {
+    list-style-type: none;
+    grid-column: 10/12;
+    display: flex;
+    align-self: center;
+    justify-content: flex-start;
+}
+
+ul li {
+    margin-right: 3em;
+}
+
+
+.navbar > a {
+    grid-column: 2/3;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #407BFF;
+    font-family: 'Cabin', sans-serif;
+    font-weight: 500;
+}
+
+
+section {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.login-card {
+    box-shadow: 0px 0px 30px -10px;
+    border-radius: 15px;
+    padding: 3em;
+    /* width: fit-content;*/
+    width: 30%;
+    text-align: center;
+}
+.login-image {
+    width: 50%;
+}
+h2 {
+    margin-bottom: 1em;
+}
+
+input {
+    width: 100%;
+    border: 1px rgba(0, 0, 0, 0.2) solid;
+    border-radius: 10px;
+    padding: 1em;
+}
+
+label {
+    display: block; 
+}
+
+
+form button {
+    width: 70%;
+    border: none;
+    background-color: #4E47ED;
+    color: white;
+    padding: 1em 0;
+    border-radius: 10px;
+    margin-top: 1em;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
+
+
+
+
+

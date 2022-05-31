@@ -1,0 +1,23 @@
+<% layout("layouts/boilerplate") %>
+    <link rel="stylesheet" href="/stylesheets/forgot.css">
+    <!-- <form action="/forgot" method="POST">
+        <input type="email" name="email">
+        <button>Forgot</button>
+    </form> -->
+
+
+
+    <section>
+        <div class="login-card">
+            <h2>Password Retrieval</h2>
+            <form action="/forgot" method="POST">
+                <input type="email" name="email" placeholder="Email">
+                <button>Reset Password</button>
+
+            </form>
+
+        </div>
+        <div class="login-img">
+            <img src="/images/loginimg.png" alt="">
+        </div>
+    </section>

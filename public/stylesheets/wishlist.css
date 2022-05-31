@@ -1,0 +1,139 @@
+@import url("https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  row-gap: 1em;
+  padding: 0 5em;
+}
+
+.navbar {
+  grid-column: 1/13;
+
+  grid-row: auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+ul {
+  list-style-type: none;
+  grid-column: 10/12;
+  display: flex;
+  align-self: center;
+  justify-content: flex-start;
+}
+
+ul li {
+  margin-right: 3em;
+}
+
+.navbar > a {
+  grid-column: 2/3;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #407bff;
+  font-family: "Cabin", sans-serif;
+  font-weight: 500;
+}
+
+#first-row {
+  grid-row: auto;
+  grid-column: 1/13;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1em;
+  border-bottom: 1px #4e47ed solid;
+}
+
+#first-row h1 {
+  color: #4e47ed;
+}
+
+#first-row button {
+  padding: 1.2em 3em;
+  border: none;
+  color: white;
+  background-color: #4e47ed;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.cart-headers {
+  grid-row: auto;
+  grid-column: 1/13;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.cart-headers h1 {
+  font-weight: 500;
+}
+
+.cart-data {
+  grid-row: auto;
+  grid-column: 1/13;
+
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px rgba(79, 71, 237, 0.303) solid;
+  padding-bottom: 1em;
+}
+
+.cart-data p {
+  font-size: 18px;
+}
+
+#total {
+  grid-row: auto;
+  grid-column: 1/13;
+
+  display: flex;
+  justify-content: space-between;
+  color: #4e47ed;
+}
+
+#buttons {
+  grid-row: auto;
+  grid-column: 1/13;
+
+  display: flex;
+  justify-content: center;
+}
+
+#buttons button {
+  border: 1px #4e47ed solid;
+  color: #4e47ed;
+  background-color: white;
+  border-radius: 15px;
+  padding: 1em 3em;
+  transition: ease-in-out 0.2s;
+}
+
+#buttons button:hover {
+  color: white;
+  background-color: #4e47ed;
+  cursor: pointer;
+}
+
+#delete-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#delete-div img {
+  cursor: pointer;
+}

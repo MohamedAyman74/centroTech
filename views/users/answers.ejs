@@ -1,0 +1,54 @@
+<link rel="stylesheet" href="/stylesheets/answers.css">
+<% layout("layouts/boilerplate") %>
+    <section class="container">
+        <div class="main-flex">
+            <img src="/images/userimg.png" alt="">
+            <div>
+                <h4>
+                    <%= question.title %>
+                </h4>
+                <% if(question.askedBy){ %>
+                    <p>
+                        <%= question.askedBy.fullname %> - Student
+                    </p>
+                    <% } else if(question.askedByOAuth){ %>
+                        <p>
+                            <%= question.askedByOAuth.fullname %> - Student
+                        </p>
+                        <% } %>
+            </div>
+        </div>
+        <p id="reply">
+            <%= question.details %>
+        </p>
+
+        <% answers.forEach((answer, i)=> { %>
+            <div class="main-flex">
+                <img src="/images/userimg.png" alt="">
+                <div>
+                    <h4>
+                        Reply Number: #<%= ++i %> -
+                            <%= question.title %>
+                    </h4>
+                    <% if(answer.postedBy){ %>
+                        <p>
+                            <%= answer.postedBy.fullname %> - Student
+                        </p>
+                        <% } else if(answer.postedByOAuth){ %>
+                            <p>
+                                <%= answer.postedByOAuth.fullname %> - Student
+                            </p>
+                            <% } %>
+
+                </div>
+            </div>
+            <p id="reply">
+                <%= answer.reply %>
+            </p>
+            <% }); %>
+
+                <form action="/questions/<%= question._id %>" method="POST">
+                    <textarea name="reply" id="" rows="10"></textarea>
+                    <button type="submit">Reply</button>
+                </form>
+    </section>

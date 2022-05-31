@@ -1,0 +1,236 @@
+@import url('https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+.navbar {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    margin-bottom: 3em;
+}
+
+.navbar ul {
+    list-style-type: none;
+    grid-column: 9/11;
+    display: flex;
+    align-self: center;
+    justify-content: flex-start;
+}
+
+.navbar ul li {
+    margin-right: 3em;
+}
+
+.navbar > a {
+    grid-column: 2/3;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #407BFF;
+    font-family: 'Cabin', sans-serif;
+    font-weight: 500;
+}
+.navbar img {
+    grid-column: 3/4;
+}
+
+section {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+}
+
+.container {
+    grid-column: 2/12;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+}
+.left-side {
+    width: 50%;
+}
+.left-side h1 {
+    margin-bottom: 1em;
+}
+.left-side button {
+    margin: 1em 0;
+    border: none;
+    border-radius: 15px;
+    background-color: #4e47ed;
+    color: white;
+    padding: 1em 2em;
+    cursor: pointer;
+}
+video {
+    display: block;
+    width: 100%;
+}
+
+.lectures {
+    display: flex;
+    justify-content: space-between;
+    padding: 1.5em 2em;
+    height: 100%;
+}
+.lectures:first-child:hover {
+    background-color: #CCDCFF;
+    border-radius: 15px 15px 0 0;
+    cursor: pointer;
+}
+.lectures:not(:last-child, :first-child):hover {
+    background-color: #CCDCFF;
+    cursor: pointer;
+}
+.lectures:last-child:hover {
+    background-color: #CCDCFF;
+    border-radius: 0 0 15px 15px;
+    cursor: pointer;
+}
+.right-side {
+    width: 40%;
+    height: 100%;
+}
+.lectures-container {
+    display: flex;
+    flex-direction: column;
+    border: 2px #4e47ed solid;
+    border-radius: 15px;
+    width: 100%;
+    height: fit-content;
+    max-height: 64%;
+    overflow-y: auto;
+}
+
+#upload {
+    margin-top: 1em;
+    border: none;
+    border-radius: 15px;
+    background-color: #4e47ed;
+    color: white;
+    padding: 1em 2em;
+    cursor: pointer;
+}
+
+::-webkit-scrollbar {
+    width: 27px;
+}
+
+
+::-webkit-scrollbar-track {
+    background: white;
+    border-radius: 15px;
+
+}
+
+
+::-webkit-scrollbar-thumb {
+    background: #4E47ED;
+    border-radius: 15px;
+    border: 10px white solid;
+}
+
+.content {
+    grid-column: 2/6;
+    margin-top: -1em;
+}
+.content h1 {
+    font-size: 40px;
+}
+.content ul {
+    margin-left: 2em;
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 18px;
+}
+
+
+.popup {
+    position: absolute;
+    top: 20%;
+    left: 30%;
+    background-color: white;
+    border: 3px #4e47ed solid;
+    border-radius: 15px;
+    padding: 3em;
+    width: 50vw;
+    height: fit-content;
+    display: none;
+}
+
+.popup label {
+    font-size: 18px;
+    font-weight: 500;
+}
+#question input {
+   width: 80%;
+   height: 4em;
+}
+.popup form input:not([type="checkbox"]) {
+    border: 1px #407BFF solid;
+    border-radius: 15px;
+    margin-bottom: 1em;
+    margin-left: 1em;
+    width: 60%;
+    height: 2.5em;
+    outline: none;
+    padding-left: 1em;
+
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.popup-btns {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2em;
+}
+.popup-btns button {
+    border: none;
+    background-color: #4e47ed;
+    color: white;
+    border-radius: 15px;
+    padding: 1em 2em;
+    cursor: pointer;
+}
+
+.show {
+    display: block;
+}
+
+
+
+@media (max-width: 1000px) {
+    .content h1 {
+        font-size: 30px;
+    }
+    .left-side h1 {
+        margin-bottom: 0;
+    }
+    .lectures {
+        padding: 1em 2em;
+    }
+    .content ul li {
+        font-size: 16px;
+    }
+}
+@media (max-width: 800px) {
+    .content h1 {
+        font-size: 24px;
+    }
+    .content ul li {
+        font-size: 14px;
+    }
+    .left-side h1 {
+        margin-bottom: 0;
+    }
+    #quiz-btn {
+        margin-top: 1em;
+        margin-bottom: 2em;
+    }
+    
+}

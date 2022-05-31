@@ -1,0 +1,38 @@
+<% layout("layouts/boilerplate") %>
+    <link rel="stylesheet" href="/stylesheets/register.css">
+    <section>
+        <div class="login-card">
+            <h2>Welcome to CentroTech</h2>
+            <form action="/register" method="POST">
+                <div>
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" name="fullname">
+                </div>
+                <div id="email-div">
+                    <label for="email" id="email-label">Email</label>
+                    <input type="email" id="email" name="email">
+                </div>
+                <!-- <div>
+                    <label for="username">User Name <small>(That will be shown to others, must be
+                            unique)</small></label>
+                    <input type="text" id="username" name="username">
+                </div> -->
+                <div>
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password">
+                </div>
+                <div>
+                    <label for="password-repeat">Repeat your password</label>
+                    <input type="password" id="password-repeat">
+                </div>
+                <button>Create Account</button>
+            </form>
+            <div class="signup-redirect">
+                <p>Already have an account?</p>
+                <a href="/login">Sign in</a>
+            </div>
+        </div>
+        <div class="login-img">
+            <img src="/images/loginimg.png" alt="">
+        </div>
+    </section>

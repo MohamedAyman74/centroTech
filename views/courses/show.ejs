@@ -1,0 +1,91 @@
+<% layout("layouts/boilerplate") %>
+    <link rel="stylesheet" href="/stylesheets/showCourse.css">
+    <section>
+        <div class="container">
+            <div class="left-side">
+                <h1>
+                    <%= course.instructor.fullname %> : <%= course.name %>
+                </h1>
+                <% if(course.videos.length> 0){ %>
+                    <!-- <iframe id="video-player" width="560" height="315" src="<%= course.videos[0].url %>"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe> -->
+                        <video width="320" height="240" controls id="video-player">
+                            <source src="<%= course.videos[0].url %>" type="video/mp4">
+                            <!-- <source src="movie.ogg" type="video/ogg"> -->
+                          Your browser does not support the video tag.
+                          </video>
+                    <% } else{ %>
+                        <h3>NO VIDEOS UPLOADED YET</h3>
+                        <% } %>
+                            <button id="quiz-btn">Publish Quiz</button>
+            </div>
+            <div class="right-side">
+                <div class="lectures-container">
+                    <% course.videos.forEach((video, i)=> { %>
+                        <div class="lectures">
+                            <p><a class="lecture-link" href="<%= video.url %> "
+                                    style="text-decoration: none; color: black;">Lecture <%= ++i %>
+                                </a>
+                            </p>
+                            <!-- <img src="playicon.svg" alt=""> -->
+                        </div>
+                        <% }); %>
+
+                </div>
+                <form action="/courses/<%= course._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="videos" id="videos" multiple>
+                    <button id="upload">Upload Lecture</button>
+                </form>
+            </div>
+        </div>
+        <div class="content">
+            <h1>Lecture Content</h1>
+            <ul>
+                <li>lorem ipsum dolor sit amet</li>
+                <li>lorem ipsum dolor sit amet</li>
+                <li>lorem ipsum dolor sit amet</li>
+                <li>lorem ipsum dolor sit amet</li>
+            </ul>
+        </div>
+    </section>
+    <div class="popup">
+        <form action="">
+            <div id="question">
+                <label for="">Q1)</label>
+                <input type="text">
+            </div>
+            <div class="mcq">
+                <input type="checkbox">
+                <label for="">Choice 1</label>
+                <input type="text">
+            </div>
+            <div class="mcq">
+                <input type="checkbox">
+                <label for="">Choice 2</label>
+                <input type="text">
+            </div>
+            <div class="mcq">
+                <input type="checkbox">
+                <label for="">Choice 3</label>
+                <input type="text">
+            </div>
+            <div class="mcq">
+                <input type="checkbox">
+                <label for="">Choice 4</label>
+                <input type="text">
+            </div>
+            <div class="grade">
+                <label for="">Question Grade</label>
+                <input type="number">
+            </div>
+            <div class="popup-btns">
+                <button>Publish</button>
+                <button>Next Q</button>
+            </div>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="/javascripts/showCourse.js"></script>
