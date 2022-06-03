@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+
+.container {
+    max-width: 1440px;
+    /* margin: 0 auto; */
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    row-gap: 1em;
+    padding: 0 5em;
+    /* align-content: center;
+    justify-items: center; */
+
+}
+
+.navbar {
+
+
+    grid-column: 1/13;
+    justify-self: stretch;
+
+    grid-row: auto;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+ul {
+    list-style-type: none;
+    grid-column: 10/12;
+    display: flex;
+    align-self: center;
+    justify-content: flex-start;
+}
+
+ul li {
+    margin-right: 3em;
+}
+
+.navbar>a {
+    grid-column: 2/3;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #407BFF;
+    font-family: 'Cabin', sans-serif;
+    font-weight: 500;
+}
+
+.tab-container {
+    grid-column: 1/13;
+    display: flex;
+    /* justify-content: center; */
+    /* position: relative; */
+
+}
+
+.tab {
+    margin-right: 2em;
+    color: gray;
+    transition: ease-in-out 0.2s;
+    font-size: 20px;
+    font-weight: 500;
+    border-bottom: 3px transparent solid;
+
+}
+
+.tab:hover {
+    color: #4e47ed;
+    cursor: pointer;
+    border-bottom: 3px #4e47ed solid;
+}
+
+.active {
+    color: #4e47ed;
+    cursor: pointer;
+    border-bottom: 3px #4e47ed solid;
+}
+
+
+.visa-details {
+    grid-column: 1/5;
+    margin-top: 2em;
+
+}
+
+
+.visa-details form label {
+    display: block;
+}
+.visa-details form input {
+    width: 100%;
+    border: 1px rgba(79, 71, 237, 0.316) solid;
+    padding: 1em;
+    border-radius: 10px;
+    margin: 0.5em 0;
+    outline-color: #4e47ed;
+}
+
+#pay-button {
+/* text-align: center; */
+margin-top: 1em;
+}
+
+#pay-button button {
+    font-size: 15px;
+    width: fit-content;
+    border: none;
+    color: white;
+    background-color: #4e47ed;
+    padding: 1em;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+select {
+    border: 1px rgba(79, 71, 237, 0.316) solid;
+    padding: 1em 3em 1em 1em;
+    border-radius: 10px;
+    appearance: none;     
+    background-image: url(arrow.svg);   
+    background-repeat: no-repeat;
+    background-position: right;
+    outline-color: #4e47ed;
+    margin: 1em 1em 1em 0;
+}
+
+.select-flex {
+    display: flex;
+    justify-content: flex-start;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.hide {
+    display: none;
+}

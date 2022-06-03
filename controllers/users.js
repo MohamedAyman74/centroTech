@@ -4,6 +4,8 @@ const oAuthUser = require("../models/oAuthUser");
 const Token = require("../models/token");
 const Question = require("../models/question");
 const Answer = require("../models/answer");
+const Quiz = require("../models/quiz");
+const QuizResponse = require("../models/quizResponses");
 const ExpressError = require("../utils/ExpressError");
 const bcrypt = require("bcrypt");
 const { sendEmail } = require("../utils/sendMail");
@@ -311,4 +313,56 @@ module.exports.addAnswer = async (req, res) => {
     req.flash("error", "Something wrong has happened");
     res.redirect("/questions");
   }
+};
+
+module.exports.renderQuizzes = async (req, res) => {
+  const quizzes = await Quiz.find({})
+    .populate({
+      path: "instructor",
+      model: "Instructor",
+      select: "fullname",
+    })
+    .populate({
+      path: "course",
+      model: "Course",
+      select: "name",
+    });
+  res.render("users/quizzesIndex", { quizzes });
+};
+
+module.exports.renderQuizPage = async (req, res) => {
+  const { Id } = req.params;
+  const quiz = await Quiz.findById(Id)
+    .populate({
+      path: "course",
+      model: "Course",
+      select: "name",
+    })
+    .populate("questions");
+  res.render("users/takeQuiz", { quiz });
+};
+
+module.exports.takeQuiz = async (req, res) => {
+  const { Id } = req.params;
+  const userResponses = req.body.correctAnswers;
+  const correctAnswersArr = [];
+  let marks = 0;
+  const quiz = await Quiz.findById(Id).populate("questions");
+  const newResponse = new QuizResponse({ quiz: quiz._id });
+  quiz.questions.forEach((question) => {
+    correctAnswersArr.push(question.correctAnswers[0]);
+  });
+
+  userResponses.forEach(async (response, i) => {
+    newResponse.submittedAnswers.push(response);
+    if (response == correctAnswersArr[i]) {
+      marks += quiz.questions[i].grade;
+    }
+    newResponse.finalGrade = marks;
+  });
+  console.log(marks);
+  await newResponse.save();
+  // console.log(correctAnswersArr);
+  // console.log(quiz.questions);
+  res.redirect(`/quiz/${Id}`);
 };

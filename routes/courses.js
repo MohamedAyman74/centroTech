@@ -19,6 +19,11 @@ router
   .get(catchAsync(courses.renderNewCourseForm))
   .post(catchAsync(courses.addCourse));
 
+router
+  .route("/purchase")
+  .get(courses.renderPurchasePage)
+  .post(courses.makePurchase);
+
 router.route("/delete/:Id").delete(catchAsync(courses.deleteCourse));
 
 router
@@ -33,5 +38,9 @@ router
 
 router.route("/wishlist/:Id").put(catchAsync(courses.addToWishlist));
 router.route("/cart/:Id").post(catchAsync(courses.addToCart));
+
+router.route("/:Id/add").post(courses.addQuestion);
+router.route("/:Id/delete").post(courses.dismissQuiz);
+router.route("/:Id/submit").post(catchAsync(courses.addQuiz));
 
 module.exports = router;

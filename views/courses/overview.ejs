@@ -22,7 +22,9 @@
                     libero odio, harum ducimus accusantium unde nemo error adipisci in, consequuntur non! Sit iste
                     voluptatibus eaque?</p>
                 <div class="purchase-div">
-                    <button id="purchase">Purchase</button>
+                    <form action="/courses/cart/<%= course._id %>" method="POST">
+                        <button type="submit" id="purchase">Purchase</button>
+                    </form>
                 </div>
 
             </div>

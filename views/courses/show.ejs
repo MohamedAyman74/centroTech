@@ -11,11 +11,11 @@
                         title="YouTube video player" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe> -->
-                        <video width="320" height="240" controls id="video-player">
-                            <source src="<%= course.videos[0].url %>" type="video/mp4">
-                            <!-- <source src="movie.ogg" type="video/ogg"> -->
-                          Your browser does not support the video tag.
-                          </video>
+                    <video width="320" height="240" controls id="video-player">
+                        <source src="<%= course.videos[0].url %>" type="video/mp4">
+                        <!-- <source src="movie.ogg" type="video/ogg"> -->
+                        Your browser does not support the video tag.
+                    </video>
                     <% } else{ %>
                         <h3>NO VIDEOS UPLOADED YET</h3>
                         <% } %>
@@ -51,38 +51,39 @@
         </div>
     </section>
     <div class="popup">
-        <form action="">
+        <form action="" method="POST">
             <div id="question">
                 <label for="">Q1)</label>
-                <input type="text">
+                <input type="text" name="quiz[question]">
             </div>
             <div class="mcq">
-                <input type="checkbox">
+                <input type="radio" name="quiz[correctAnswers]" value="answer1">
                 <label for="">Choice 1</label>
-                <input type="text">
+                <input type="text" name="quiz[answer1]">
             </div>
             <div class="mcq">
-                <input type="checkbox">
+                <input type="radio" name="quiz[correctAnswers]" value="answer2">
                 <label for="">Choice 2</label>
-                <input type="text">
+                <input type="text" name="quiz[answer2]">
             </div>
             <div class="mcq">
-                <input type="checkbox">
+                <input type="radio" name="quiz[correctAnswers]" value="answer3">
                 <label for="">Choice 3</label>
-                <input type="text">
+                <input type="text" name="quiz[answer3]">
             </div>
             <div class="mcq">
-                <input type="checkbox">
+                <input type="radio" name="quiz[correctAnswers]" value="answer4">
                 <label for="">Choice 4</label>
-                <input type="text">
+                <input type="text" name="quiz[answer4]">
             </div>
             <div class="grade">
                 <label for="">Question Grade</label>
-                <input type="number">
+                <input type="number" name="quiz[grade]">
             </div>
             <div class="popup-btns">
-                <button>Publish</button>
-                <button>Next Q</button>
+                <button type="submit" formaction="/courses/<%= course._id %>/delete">Dismiss</button>
+                <button type="submit" formaction="/courses/<%= course._id %>/submit">Publish</button>
+                <button type="submit" formaction="/courses/<%= course._id %>/add">Next Q</button>
             </div>
         </form>
     </div>

@@ -51,6 +51,13 @@ const UserSchema = new Schema({
       ref: "Course",
     },
   ],
+  quizzes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Quiz",
+    },
+  ],
+  courses: [{ type: Schema.Types.ObjectId, ref: "Course" }],
 });
 
 // UserSchema.pre("save", async function () {

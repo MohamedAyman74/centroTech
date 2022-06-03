@@ -56,4 +56,10 @@ router
   .get(catchAsync(users.renderAnswers))
   .post(catchAsync(users.addAnswer));
 
+router.route("/quizzes").get(catchAsync(users.renderQuizzes));
+
+router
+  .route("/quiz/:Id")
+  .get(catchAsync(users.renderQuizPage))
+  .post(catchAsync(users.takeQuiz));
 module.exports = router;

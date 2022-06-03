@@ -3,6 +3,8 @@ const User = require("../models/user");
 const OAuthUser = require("../models/oAuthUser");
 const Instructor = require("../models/instructor");
 const CourseReview = require("../models/courseReview");
+const QuizQuestion = require("../models/quizQuestion");
+const Quiz = require("../models/quiz");
 
 module.exports.index = async (req, res) => {
   if (req.session.courses) {
@@ -128,7 +130,7 @@ module.exports.addToCart = async (req, res) => {
   } else {
     req.session.cart.push(Id);
     req.flash("success", "The course has been successfully added to your cart");
-    res.redirect("/courses");
+    res.redirect("/cart");
   }
 };
 
@@ -166,4 +168,91 @@ module.exports.addReview = async (req, res) => {
   await courseReview.save();
   req.flash("success", "Your review has been submitted");
   res.redirect(`/courses/show/${Id}`);
+};
+
+module.exports.addQuestion = (req, res) => {
+  if (!req.session.quiz) {
+    req.session.quiz = [];
+  }
+  const { Id } = req.params;
+  const question = {};
+  for (let i in req.body.quiz) {
+    question[i] = req.body.quiz[i];
+  }
+  req.session.quiz.push(question);
+  // console.log(req.session.quiz);
+  // console.log(req.session.isInstructor);
+  // console.log(req.session.instructor_id);
+  res.redirect(`/courses/${Id}`);
+};
+
+module.exports.dismissQuiz = (req, res) => {
+  const { Id } = req.params;
+  req.session.quiz = null;
+  delete req.session.quiz;
+  res.redirect(`/courses/${Id}`);
+};
+
+module.exports.addQuiz = async (req, res) => {
+  const { Id } = req.params;
+  const questions = req.session.quiz;
+  const instructor = req.session.instructor_id;
+  let totalGrade = 0;
+  const newQuiz = new Quiz({
+    instructor,
+    course: Id,
+  });
+  const savedQuiz = await newQuiz.save();
+  questions.forEach(async (question) => {
+    {
+      // const correctAnswers
+      const newQuestion = new QuizQuestion({
+        ...question,
+        quiz: savedQuiz._id,
+      });
+      totalGrade += parseInt(question.grade);
+      // e3mel push gowa el array le kol correct answers.
+      await newQuestion.save(async (err, savedQuestion) => {
+        const updatedQuiz = await Quiz.findById(savedQuiz._id);
+        updatedQuiz.questions.push(savedQuestion._id);
+        updatedQuiz.totalGrade = totalGrade;
+        await updatedQuiz.save();
+      });
+      // console.log(newQuestion);
+    }
+  });
+  req.session.quiz = null;
+  delete req.session.quiz;
+  res.redirect(`/courses/${Id}`);
+};
+
+module.exports.renderPurchasePage = (req, res) => {
+  res.render("courses/purchase");
+};
+
+module.exports.makePurchase = async (req, res) => {
+  const cart = res.locals.cart;
+  const currentUser = res.locals.currentUser;
+  const isOkay = [];
+
+  cart.forEach(async (purchasedCourse) => {
+    let user = await User.findById(currentUser);
+    if (!user) {
+      user = await OAuthUser.findById(currentUser);
+    }
+    if (user) {
+      const course = await Course.findById(purchasedCourse);
+      // const isFound = user.courses.includes(purchasedCourse);
+      // console.log(user.courses);
+      // console.log(isFound);
+      const enroll = ++course.enrolled;
+      course.enrolled = enroll;
+      await course.save();
+      // delete req.session.cart;
+      user.courses.push(purchasedCourse);
+      await user.save();
+    }
+  });
+  req.flash("success", "Courses purchased successfully");
+  res.redirect("/courses");
 };
