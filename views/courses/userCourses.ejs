@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="/stylesheets/newCourse.css">
+<% layout("layouts/boilerplate") %>
+
+    <section>
+        <input class="input-search" type="search" placeholder="Teacher/subject name">
+        <div class="course-list">
+            <% courses.forEach(course=> { %>
+                <div class="course-card">
+                    <img src="/images/teacherimg.jpg" alt="">
+                    <h3>
+                        <%= course.name %>
+                    </h3>
+                    <h5>
+                        <%= course.instructor.fullname %>
+                    </h5>
+                    <div class="card-price">
+                        <p>
+                            <%= course.price %> L.E
+                        </p>
+                        <a href="/courses/show/<%= course._id %> "><button>View Course</button></a>
+                    </div>
+                </div>
+                <% }); %>
+        </div>
+    </section>
+    <script src="/javascripts/newCourse.js"></script>

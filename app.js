@@ -161,6 +161,9 @@ app.use((req, res, next) => {
   if (!res.locals.currentUser) {
     res.locals.currentUser = req.session.instructor_id;
   }
+  if (!res.locals.currentUser) {
+    res.locals.currentUser = req.session.admin_id;
+  }
   // if (res.locals.currentUser) {
   res.locals.cart = req.session.cart;
   // }
@@ -189,8 +192,8 @@ app.get(
   }),
   (req, res) => {
     if (!req.user.isSuspended) {
-      console.log("not sus");
       req.session.user_id = req.user._id;
+      req.session.cart = [];
       res.redirect("/");
     } else {
       req.flash("error", "Your account is suspended");
@@ -215,6 +218,12 @@ app.get("/", (req, res) => {
 
 app.get("*", (req, res) => {
   res.send("ERROR 404 NOT FOUND");
+});
+
+app.use((err, req, res, next) => {
+  const { statusCode = "500" } = err;
+  if (!err.message) err.message = "Something went wrong!";
+  res.status(statusCode).render("error", { err });
 });
 
 app.listen(3000, () => {

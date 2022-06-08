@@ -36,16 +36,21 @@ module.exports.renderLogin = (req, res) => {
 module.exports.login = async (req, res) => {
   const { email, password } = req.body;
   const instructor = await Instructor.findOne({ email });
-  const validPassword = await bcrypt.compare(password, instructor.password);
-  if (!validPassword) {
+  if (instructor) {
+    const validPassword = await bcrypt.compare(password, instructor.password);
+    if (!validPassword) {
+      req.flash("error", "Wrong username or password");
+      res.redirect("/instructor/login");
+    } else {
+      req.session.instructor_id = instructor._id;
+      req.session.isInstructor = true;
+      req.flash("success", "Welcome back!");
+      const redirectUrl = req.session.returnTo || "/";
+      delete req.session.returnTo;
+      res.redirect(redirectUrl);
+    }
+  } else {
     req.flash("error", "Wrong username or password");
     res.redirect("/instructor/login");
-  } else {
-    req.session.instructor_id = instructor._id;
-    req.session.isInstructor = true;
-    req.flash("success", "Welcome back!");
-    const redirectUrl = req.session.returnTo || "/";
-    delete req.session.returnTo;
-    res.redirect(redirectUrl);
   }
 };

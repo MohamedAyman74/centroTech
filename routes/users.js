@@ -51,12 +51,17 @@ router
   .get(catchAsync(users.renderQuestions))
   .post(catchAsync(users.addNewQuestion));
 
+router.route("/support-tickets").get(catchAsync(users.renderSupportTickets));
+
 router
   .route("/questions/:Id")
   .get(catchAsync(users.renderAnswers))
   .post(catchAsync(users.addAnswer));
 
 router.route("/quizzes").get(catchAsync(users.renderQuizzes));
+
+router.route("/quizzes/solved").get(catchAsync(users.renderSolvedQuizzes));
+router.route("/quizzes/solved/:Id").get(catchAsync(users.renderQuizAnswers));
 
 router
   .route("/quiz/:Id")

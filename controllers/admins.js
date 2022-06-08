@@ -5,6 +5,7 @@ const Instructor = require("../models/instructor");
 const { sendEmail } = require("../utils/sendMail");
 const bcrypt = require("bcrypt");
 const instructorApp = require("../models/instructorApp");
+const Admin = require("../models/admin");
 
 module.exports.renderUsersManagement = async (req, res) => {
   const users = await User.find({});
@@ -153,4 +154,30 @@ module.exports.renderRejectedApplications = async (req, res) => {
 
 module.exports.renderDashboard = (req, res) => {
   res.render("admins");
+};
+
+module.exports.renderLogin = (req, res) => {
+  res.render("admins/login");
+};
+
+module.exports.loginAdmin = async (req, res) => {
+  const { email, password } = req.body;
+  const admin = await Admin.findOne({ email });
+  if (admin) {
+    const validPassword = await bcrypt.compare(password, admin.password);
+    if (!validPassword) {
+      req.flash("error", "Wrong username or password");
+      res.redirect("/admins/login");
+    } else {
+      req.session.admin_id = admin._id;
+      req.session.isAdmin = true;
+      req.flash("success", "Welcome back!");
+      const redirectUrl = req.session.returnTo || "/admins";
+      delete req.session.returnTo;
+      res.redirect(redirectUrl);
+    }
+  } else {
+    req.flash("error", "Wrong username or password");
+    res.redirect("/admins/login");
+  }
 };

@@ -7,6 +7,13 @@ const QuizQuestion = require("../models/quizQuestion");
 const Quiz = require("../models/quiz");
 
 module.exports.index = async (req, res) => {
+  let user = await User.findById(res.locals.currentUser);
+  if (!user) {
+    user = await OAuthUser.findById(res.locals.currentUser);
+  }
+  if (!user) {
+    user = await Instructor.findById(res.locals.currentUser);
+  }
   if (req.session.courses) {
     const courses = req.session.courses;
     delete req.session.courses;
@@ -15,9 +22,24 @@ module.exports.index = async (req, res) => {
     const courses = await Course.find({}).populate({
       path: "instructor",
       model: "Instructor",
-      select: "fullname",
+      select: { fullname: 1, _id: 1 },
     });
-    res.render("courses/index", { courses });
+    if (req.session.isInstructor) {
+      const isInstructor = req.session.isInstructor;
+      const isAdmin = false;
+      res.render("courses/index", { courses, user, isInstructor, isAdmin });
+    } else if (req.session.isAdmin) {
+      const isAdmin = req.session.isAdmin;
+      const isInstructor = false;
+      res.render("courses/index", { courses, user, isInstructor, isAdmin });
+    } else if (req.session.user_id) {
+      const isInstructor = false;
+      const isAdmin = false;
+      res.render("courses/index", { courses, user, isInstructor, isAdmin });
+    } else {
+      req.flash("error", "You must be logged in to view this page");
+      res.redirect("/");
+    }
   }
 };
 
@@ -135,16 +157,57 @@ module.exports.addToCart = async (req, res) => {
 };
 
 module.exports.renderCourseOverview = async (req, res) => {
+  let user = await User.findById(res.locals.currentUser);
+  if (!user) {
+    user = await OAuthUser.findById(res.locals.currentUser);
+  }
+  if (!user) {
+    user = await Instructor.findById(res.locals.currentUser);
+  }
   const { Id } = req.params;
   const course = await Course.findById(Id).populate({
     path: "instructor",
     model: "Instructor",
-    select: "fullname",
+    select: { fullname: 1, _id: 1 },
   });
   const reviews = await CourseReview.find({ course: Id })
     .populate("reviewedBy")
     .populate("reviewedByOAuth");
-  res.render("courses/overview", { course, reviews });
+  if (req.session.isInstructor) {
+    const isInstructor = req.session.isInstructor;
+    const isAdmin = false;
+    user.courses = [];
+    res.render("courses/overview", {
+      course,
+      reviews,
+      user,
+      isInstructor,
+      isAdmin,
+    });
+  } else if (req.session.isAdmin) {
+    const isAdmin = req.session.isAdmin;
+    const isInstructor = false;
+    res.render("courses/overview", {
+      course,
+      reviews,
+      user,
+      isInstructor,
+      isAdmin,
+    });
+  } else if (req.session.user_id) {
+    const isInstructor = false;
+    const isAdmin = false;
+    res.render("courses/overview", {
+      course,
+      reviews,
+      user,
+      isInstructor,
+      isAdmin,
+    });
+  } else {
+    req.flash("error", "You must be logged in to view this page");
+    res.redirect("/");
+  }
 };
 
 module.exports.addReview = async (req, res) => {
@@ -164,6 +227,8 @@ module.exports.addReview = async (req, res) => {
     courseReview.reviewedBy = user._id;
   }
   course.reviews.push(courseReview);
+  user.courseReviews.push(courseReview);
+  await user.save();
   await course.save();
   await courseReview.save();
   req.flash("success", "Your review has been submitted");
@@ -233,26 +298,135 @@ module.exports.renderPurchasePage = (req, res) => {
 module.exports.makePurchase = async (req, res) => {
   const cart = res.locals.cart;
   const currentUser = res.locals.currentUser;
-  const isOkay = [];
+  const toPurchase = [];
 
-  cart.forEach(async (purchasedCourse) => {
-    let user = await User.findById(currentUser);
-    if (!user) {
-      user = await OAuthUser.findById(currentUser);
-    }
-    if (user) {
-      const course = await Course.findById(purchasedCourse);
-      // const isFound = user.courses.includes(purchasedCourse);
-      // console.log(user.courses);
-      // console.log(isFound);
-      const enroll = ++course.enrolled;
-      course.enrolled = enroll;
-      await course.save();
-      // delete req.session.cart;
-      user.courses.push(purchasedCourse);
+  let user = await User.findById(currentUser);
+  if (!user) {
+    user = await OAuthUser.findById(currentUser);
+  }
+  if (user) {
+    cart.forEach((purchasedCourse) => {
+      const isFound = user.courses.includes(purchasedCourse);
+      if (!isFound) {
+        toPurchase.push(purchasedCourse);
+      }
+    });
+    if (toPurchase.length === cart.length) {
+      toPurchase.forEach(async (item, i) => {
+        const course = await Course.findById(item);
+        course.enrolled++;
+        await course.save();
+        if (i === toPurchase.length - 1) {
+        }
+      });
+      user.courses.push(...toPurchase);
       await user.save();
+      req.session.cart = [];
+      req.flash("success", "Courses purchased successfully");
+      res.redirect("/courses");
+    } else {
+      req.flash(
+        "error",
+        "A course you are trying to purchase is already owned"
+      );
+      res.redirect("/courses");
     }
+  } else {
+    req.flash("error", "You must be logged in first");
+    res.redirect("/courses");
+  }
+};
+
+// module.exports.makePurchase = async (req, res) => {
+//   const cart = res.locals.cart;
+//   const currentUser = res.locals.currentUser;
+//   const isOkay = [];
+
+//   cart.forEach(async (purchasedCourse) => {
+//     let user = await User.findById(currentUser);
+//     if (!user) {
+//       user = await OAuthUser.findById(currentUser);
+//     }
+//     if (user) {
+//       const course = await Course.findById(purchasedCourse);
+//       // const isFound = user.courses.includes(purchasedCourse);
+//       // console.log(user.courses);
+//       // console.log(isFound);
+//       const enroll = ++course.enrolled;
+//       course.enrolled = enroll;
+//       await course.save();
+//       // delete req.session.cart;
+//       user.courses.push(purchasedCourse);
+//       await user.save();
+//     }
+//   });
+//   req.flash("success", "Courses purchased successfully");
+//   res.redirect("/courses");
+// };
+
+module.exports.renderUserCourses = async (req, res) => {
+  const currentUser = res.locals.currentUser;
+  let user = await User.findById(currentUser).populate({
+    path: "courses",
+    model: "Course",
+    populate: {
+      path: "instructor",
+      model: "Instructor",
+      select: "fullname",
+    },
+    select: { name: 1, price: 1 },
   });
-  req.flash("success", "Courses purchased successfully");
-  res.redirect("/courses");
+  if (!user) {
+    user = await OAuthUser.findById(currentUser).populate({
+      path: "courses",
+      model: "Course",
+      populate: {
+        path: "instructor",
+        model: "Instructor",
+        select: "fullname",
+      },
+      select: { name: 1, price: 1 },
+    });
+  }
+  const courses = user.courses;
+  res.render("courses/userCourses", { courses });
+};
+
+module.exports.deleteReview = async (req, res) => {
+  const { Id, userId, reviewId } = req.params;
+  const currentUser = res.locals.currentUser;
+  let user = await User.findById(userId);
+  if (user) {
+    if (userId === currentUser) {
+      await User.findByIdAndUpdate(userId, {
+        $pull: { courseReviews: reviewId },
+      });
+      await Course.findByIdAndUpdate(Id, {
+        $pull: { reviews: reviewId },
+      });
+      await CourseReview.findByIdAndDelete(reviewId);
+      req.flash("success", "Successfully deleted the review");
+      res.redirect(`/courses/show/${Id}`);
+    } else {
+      req.flash("error", "Sorry, you are not authorized to delete the review");
+      res.redirect(`/courses/show/${Id}`);
+    }
+  }
+  if (!user) {
+    user = await OAuthUser.findById(currentUser);
+    if (userId === currentUser) {
+      await OAuthUser.findByIdAndUpdate(currentUser, {
+        $pull: { courseReviews: reviewId },
+      });
+      await Course.findByIdAndUpdate(Id, {
+        $pull: { reviews: reviewId },
+      });
+      await CourseReview.findByIdAndDelete(reviewId);
+      req.flash("success", "Successfully deleted the review");
+      res.redirect(`/courses/show/${Id}`);
+    } else {
+      req.flash("error", "Sorry, you are not authorized to delete the review");
+      res.redirect(`/courses/show/${Id}`);
+    }
+  }
 };

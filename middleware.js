@@ -1,3 +1,6 @@
+const ExpressError = require("./utils/ExpressError");
+const { courseSchema } = require("./schemas");
+
 module.exports.isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
     req.session.returnTo = req.originalUrl;
@@ -15,4 +18,15 @@ module.exports.isAuthorized = (req, res, next) => {
     return res.redirect("/");
   }
   next();
+};
+
+module.exports.validateCourse = (req, res, next) => {
+  const { error } = courseSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(", ");
+    // console.log(msg);
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
 };

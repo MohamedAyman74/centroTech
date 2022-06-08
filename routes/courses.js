@@ -3,6 +3,7 @@ const router = express.Router();
 const catchAsync = require("../utils/catchAsync");
 // const courses = require("../controllers/courses");
 const courses = require("../controllers/courses");
+const { validateCourse } = require("../middleware");
 
 const multer = require("multer");
 const { videoStorage } = require("../cloudinary");
@@ -17,12 +18,14 @@ router.route("/search").post(catchAsync(courses.homePageSearch));
 router
   .route("/new")
   .get(catchAsync(courses.renderNewCourseForm))
-  .post(catchAsync(courses.addCourse));
+  .post(validateCourse, catchAsync(courses.addCourse));
 
 router
   .route("/purchase")
   .get(courses.renderPurchasePage)
   .post(courses.makePurchase);
+
+router.route("/mycourses").get(courses.renderUserCourses);
 
 router.route("/delete/:Id").delete(catchAsync(courses.deleteCourse));
 
@@ -30,6 +33,10 @@ router
   .route("/show/:Id")
   .get(catchAsync(courses.renderCourseOverview))
   .post(catchAsync(courses.addReview));
+
+router
+  .route("/show/:Id/reviews/:userId/delete/:reviewId")
+  .delete(catchAsync(courses.deleteReview));
 
 router
   .route("/:Id")

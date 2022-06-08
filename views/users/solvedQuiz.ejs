@@ -1,0 +1,51 @@
+<% layout("layouts/boilerplate") %>
+    <link rel="stylesheet" href="/stylesheets/takeQuiz.css">
+    <section>
+        <div class="header">
+            <h1>
+                <%= quiz.course.name %>
+            </h1>
+            <p>25:38</p>
+        </div>
+
+        <div class="mcq">
+            <form action="/quiz/<%= quiz._id %>" method="POST">
+                <% quiz.questions.forEach((question, i)=> { %>
+                    <div class="question">
+                        <p>Q<%= i+1 %>) <%= question.question %>
+                        </p>
+                        <div>
+                            <input type="radio" name="correctAnswers[<%= i %>]" value="answer1"
+                                <%=answers[i]==="answer1" ? "checked" : "" %> disabled>
+                            <label for="">
+                                <%= question.answer1 %>
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" name="correctAnswers[<%= i %>]" value="answer2"
+                                <%=answers[i]==="answer2" ? "checked" : "" %> disabled>
+                            <label for="">
+                                <%= question.answer2 %>
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" name="correctAnswers[<%= i %>]" value="answer3"
+                                <%=answers[i]==="answer3" ? "checked" : "" %> disabled>
+                            <label for="">
+                                <%= question.answer3 %>
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" name="correctAnswers[<%= i %>]" value="answer4"
+                                <%=answers[i]==="answer4" ? "checked" : "" %> disabled>
+                            <label for="">
+                                <%= question.answer4 %>
+                            </label>
+                        </div>
+                    </div>
+                    <%= question.grade %> Marks
+                        <% }); %>
+                            <button>Submit</button>
+            </form>
+        </div>
+    </section>

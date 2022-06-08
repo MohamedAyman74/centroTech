@@ -6,6 +6,11 @@ const admins = require("../controllers/admins");
 router.route("/").get(admins.renderDashboard);
 
 router
+  .route("/login")
+  .get(admins.renderLogin)
+  .post(catchAsync(admins.loginAdmin));
+
+router
   .route("/usersmanagement")
   .get(catchAsync(admins.renderUsersManagement))
   .post(catchAsync(admins.searchUser));

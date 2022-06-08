@@ -22,9 +22,14 @@
                     libero odio, harum ducimus accusantium unde nemo error adipisci in, consequuntur non! Sit iste
                     voluptatibus eaque?</p>
                 <div class="purchase-div">
-                    <form action="/courses/cart/<%= course._id %>" method="POST">
-                        <button type="submit" id="purchase">Purchase</button>
-                    </form>
+                    <% if((isAdmin || (isInstructor && user._id.equals(course.instructor._id)))){ %>
+                        <a href="/courses/<%= course._id %>"><button id="purchase">Open
+                                Lectures</button></a>
+                        <% } else if(!isInstructor && user.courses.indexOf(course._id) <=0){ %>
+                            <form action="/courses/cart/<%= course._id %>" method="POST">
+                                <button type="submit" id="purchase">Purchase</button>
+                            </form>
+                            <% } else{}%>
                 </div>
 
             </div>
@@ -41,10 +46,24 @@
                         <% if(review.reviewedBy){ %>
                             <h4>
                                 <%= review.reviewedBy.fullname %>
+                                    <% if((review.reviewedBy._id===currentUser) || isAdmin){ %>
+                                        <form
+                                            action="/courses/show/<%= course._id %>/reviews/<%= review.reviewedBy._id %>/delete/<%= review._id%>?_method=DELETE"
+                                            method="POST">
+                                            <button>Delete</button>
+                                        </form>
+                                        <% } %>
                             </h4>
                             <% } else if(review.reviewedByOAuth){ %>
                                 <h4>
                                     <%= review.reviewedByOAuth.fullname %>
+                                        <% if(review.reviewedByOAuth._id.equals(currentUser) || isAdmin){ %>
+                                            <form
+                                                action="/courses/show/<%= course._id %>/reviews/<%= review.reviewedByOAuth._id %>/delete/<%= review._id %>?_method=DELETE"
+                                                method="POST">
+                                                <button>Delete</button>
+                                            </form>
+                                            <% } %>
                                 </h4>
                                 <% } %>
                                     <p id="author">
@@ -63,14 +82,15 @@
                         <button class="show-more">Show more</button>
                     </div>
                     <% } %>
-                        <div class="give-review">
-
-                            <form action="/courses/show/<%= course._id %>" method="POST">
-                                <label for="feedback">Tell Us About Your Experience!</label>
-                                <textarea name="review" id="feedback" rows="10"></textarea>
-                                <button>Submit Review</button>
-                            </form>
-                        </div>
+                        <% if((!isAdmin && !isInstructor && user.courses.includes(course._id))){ %>
+                            <div class="give-review">
+                                <form action="/courses/show/<%= course._id %>" method="POST">
+                                    <label for="feedback">Tell Us About Your Experience!</label>
+                                    <textarea name="review" id="feedback" rows="10"></textarea>
+                                    <button>Submit Review</button>
+                                </form>
+                            </div>
+                            <% } %>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
         integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>

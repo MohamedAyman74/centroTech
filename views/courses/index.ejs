@@ -41,16 +41,18 @@
                             <%= course.price %> L.E
                         </p>
                         <!-- <a href="/courses/wishlist/<%= course._id  %>"><i class="fa fa-solid fa-heart"></i></a> -->
-                        <form style="height: 5px; margin-bottom: 15px;"
-                            action="/courses/wishlist/<%= course._id %>?_method=PUT" method="POST">
-                            <button type="submit"><i class="fa fa-solid fa-heart"></i></button>
-                        </form>
-                        <form style="height: 5px; margin-bottom: 15px;" action="/courses/cart/<%= course._id %>"
-                            method="POST">
-                            <button type="submit"><i class="fa fa-solid fa-cart-arrow-down"></i></button>
-                        </form>
-                        <!-- <a href="/courses/cart/<%= course._id %>"><i class="fa fa-solid fa-cart-arrow-down"></i></a> -->
-                        <a href="/courses/show/<%= course._id %> "><button>View Course</button></a>
+                        <% if((!isAdmin && !isInstructor && !user.courses.includes(course._id))){ %>
+                            <form style="height: 5px; margin-bottom: 15px;"
+                                action="/courses/wishlist/<%= course._id %>?_method=PUT" method="POST">
+                                <button type="submit"><i class="fa fa-solid fa-heart"></i></button>
+                            </form>
+                            <form style="height: 5px; margin-bottom: 15px;" action="/courses/cart/<%= course._id %>"
+                                method="POST">
+                                <button type="submit"><i class="fa fa-solid fa-cart-arrow-down"></i></button>
+                            </form>
+                            <% } %>
+                                <!-- <a href="/courses/cart/<%= course._id %>"><i class="fa fa-solid fa-cart-arrow-down"></i></a> -->
+                                <a href="/courses/show/<%= course._id %> "><button>View Course</button></a>
                     </div>
                 </div>
                 <% }); %>

@@ -1,0 +1,51 @@
+<% layout("layouts/boilerplate") %>
+    <script src="https://kit.fontawesome.com/62a2a279f8.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/stylesheets/coursesIndex.css">
+    <section>
+        <div class="courses-nav">
+            <div>
+                <a href="/"><img class="logo" src="/svgs/logo.svg" alt=""></a>
+            </div>
+            <div>
+                <ul class="nav-links">
+                    <% if(currentUser){ %>
+                        <li><a href="/logout">Logout</a></li>
+                        <li><a href="/profile/<%= currentUser %>">Profile</a></li>
+                        <% }else{ %>
+                            <li><a href="/login">Login</a></li>
+                            <li><a href="/register">Register</a></li>
+                            <% } %>
+                </ul>
+            </div>
+        </div>
+        <div class="sidebar">
+            <h1>Solved Quizzes</h1>
+            <form action="/courses" method="POST" id="courseSearch">
+                <input type="search" name="searched" id="searchInput" placeholder="Subject/teacher name">
+                <h2>Filter by subject</h2>
+                <button>Subject</button>
+            </form>
+        </div>
+        <div class="course-list">
+            <% quizzes.forEach(quiz=> { %>
+                <div class="course-card">
+                    <img src="/images/teacherimg.jpg" alt="">
+                    <h3>
+                        <%= quiz.course.name %>
+                    </h3>
+                    <h5>
+                        <%= quiz.instructor.fullname %>
+                    </h5>
+                    <div class="card-price">
+                        <p>
+                            course.price
+                        </p>
+                        <a href="/quizzes/solved/<%= quiz._id %>"><button>View Answer</button></a>
+                    </div>
+                </div>
+                <% }); %>
+        </div>
+    </section>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="/javascripts/coursesIndex.js"></script>

@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const User = require("./user");
+const courseReview = require("./courseReview");
+const oAuthUser = require("./oAuthUser");
 
 const ImageSchema = new Schema({
   url: String,
@@ -43,14 +46,24 @@ const CourseSchema = new Schema({
   //   ],
 });
 
-// CourseSchema.post("findOneAndDelete", async (doc) => {
-//   if (doc) {
-//     await Review.deleteMany({
-//       _id: {
-//         $in: doc.reviews,
-//       },
-//     });
-//   }
-// });
+CourseSchema.post("findOneAndDelete", async (doc) => {
+  if (doc) {
+    await courseReview.deleteMany({
+      course: doc._id,
+    });
+    await User.updateMany(
+      {},
+      {
+        $pull: { courses: doc._id },
+      }
+    );
+    await oAuthUser.updateMany(
+      {},
+      {
+        $pull: { courses: doc._id },
+      }
+    );
+  }
+});
 
 module.exports = mongoose.model("Course", CourseSchema);

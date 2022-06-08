@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const courseReview = require("./courseReview");
 // const passportLocalMongoose = require("passport-local-mongoose");
 // const bcrypt = require("bcrypt");
 
@@ -54,11 +55,22 @@ const OAuthSchema = new Schema({
     },
   ],
   courses: [{ type: Schema.Types.ObjectId, ref: "Course" }],
+  courseReviews: [{ type: Schema.Types.ObjectId, ref: "CourseReview" }],
 });
 
 // UserSchema.pre("save", async function () {
 //   const salt = await bcrypt.genSalt(12);
 //   this.password = await bcrypt.hash(this.password, salt);
 // });
+
+OAuthSchema.post("findOneAndDelete", async (doc) => {
+  if (doc) {
+    await courseReview.deleteMany({
+      _id: {
+        $in: doc.courseReviews,
+      },
+    });
+  }
+});
 
 module.exports = mongoose.model("OAuth", OAuthSchema);

@@ -6,6 +6,8 @@ const Question = require("../models/question");
 const Answer = require("../models/answer");
 const Quiz = require("../models/quiz");
 const QuizResponse = require("../models/quizResponses");
+const Instructor = require("../models/instructor");
+const Admin = require("../models/admin");
 const ExpressError = require("../utils/ExpressError");
 const bcrypt = require("bcrypt");
 const { sendEmail } = require("../utils/sendMail");
@@ -316,7 +318,38 @@ module.exports.addAnswer = async (req, res) => {
 };
 
 module.exports.renderQuizzes = async (req, res) => {
-  const quizzes = await Quiz.find({})
+  const currentUser = res.locals.currentUser;
+  let user = await User.findById(currentUser);
+  let responses = await QuizResponse.find({ student: currentUser });
+  const quizzesTaken = [];
+  let toBeFound = {};
+  if (user) {
+    responses.forEach((response) => {
+      quizzesTaken.push(response.quiz);
+    });
+    toBeFound = { _id: { $nin: quizzesTaken }, course: { $in: user.courses } };
+  }
+  if (!user) {
+    responses = await QuizResponse.find({ studentOAuth: currentUser });
+    responses.forEach((response) => {
+      quizzesTaken.push(response.quiz);
+    });
+    user = await oAuthUser.findById(currentUser);
+    if (user)
+      toBeFound = {
+        _id: { $nin: quizzesTaken },
+        course: { $in: user.courses },
+      };
+  }
+  if (!user) {
+    user = await Instructor.findById(currentUser);
+    if (user) toBeFound = { instrucotr: user._id };
+  }
+  if (!user) {
+    user = await Admin.findById(currentUser);
+    if (user) toBeFound = {};
+  }
+  const quizzes = await Quiz.find(toBeFound)
     .populate({
       path: "instructor",
       model: "Instructor",
@@ -327,7 +360,22 @@ module.exports.renderQuizzes = async (req, res) => {
       model: "Course",
       select: "name",
     });
-  res.render("users/quizzesIndex", { quizzes });
+  if (req.session.isInstructor) {
+    const isInstructor = req.session.isInstructor;
+    const isAdmin = false;
+    res.render("users/quizzesIndex", { quizzes, isAdmin, isInstructor });
+  } else if (req.session.isAdmin) {
+    const isAdmin = req.session.isAdmin;
+    const isInstructor = false;
+    res.render("users/quizzesIndex", { quizzes, isAdmin, isInstructor });
+  } else if (req.session.user_id) {
+    const isAdmin = false;
+    const isInstructor = false;
+    res.render("users/quizzesIndex", { quizzes, isAdmin, isInstructor });
+  } else {
+    req.flash("error", "You must be logged in to view this page");
+    res.redirect("/");
+  }
 };
 
 module.exports.renderQuizPage = async (req, res) => {
@@ -360,9 +408,106 @@ module.exports.takeQuiz = async (req, res) => {
     }
     newResponse.finalGrade = marks;
   });
-  console.log(marks);
+  const currentUser = req.session.user_id;
+  let user = await User.findById(currentUser);
+  if (user) {
+    newResponse.student = currentUser;
+  }
+  if (!user) {
+    user = await oAuthUser.findById(currentUser);
+    if (user) {
+      newResponse.studentOAuth = currentUser;
+    }
+  }
   await newResponse.save();
   // console.log(correctAnswersArr);
   // console.log(quiz.questions);
   res.redirect(`/quiz/${Id}`);
+};
+
+module.exports.renderSolvedQuizzes = async (req, res) => {
+  const currentUser = res.locals.currentUser;
+  let user = await User.findById(currentUser);
+  let responses = await QuizResponse.find({ student: currentUser });
+  let toBeFound = {};
+  const quizzesTaken = [];
+  if (user) {
+    responses.forEach((response) => {
+      quizzesTaken.push(response.quiz);
+    });
+    toBeFound = { _id: { $in: quizzesTaken }, course: { $in: user.courses } };
+  }
+  if (!user) {
+    user = await oAuthUser.findById(currentUser);
+    if (user)
+      responses = await QuizResponse.find({ studentOAuth: currentUser });
+    responses.forEach((response) => {
+      quizzesTaken.push(response.quiz);
+    });
+    toBeFound = {
+      _id: { $in: quizzesTaken },
+      course: { $in: user.courses },
+    };
+  }
+  if (!user) {
+    user = await Instructor.findById(currentUser);
+    if (user) toBeFound = { instrucotr: user._id };
+  }
+  if (!user) {
+    user = await Admin.findById(currentUser);
+    if (user) toBeFound = {};
+  }
+  const quizzes = await Quiz.find(toBeFound)
+    .populate({
+      path: "instructor",
+      model: "Instructor",
+      select: "fullname",
+    })
+    .populate({
+      path: "course",
+      model: "Course",
+      select: "name",
+    });
+  if (req.session.isInstructor) {
+    const isInstructor = req.session.isInstructor;
+    const isAdmin = false;
+    res.render("users/solvedQuizzes", { quizzes, isAdmin, isInstructor });
+  } else if (req.session.isAdmin) {
+    const isAdmin = req.session.isAdmin;
+    const isInstructor = false;
+    res.render("users/solvedQuizzes", { quizzes, isAdmin, isInstructor });
+  } else if (req.session.user_id) {
+    const isAdmin = false;
+    const isInstructor = false;
+    res.render("users/solvedQuizzes", { quizzes, isAdmin, isInstructor });
+  } else {
+    req.flash("error", "You must be logged in to view this page");
+    res.redirect("/");
+  }
+};
+
+module.exports.renderQuizAnswers = async (req, res) => {
+  const { Id } = req.params;
+  const currentUser = res.locals.currentUser;
+  let user = await User.findById(currentUser);
+  let toBeFound = {};
+  if (user) {
+    toBeFound = { quiz: Id, student: currentUser };
+  }
+  if (!user) {
+    user = await oAuthUser.findById(currentUser);
+    if (user) {
+      toBeFound = { quiz: Id, studentOAuth: currentUser };
+    }
+  }
+  const quiz = await Quiz.findById(Id).populate("questions");
+  const quizResponse = await QuizResponse.find(toBeFound);
+  const answers = quizResponse[0].submittedAnswers;
+  console.log(answers);
+  res.render("users/solvedQuiz", { quiz, answers });
+};
+
+module.exports.renderSupportTickets = async (req, res) => {
+  const tickets = [];
+  res.render("users/supportTickets", { tickets });
 };
