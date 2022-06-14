@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    row-gap: 1em;
+    padding: 0 5em;
+
+}
+
+.navbar {
+
+
+    grid-column: 1/13;
+
+    grid-row: auto;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+ul {
+    list-style-type: none;
+    grid-column: 10/12;
+    display: flex;
+    align-self: center;
+    justify-content: flex-start;
+}
+
+ul li {
+    margin-right: 3em;
+}
+
+.navbar>a {
+    grid-column: 2/3;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #407BFF;
+    font-family: 'Cabin', sans-serif;
+    font-weight: 500;
+}
+.login-card {
+    grid-column: 1/5;
+    box-shadow: 0px 0px 30px -10px;
+    border-radius: 15px;
+    padding: 3em;
+    /* width: fit-content; */
+    height: fit-content;
+}
+.login-card-2 {
+    grid-column: 7/12;
+    box-shadow: 0px 0px 30px -10px;
+    border-radius: 15px;
+    padding: 2em 0;
+    /* width: fit-content; */
+    height: 66vh;
+    overflow-y: auto;
+}
+
+.main-flex {
+    display: flex;
+    margin-left: 1em;
+    align-items: center;
+}
+.main-flex img {
+    margin-right: 1em;
+}
+
+.login-image {
+    width: 50%;
+}
+h2 {
+    margin-bottom: 1em;
+}
+
+input {
+    width: 100%;
+    border: 1px rgba(0, 0, 0, 0.2) solid;
+    border-radius: 10px;
+    padding: 1em;
+}
+
+label {
+    display: block; 
+    margin: 1em 0;
+}
+
+
+
+form button {
+    width: 100%;
+    border: none;
+    background-color: #4E47ED;
+    color: white;
+    padding: 1em 0;
+    border-radius: 10px;
+    margin-top: 1em;
+    font-size: 16px;
+}
+
+
+textarea {
+    resize: none;
+    width: 100%;
+    border: 1px rgb(78, 71, 237, 0.5) solid;
+    border-radius: 15px;
+    /* margin-top: 1em; */
+    padding: 1em;
+    outline: none;
+}
+
+#reply {
+    padding: 1em 2em;
+    border-bottom: 1px rgb(78, 71, 237, 0.3) solid;
+    margin-bottom: 1em;
+}
+
+
+
+::-webkit-scrollbar {
+    width: 27px;
+}
+
+
+::-webkit-scrollbar-track {
+    background: white;
+    border-radius: 15px;
+
+}
+
+
+::-webkit-scrollbar-thumb {
+    background: #4E47ED;
+    border-radius: 15px;
+    border: 10px white solid;
+
+
+}

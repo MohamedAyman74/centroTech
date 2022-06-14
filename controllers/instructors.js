@@ -54,3 +54,7 @@ module.exports.login = async (req, res) => {
     res.redirect("/instructor/login");
   }
 };
+
+module.exports.renderInstructorProfile = async (req, res) => {
+  res.render("instructors/profile");
+};

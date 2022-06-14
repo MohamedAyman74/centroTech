@@ -17,7 +17,19 @@ module.exports.index = async (req, res) => {
   if (req.session.courses) {
     const courses = req.session.courses;
     delete req.session.courses;
-    res.render("courses/index", { courses });
+    if (req.session.isInstructor) {
+      const isInstructor = req.session.isInstructor;
+      const isAdmin = false;
+      res.render("courses/index", { courses, user, isInstructor, isAdmin });
+    } else if (req.session.isAdmin) {
+      const isAdmin = req.session.isAdmin;
+      const isInstructor = false;
+      res.render("courses/index", { courses, user, isInstructor, isAdmin });
+    } else if (req.session.user_id) {
+      const isInstructor = false;
+      const isAdmin = false;
+      res.render("courses/index", { courses, user, isInstructor, isAdmin });
+    }
   } else {
     const courses = await Course.find({}).populate({
       path: "instructor",
@@ -73,8 +85,30 @@ module.exports.searchCourse = async (req, res) => {
   const { searched } = req.body;
   const courses = await Course.find({
     $or: [{ name: { $regex: searched } }, { subject: { $regex: searched } }],
+  }).populate({
+    path: "instructor",
+    model: "Instructor",
+    select: { fullname: 1, _id: 1 },
   });
-  res.json(courses);
+  let user = await User.findById(res.locals.currentUser);
+  if (!user) {
+    user = await OAuthUser.findById(res.locals.currentUser);
+  }
+  if (req.session.isInstructor) {
+    const isInstructor = req.session.isInstructor;
+    const isAdmin = false;
+    res.json({ courses, user, isInstructor, isAdmin });
+  } else if (req.session.isAdmin) {
+    const isAdmin = req.session.isAdmin;
+    const isInstructor = false;
+    res.json({ courses, user, isInstructor, isAdmin });
+  } else if (req.session.user_id) {
+    const isInstructor = false;
+    const isAdmin = false;
+    // res.render("courses/index", { courses, user, isInstructor, isAdmin });
+    res.json({ courses, user, isInstructor, isAdmin });
+    // res.send();
+  }
 };
 
 module.exports.renderCoursePage = async (req, res) => {
@@ -117,6 +151,10 @@ module.exports.homePageSearch = async (req, res) => {
   const { search } = req.body;
   const courses = await Course.find({
     $or: [{ name: { $regex: search } }, { subject: { $regex: search } }],
+  }).populate({
+    path: "instructor",
+    model: "Instructor",
+    select: { fullname: 1, _id: 1 },
   });
   req.session.courses = courses;
   // console.log(req.session.courses);

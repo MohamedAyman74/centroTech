@@ -13,4 +13,8 @@ router
   .get(instructors.renderLogin)
   .post(catchAsync(instructors.login));
 
+router
+  .route("/profile/:Id")
+  .get(catchAsync(instructors.renderInstructorProfile));
+
 module.exports = router;

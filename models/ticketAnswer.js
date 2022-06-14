@@ -1,20 +1,24 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const AnswerSchema = new Schema({
+const TicketAnswerSchema = new Schema({
   reply: {
     type: String,
     required: true,
   },
-  postedBy: {
+  replyBy: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },
-  postedByOAuth: {
+  replyByOAuth: {
     type: Schema.Types.ObjectId,
     ref: "OAuth",
   },
-  postedByAdmin: {
+  replyByInstructor: {
+    type: Schema.Types.ObjectId,
+    ref: "Instructor",
+  },
+  replyByAdmin: {
     type: Schema.Types.ObjectId,
     ref: "Admin",
   },
@@ -22,9 +26,9 @@ const AnswerSchema = new Schema({
     type: String,
     required: true,
   },
-  question: {
+  ticket: {
     type: Schema.Types.ObjectId,
-    ref: "Question",
+    ref: "Ticket",
   },
 });
 
@@ -38,4 +42,4 @@ const AnswerSchema = new Schema({
 //   }
 // });
 
-module.exports = mongoose.model("Answer", AnswerSchema);
+module.exports = mongoose.model("TicketAnswer", TicketAnswerSchema);

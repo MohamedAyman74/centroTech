@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const QuestionSchema = new Schema({
+const TicketSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -10,13 +10,17 @@ const QuestionSchema = new Schema({
     type: String,
     required: true,
   },
-  askedBy: {
+  sentBy: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },
-  askedByOAuth: {
+  sentByOAuth: {
     type: Schema.Types.ObjectId,
     ref: "OAuth",
+  },
+  sentByInstructor: {
+    type: Schema.Types.ObjectId,
+    ref: "Instructor",
   },
   date: {
     type: String,
@@ -41,4 +45,4 @@ const QuestionSchema = new Schema({
 //   }
 // });
 
-module.exports = mongoose.model("Question", QuestionSchema);
+module.exports = mongoose.model("Ticket", TicketSchema);

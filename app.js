@@ -16,11 +16,18 @@ const bcrypt = require("bcrypt");
 const User = require("./models/user");
 const OAuth = require("./models/oAuthUser");
 
+//Courses Model
+const Course = require("./models/course");
+
+// Instructor Model
+const Instructor = require("./models/instructor");
+
 // ROUTES
 const userRoutes = require("./routes/users");
 const courseRoutes = require("./routes/courses");
 const adminRoutes = require("./routes/admins");
 const instructorRoutes = require("./routes/instructors");
+const oAuthUser = require("./models/oAuthUser");
 
 mongoose.connect("mongodb://localhost:27017/centroTech", {
   useNewUrlParser: true,
@@ -212,8 +219,17 @@ app.use("/instructor", instructorRoutes);
 
 // app.get("/auth/google/callback", passport.authenticate("google"));
 
-app.get("/", (req, res) => {
-  res.render("home");
+app.get("/", async (req, res) => {
+  let studentsCount = 0;
+  const localUsers = await User.find({});
+  studentsCount += localUsers.length;
+  const onlineAuthUsers = await OAuth.find({});
+  studentsCount += onlineAuthUsers.length;
+  const courses = await Course.find({});
+  const coursesCount = courses.length;
+  const instructors = await Instructor.find({});
+  const instructorsCount = instructors.length;
+  res.render("home", { studentsCount, coursesCount, instructorsCount });
 });
 
 app.get("*", (req, res) => {

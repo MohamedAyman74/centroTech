@@ -8,6 +8,8 @@ const Quiz = require("../models/quiz");
 const QuizResponse = require("../models/quizResponses");
 const Instructor = require("../models/instructor");
 const Admin = require("../models/admin");
+const Ticket = require("../models/supportTicket");
+const TicketAnswer = require("../models/ticketAnswer");
 const ExpressError = require("../utils/ExpressError");
 const bcrypt = require("bcrypt");
 const { sendEmail } = require("../utils/sendMail");
@@ -508,6 +510,115 @@ module.exports.renderQuizAnswers = async (req, res) => {
 };
 
 module.exports.renderSupportTickets = async (req, res) => {
-  const tickets = [];
+  const currentUser = res.locals.currentUser;
+  let user = await User.findById(currentUser);
+  let toBeFound = {};
+  if (user) {
+    toBeFound = { sentBy: currentUser };
+  }
+  if (!user) {
+    user = await oAuthUser.findById(currentUser);
+    if (user) toBeFound = { sentByOAuth: currentUser };
+  }
+  if (!user) {
+    user = await Instructor.findById(currentUser);
+    if (user) toBeFound = { sentByInstructor: currentUser };
+  }
+  if (!user) {
+    user = await Admin.findById(currentUser);
+    if (user) toBeFound = {};
+  }
+  const tickets = await Ticket.find(toBeFound);
   res.render("users/supportTickets", { tickets });
+};
+
+module.exports.sendSupportTicket = async (req, res) => {
+  const { title, details } = req.body;
+  const date = new Date().toLocaleString();
+  const currentUser = res.locals.currentUser;
+
+  const ticket = new Ticket({
+    title,
+    details,
+    date,
+  });
+
+  let searchUser = await User.findById(currentUser);
+  if (searchUser) {
+    ticket.sentBy = currentUser;
+  }
+  if (!searchUser) {
+    searchUser = await oAuthUser.findById(currentUser);
+    ticket.sentByOAuth = currentUser;
+  }
+  if (!searchUser) {
+    searchUser = await Instructor.findById(currentUser);
+    ticket.sentByInstructor = currentUser;
+  }
+  await ticket.save();
+  res.redirect("/support-tickets");
+};
+
+module.exports.renderSupportTicket = async (req, res) => {
+  const { Id } = req.params;
+  const ticket = await Ticket.findById(Id)
+    .populate("sentBy")
+    .populate("sentByOAuth")
+    .populate("sentByInstructor")
+    .populate({
+      path: "replies",
+      model: "TicketAnswer",
+      select: {
+        reply: 1,
+        replyBy: 1,
+        replyByOAuth: 1,
+        replyByInstructor: 1,
+        replyByAdmin: 1,
+        date: 1,
+      },
+      populate: [
+        { path: "replyBy", model: "User", select: "fullname" },
+        { path: "replyByOAuth", model: "OAuth", select: "fullname" },
+        { path: "replyByInstructor", model: "Instructor", select: "fullname" },
+        { path: "replyByAdmin", model: "Admin", select: "fullname" },
+      ],
+    });
+  res.render("users/ticket", { ticket });
+};
+
+module.exports.sendTicketReply = async (req, res) => {
+  const { Id } = req.params;
+  const { reply } = req.body;
+  const currentUser = res.locals.currentUser;
+  const date = new Date().toLocaleString();
+  const ticket = await Ticket.findById(Id);
+  if (ticket) {
+    const newReply = new TicketAnswer({ reply, date, ticket: Id });
+    let user = await User.findById(currentUser);
+    if (user) {
+      newReply.replyBy = currentUser;
+    }
+    if (!user) {
+      user = await oAuthUser.findById(currentUser);
+      if (user) newReply.replyByOAuth = currentUser;
+    }
+    if (!user) {
+      user = await Instructor.findById(currentUser);
+      if (user) newReply.replyByInstructor = currentUser;
+    }
+    if (!user) {
+      user = await Admin.findById(currentUser);
+      if (user) newReply.replyByAdmin = currentUser;
+    }
+    await newReply.save(async (err, reply) => {
+      const supportTicket = await Ticket.findById(Id);
+      supportTicket.replies.push(reply._id);
+      await supportTicket.save();
+    });
+    req.flash("success", "Your reply has been added");
+    res.redirect(`/support-tickets/${Id}`);
+  } else {
+    req.flash("error", "Something wrong has happened");
+    res.redirect("/support-tickets");
+  }
 };

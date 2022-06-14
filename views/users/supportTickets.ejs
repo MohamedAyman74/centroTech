@@ -50,9 +50,9 @@
     <section class="container">
         <h1>Create Ticket - Contact Admin</h1>
 
-        <% tickets.slice().reverse().forEach(question=> { %>
+        <% tickets.slice().reverse().forEach(ticket=> { %>
             <div class="topic-container">
-                <a href="/questions/<%= ticket._id %>">
+                <a href="/support-tickets/<%= ticket._id %>">
                     <div class="main-flex">
                         <img src="userimg.png" alt="">
                         <div>
@@ -76,64 +76,16 @@
                 </a>
             </div>
             <% }); %>
-                <!-- <div class="topic-container">
-            <div class="main-flex">
-                <img src="userimg.png" alt="">
-                <div>
-                    <h4>How to suicide without pain</h4>
-                    <p id="author">By ay</p>
-                </div>
-                <p id="time">21:35</p>
-            </div>
-
-        </div>
-        <div class="topic-container">
-            <div class="main-flex">
-                <img src="userimg.png" alt="">
-                <div>
-                    <h4>How to suicide without pain</h4>
-                    <p id="author">By ay</p>
-                </div>
-                <p id="time">21:35</p>
-            </div>
-
-        </div> -->
-                <button id="new-topic">New Topic</button>
+                <button id="new-topic">New Ticket</button>
 
                 <div class="popup">
-                    <h1>Ask A Question</h1>
-                    <form action="/questions" method="POST">
-                        <!-- <input type="text" placeholder="Course name" name="course[name]"> -->
-                        <!-- <input type="text" placeholder="Course subject" name="course[subject]"> -->
-                        <!-- <input type="text" placeholder="Instructor E-mail" name="course[email]"> -->
-                        <!-- <input type="text" placeholder="Teacher name"> -->
-                        <!-- <input type="number" placeholder="Course fees" name="course[price]"> -->
-                        <input type="text" name="title" id="title" placeholder="Enter your question title">
+                    <h1>Open A Ticket</h1>
+                    <form action="/support-tickets" method="POST">
+                        <input type="text" name="title" id="title" placeholder="Enter your ticket title">
                         <textarea name="details" id="details" cols="30" rows="10"
-                            placeholder="Enter your question details"></textarea>
-                        <button id="popup-btn" type="submit">Ask Question</button>
+                            placeholder="Enter your ticket details"></textarea>
+                        <button id="popup-btn" type="submit">Open Ticket</button>
                     </form>
                 </div>
     </section>
-
-    <script>
-        const popupQuerySelector = ".popup"
-        const popup = document.querySelector(popupQuerySelector)
-        const popupBtn = document.querySelector("#new-topic")
-        popupBtn.addEventListener("click", () => {
-            setTimeout(() => {
-                if (!popup.classList.contains("show")) {
-                    // Add class `show` to filterList element
-                    popup.classList.add("show");
-                }
-            }, 150);
-        })
-
-        document.addEventListener("click", (e) => {
-            const isClosest = e.target.closest(popupQuerySelector)
-            console.log(isClosest)
-            if (!isClosest && popup.classList.contains("show")) {
-                popup.classList.remove("show");
-            }
-        })
-    </script>
+    <script src="/javascripts/supportTickets.js"></script>

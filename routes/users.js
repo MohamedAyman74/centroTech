@@ -51,7 +51,15 @@ router
   .get(catchAsync(users.renderQuestions))
   .post(catchAsync(users.addNewQuestion));
 
-router.route("/support-tickets").get(catchAsync(users.renderSupportTickets));
+router
+  .route("/support-tickets")
+  .get(catchAsync(users.renderSupportTickets))
+  .post(catchAsync(users.sendSupportTicket));
+
+router
+  .route("/support-tickets/:Id")
+  .get(catchAsync(users.renderSupportTicket))
+  .post(catchAsync(users.sendTicketReply));
 
 router
   .route("/questions/:Id")
