@@ -7,7 +7,10 @@
     font-family: 'Poppins', sans-serif;
 }
 
-
+.nav-container {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+}
 .container {
     max-width: 1440px;
     margin: 0 auto;
@@ -15,13 +18,14 @@
     grid-template-columns: repeat(12, 1fr);
     row-gap: 1em;
     padding: 0 5em;
+    margin-top: 4em;
 
 }
 
 .navbar {
 
 
-    grid-column: 1/13;
+    grid-column: 2/12;
 
     grid-row: auto;
     display: flex;
@@ -148,3 +152,53 @@ ul li {
 #delete-div img {
     cursor: pointer;
 }
+
+@media(max-width: 950px) {
+    .cart-headers h1 {
+        font-size: 20px;
+    }
+}
+@media (max-width: 700px) {
+    #first-row h1 {
+      font-size: 20px;
+    }
+    #first-row button {
+      padding: 0.8em 3em;
+    }
+    .cart-headers h1 {
+      font-size: 18px;
+    }
+    #total h1 {
+      font-size: 20px;
+    }
+    #buttons button {
+        padding: 0.8em 1.2em;
+    }
+  }
+  
+  @media (max-width: 560px) {
+    #first-row h1 {
+      font-size: 16px;
+    }
+    #first-row button {
+      padding: 0.5em 2em;
+    }
+    .cart-headers h1 {
+      font-size: 16px;
+    }
+    #total h1 {
+      font-size: 16px;
+    } 
+    #buttons button {
+      padding: 0.7em 1em;
+    }
+    .container {
+      padding: 0 4em;
+    }
+  }
+  
+  @media (max-width: 420px) {
+    .container {
+      padding: 0 2em;
+    }
+  }

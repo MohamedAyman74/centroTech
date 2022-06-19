@@ -186,3 +186,41 @@ form button {
         padding: 0.5em 0;
     }
 }
+
+@media (max-width: 499px) {
+    h2 {
+        font-size: 24px;
+    }
+    .forgot-flex a {
+        font-size: 12px;
+        margin-left: 0;
+    }
+    label {
+        font-size: 12px;
+    }
+    .forgot-flex {
+        margin-bottom: 0.5em;
+
+    }
+    .forgot-flex label {
+        margin-bottom: 0;
+    }
+    #email-div label {
+        margin-bottom: 0.5em;
+    }
+
+    .checkbox-div label {
+        margin-bottom: 0;
+    }
+
+    form button {
+        font-size: 12px;
+    }
+    #gmail {
+        font-size: 12px;
+    }
+
+    .signup-redirect p, a {
+        font-size: 12px;
+    }
+}

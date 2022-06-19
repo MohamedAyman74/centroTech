@@ -1,6 +1,8 @@
 <link rel="stylesheet" href="/stylesheets/answers.css">
 <% layout("layouts/boilerplate") %>
+
     <section class="container">
+        <button id="lock">Lock Topic</button>
         <div class="main-flex">
             <img src="/images/userimg.png" alt="">
             <div>
@@ -46,9 +48,14 @@
                 <%= answer.reply %>
             </p>
             <% }); %>
-
+        
                 <form action="/questions/<%= question._id %>" method="POST">
                     <textarea name="reply" id="" rows="10"></textarea>
                     <button type="submit">Reply</button>
                 </form>
+
+
+ 
+               
+                
     </section>

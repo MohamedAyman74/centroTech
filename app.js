@@ -100,6 +100,25 @@ passport.use(
   )
 );
 
+passport.use(
+  "instructor-local",
+  new LocalStrategy(
+    { usernameField: "email", passwordField: "password" },
+    async (email, password, done) => {
+      try {
+        const instructor = await Instructor.findOne({ email });
+        if (!instructor) {
+          // console.log(user);
+          return done(null, false, { message: "Wrong username or password" });
+        }
+        return done(null, instructor);
+      } catch (e) {
+        done(e);
+      }
+    }
+  )
+);
+
 //GOOGLE LOGIN PASSPORT
 const googleConfig = {
   clientID: process.env.GOOGLE_CLIENT_ID,
@@ -149,16 +168,29 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(async (user, done) => {
-  const localUser = await User.findById(user);
-  if (!localUser) {
-    // console.log(user);
-    const oAuthUser = await OAuth.findById(user);
-    // console.log(oAuthUser);
-    done(null, oAuthUser);
-  } else {
-    // console.log(localUser);
-    done(null, localUser);
+  let loggedUser = await User.findById(user);
+  if (loggedUser) {
+    done(null, loggedUser);
   }
+  if (!loggedUser) {
+    loggedUser = await OAuth.findById(user);
+    if (loggedUser) {
+      done(null, loggedUser);
+    }
+  }
+  if (!loggedUser) {
+    loggedUser = await Instructor.findById(user);
+    done(null, loggedUser);
+  }
+  // if (!localUser) {
+  // console.log(user);
+  // const oAuthUser = await OAuth.findById(user);
+  // console.log(oAuthUser);
+  // done(null, oAuthUser);
+  // } else {
+  // console.log(localUser);
+  // done(null, localUser);
+  // }
 });
 
 //ITEMS WITH ACCESS TO IN EACH PAGE
@@ -167,6 +199,9 @@ app.use((req, res, next) => {
   res.locals.currentUser = req.session.user_id;
   if (!res.locals.currentUser) {
     res.locals.currentUser = req.session.instructor_id;
+    if (res.locals.currentUser) {
+      res.locals.loggedInstructor = true;
+    }
   }
   if (!res.locals.currentUser) {
     res.locals.currentUser = req.session.admin_id;

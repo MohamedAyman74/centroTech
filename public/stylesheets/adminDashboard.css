@@ -48,7 +48,7 @@ a {
     text-decoration: none;
 }
 
-section div {
+.dashboard div {
     width: 100%;
     height: 20vh;
     /* background-color: #4e47ed; */
@@ -66,7 +66,7 @@ section div {
     transition: ease-in-out 0.2s;
 }
 
-section div:hover {
+.dashboard div:hover {
     transform: scale(0.9);
     background-color: #4e47ed;
     color: white;

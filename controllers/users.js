@@ -90,6 +90,10 @@ module.exports.login = async (req, res) => {
 
 module.exports.logout = (req, res) => {
   req.session.user_id = null;
+  req.session.instructor_id = null;
+  req.session.admin_id = null;
+  req.session.quiz = null;
+  req.session.cart = null;
   req.session.destroy();
   // req.flash("success", "Successfully logged you out, goodbye!");
   res.redirect("/");
@@ -160,19 +164,38 @@ module.exports.resetPassword = async (req, res) => {
 module.exports.profileRender = async (req, res) => {
   const { id } = req.params;
   let user = await User.findById(id).select("-password");
+  if (user) {
+    const isInstructor = false;
+    res.render("users/profile", { user, isInstructor });
+  }
   if (!user) {
     user = await oAuthUser.findById(id);
+    if (user) {
+      const isInstructor = false;
+      res.render("users/profile", { user, isInstructor });
+    }
   }
-  console.log(user);
-  res.render("users/profile", { user });
+  if (req.session.instructor_id) {
+    if (!user) {
+      user = await Instructor.findById(id);
+      if (user) {
+        const isInstructor = true;
+        res.render("users/profile", { user, isInstructor });
+      }
+    }
+  }
 };
 
 module.exports.updateProfile = async (req, res) => {
   const { id } = req.params;
-  console.log(req.body);
   let user = await User.findByIdAndUpdate(id, req.body, { new: true });
   if (!user) {
     user = await oAuthUser.findByIdAndUpdate(id, req.body, { new: true });
+  }
+  if (req.session.instructor_id) {
+    if (!user) {
+      user = await Instructor.findByIdAndUpdate(id, req.body, { new: true });
+    }
   }
   if (req.file) {
     if (user.image && user.image.filename !== "") {
@@ -267,6 +290,7 @@ module.exports.renderQuestions = async (req, res) => {
 };
 
 module.exports.addNewQuestion = async (req, res) => {
+  const currentUser = res.locals.currentUser;
   const { title, details } = req.body;
   const date = new Date().toLocaleString();
 
@@ -276,11 +300,11 @@ module.exports.addNewQuestion = async (req, res) => {
     date,
   });
 
-  const searchUser = await User.findById(res.locals.currentUser);
+  const searchUser = await User.findById(currentUser);
   if (searchUser) {
-    question.askedBy = res.locals.currentUser;
+    question.askedBy = currentUser;
   } else {
-    question.askedByOAuth = res.locals.currentUser;
+    question.askedByOAuth = currentUser;
   }
   await question.save();
   res.redirect("/questions");
@@ -298,17 +322,18 @@ module.exports.renderAnswers = async (req, res) => {
 };
 
 module.exports.addAnswer = async (req, res) => {
+  const currentUser = res.locals.currentUser;
   const { reply } = req.body;
   const { Id } = req.params;
   const date = new Date().toLocaleString();
   const question = await Question.findById(Id);
   if (question) {
     const answer = new Answer({ reply, date, question: Id });
-    const searchUser = await User.findById(res.locals.currentUser);
+    const searchUser = await User.findById(currentUser);
     if (searchUser) {
-      answer.postedBy = res.locals.currentUser;
+      answer.postedBy = currentUser;
     } else {
-      answer.postedByOAuth = res.locals.currentUser;
+      answer.postedByOAuth = currentUser;
     }
     await answer.save();
     req.flash("success", "Your reply has been added");

@@ -1,60 +1,18 @@
 <% layout("layouts/boilerplate") %>
     <link rel="stylesheet" href="/stylesheets/questions.css">
-    <style>
-        .popup {
-            background-color: white;
-            border: 2px #4e47ed solid;
-            border-radius: 10px;
-            /* display: none; */
-            flex-direction: column;
-            width: 33%;
-            position: absolute;
-            justify-self: center;
-            height: fit-content;
-            text-align: center;
-            display: none;
-        }
-
-        .popup input {
-            display: block;
-            border-radius: 10px;
-            border: 1px #4e47ed solid;
-            width: 70%;
-            margin: 0 auto;
-            margin-bottom: 2em;
-            padding: 1em 1em;
-        }
-
-        .popup h1 {
-            color: #4e47ed;
-            text-align: center;
-            font-size: 40px;
-            margin: 0.5em 0;
-        }
-
-        .popup button {
-            color: white;
-            background-color: #4e47ed;
-            border-radius: 10px;
-            width: 70%;
-            border: none;
-            padding: 1em 0;
-            margin-bottom: 2em;
-            cursor: pointer;
-        }
-
-        .popup.show {
-            display: block;
-        }
-    </style>
-    <section class="container">
+    <div class="top-grid">
+        <div class="top-flex">
         <h1>Questions & Answers</h1>
+        <button id="new-topic">New Topic</button>
+    </div>
+    </div>
 
+    <section class="container">
         <% questions.slice().reverse().forEach(question=> { %>
             <div class="topic-container">
                 <a href="/questions/<%= question._id %>">
                     <div class="main-flex">
-                        <img src="userimg.png" alt="">
+                        <img src="/images/userimg.png" alt="">
                         <div>
                             <h4>
                                 <%= question.title %>
@@ -71,43 +29,24 @@
                         </div>
                         <p id="time">
                             <%= question.date %>
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 30 30" width="30px" height="30px">
+                                <g id="surface21154549">
+                                <path style=" stroke:none;fill-rule:nonzero;fill-opacity:1;" d="M 15 2 C 11.144531 2 8 5.144531 8 9 L 8 11 L 6 11 C 4.894531 11 4 11.894531 4 13 L 4 25 C 4 26.105469 4.894531 27 6 27 L 24 27 C 25.105469 27 26 26.105469 26 25 L 26 13 C 26 11.894531 25.105469 11 24 11 L 22 11 L 22 9 C 22 5.273438 19.035156 2.269531 15.355469 2.074219 C 15.242188 2.027344 15.121094 2.003906 15 2 Z M 15 4 C 17.773438 4 20 6.226562 20 9 L 20 11 L 10 11 L 10 9 C 10 6.226562 12.226562 4 15 4 Z M 15 4 "/>
+                                </g>
+                                </svg>
+                                
                         </p>
+                        
                     </div>
                 </a>
             </div>
             <% }); %>
-                <!-- <div class="topic-container">
-            <div class="main-flex">
-                <img src="userimg.png" alt="">
-                <div>
-                    <h4>How to suicide without pain</h4>
-                    <p id="author">By ay</p>
-                </div>
-                <p id="time">21:35</p>
-            </div>
-
-        </div>
-        <div class="topic-container">
-            <div class="main-flex">
-                <img src="userimg.png" alt="">
-                <div>
-                    <h4>How to suicide without pain</h4>
-                    <p id="author">By ay</p>
-                </div>
-                <p id="time">21:35</p>
-            </div>
-
-        </div> -->
-                <button id="new-topic">New Topic</button>
+            
 
                 <div class="popup">
                     <h1>Ask A Question</h1>
                     <form action="/questions" method="POST">
-                        <!-- <input type="text" placeholder="Course name" name="course[name]"> -->
-                        <!-- <input type="text" placeholder="Course subject" name="course[subject]"> -->
-                        <!-- <input type="text" placeholder="Instructor E-mail" name="course[email]"> -->
-                        <!-- <input type="text" placeholder="Teacher name"> -->
-                        <!-- <input type="number" placeholder="Course fees" name="course[price]"> -->
+    
                         <input type="text" name="title" id="title" placeholder="Enter your question title">
                         <textarea name="details" id="details" cols="30" rows="10"
                             placeholder="Enter your question details"></textarea>

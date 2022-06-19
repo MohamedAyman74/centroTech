@@ -56,5 +56,7 @@ module.exports.login = async (req, res) => {
 };
 
 module.exports.renderInstructorProfile = async (req, res) => {
-  res.render("instructors/profile");
+  const { Id } = req.params;
+  const instructor = await Instructor.findById(Id).populate("ownedCourses");
+  res.render("instructors/profile", { instructor });
 };

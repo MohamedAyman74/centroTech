@@ -5,8 +5,73 @@
     margin: 0;
     box-sizing: border-box;
 }
+.nav-container {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    font-family: 'Poppins', sans-serif;
+   margin-bottom: 2em;
 
+}
 .navbar {
+   grid-column: 2/12;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   position: relative;
+
+}
+
+ul li {
+    list-style: none;
+}
+
+ul {
+    display: flex;
+}
+
+ul li a {
+
+    margin-right: 2em;
+
+}
+
+#profile-img {
+    cursor: pointer;
+}
+
+.popup {
+    position: absolute;
+    right: 0;
+    top: 70%;
+    display: none;
+    flex-direction: column;
+    border: 2px #4e47ed solid;
+    width: 20%;
+    background-color: white;
+}
+
+a {
+    text-decoration: none;
+    color: #4e47ed;
+    font-weight: 500;
+}
+
+.popup a {
+    padding: 1em 2em;
+    transition: ease-in-out 0.2s;
+}
+
+.popup a:hover{
+    background-color: #4e47ed;
+
+    cursor: pointer;
+    color: white;
+}
+
+.show {
+    display: flex;
+}
+/* .navbar {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     margin-bottom: 3em;
@@ -29,13 +94,23 @@ ul li {
     grid-column: 2/3;
 }
 
+ul form li button {
+    background-color: transparent;
+    border: none;
+    color: #407BFF;
+    font-weight: 500;
+    font-family: 'Cabin', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+}
+
 .navbar a {
     text-decoration: none;
     color: #407BFF;
     font-family: 'Cabin', sans-serif;
     font-weight: 500;
 }
-
+ */
 
 
 .home {
@@ -73,6 +148,9 @@ ul li {
     border-radius: 15px;
     width: 70%;
 }
+.hero input:focus {
+    outline-color: #407BFF;
+}
 
 .hero button {
     border: none;
@@ -86,7 +164,7 @@ ul li {
     cursor: pointer;
 }
 
-.hero div {
+.hero form {
     display: flex;
     align-items: center;
     margin-top: 1em;
@@ -115,7 +193,9 @@ ul li {
     flex-direction: row;
     border: 1px rgba(78, 71, 237, 0.2) solid;
     border-radius: 15px;
-    margin: 2em 0;
+    margin-top: 1em;
+    transform: translateY(2em);
+    background-color: white;
 
 
 
@@ -289,7 +369,7 @@ ul li {
     background-color: white;
     border-radius: 15px;
     transition: ease-in-out 0.2s;
-    padding: 0.5em 2em;
+    padding: 1em 2em;
     margin-top: 1em;
 
 }
@@ -534,5 +614,19 @@ ul li {
     .seemore-btn button {
         font-size: 10px;
     }
+    .statistics {
+        transform: translateY(1em)
+    }
+}
 
+@media (max-width: 600px) {
+    .hero {
+        grid-column: 2/8;
+    }
+    .homepic {
+        grid-column: 9/13;
+    }
+    .homepic img {
+        width: 100%;
+    }
 }

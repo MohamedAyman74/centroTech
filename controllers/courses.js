@@ -7,12 +7,13 @@ const QuizQuestion = require("../models/quizQuestion");
 const Quiz = require("../models/quiz");
 
 module.exports.index = async (req, res) => {
-  let user = await User.findById(res.locals.currentUser);
+  const currentUser = res.locals.currentUser;
+  let user = await User.findById(currentUser);
   if (!user) {
-    user = await OAuthUser.findById(res.locals.currentUser);
+    user = await OAuthUser.findById(currentUser);
   }
   if (!user) {
-    user = await Instructor.findById(res.locals.currentUser);
+    user = await Instructor.findById(currentUser);
   }
   if (req.session.courses) {
     const courses = req.session.courses;
@@ -82,6 +83,7 @@ module.exports.addCourse = async (req, res) => {
 };
 
 module.exports.searchCourse = async (req, res) => {
+  const currentUser = res.locals.currentUser;
   const { searched } = req.body;
   const courses = await Course.find({
     $or: [{ name: { $regex: searched } }, { subject: { $regex: searched } }],
@@ -90,9 +92,9 @@ module.exports.searchCourse = async (req, res) => {
     model: "Instructor",
     select: { fullname: 1, _id: 1 },
   });
-  let user = await User.findById(res.locals.currentUser);
+  let user = await User.findById(currentUser);
   if (!user) {
-    user = await OAuthUser.findById(res.locals.currentUser);
+    user = await OAuthUser.findById(currentUser);
   }
   if (req.session.isInstructor) {
     const isInstructor = req.session.isInstructor;
@@ -195,12 +197,13 @@ module.exports.addToCart = async (req, res) => {
 };
 
 module.exports.renderCourseOverview = async (req, res) => {
-  let user = await User.findById(res.locals.currentUser);
+  const currentUser = res.locals.currentUser;
+  let user = await User.findById(currentUser);
   if (!user) {
-    user = await OAuthUser.findById(res.locals.currentUser);
+    user = await OAuthUser.findById(currentUser);
   }
   if (!user) {
-    user = await Instructor.findById(res.locals.currentUser);
+    user = await Instructor.findById(currentUser);
   }
   const { Id } = req.params;
   const course = await Course.findById(Id).populate({

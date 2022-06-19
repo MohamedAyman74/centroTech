@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const passport = require("passport");
 const catchAsync = require("../utils/catchAsync");
 const instructors = require("../controllers/instructors");
 
@@ -11,7 +12,13 @@ router
 router
   .route("/login")
   .get(instructors.renderLogin)
-  .post(catchAsync(instructors.login));
+  .post(
+    passport.authenticate("instructor-local", {
+      failureFlash: true,
+      failureRedirect: "/login",
+    }),
+    catchAsync(instructors.login)
+  );
 
 router
   .route("/profile/:Id")

@@ -40,6 +40,9 @@ const InstructorSchema = new Schema({
     type: Boolean,
     default: true,
   },
+  about: {
+    type: String,
+  },
   ownedCourses: [
     {
       type: Schema.Types.ObjectId,

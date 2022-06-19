@@ -22,14 +22,15 @@
                     libero odio, harum ducimus accusantium unde nemo error adipisci in, consequuntur non! Sit iste
                     voluptatibus eaque?</p>
                 <div class="purchase-div">
-                    <% if((isAdmin || (isInstructor && user._id.equals(course.instructor._id)))){ %>
+                    <% if((isAdmin || (isInstructor && user._id.equals(course.instructor._id))) ||
+                        user.courses.includes(course._id)){ %>
                         <a href="/courses/<%= course._id %>"><button id="purchase">Open
                                 Lectures</button></a>
                         <% } else if(!isInstructor && user.courses.indexOf(course._id) <=0){ %>
                             <form action="/courses/cart/<%= course._id %>" method="POST">
                                 <button type="submit" id="purchase">Purchase</button>
                             </form>
-                            <% } else{}%>
+                            <% } else{} %>
                 </div>
 
             </div>

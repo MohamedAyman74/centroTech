@@ -1,15 +1,60 @@
-<div class="navbar">
-    <!-- lama 7ateet el img gowa a tag dakhalet shemal awy -->
-    <a href="/"><img class="logo" src="/svgs/logo.svg" alt=""></a>
-    <ul class="nav-links">
+<!-- 
+<section class="nav-container">
+    <div class="navbar">
+        <a href="/"><img class="logo" src="/svgs/logo.svg" alt=""></a>
+        <ul class="nav-links">
+            <% if(currentUser){ %>
+                <form action="/logout" method="post">
+                    <li><button>Logout</button></li>
+                </form>
+                <li><a href="/profile/<%= currentUser %>">Profile</a></li>
+                <% }else{ %>
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="/register">Register</a></li>
+                    <% } %>
+        </ul>
+    </div>
+</section> -->
+
+<section class="nav-container">
+    <div class="navbar">
+        <div>
+            <a href="/"><img class="logo" src="/svgs/logo.svg" alt=""></a>
+        </div>
+
+        <div>
+            <ul class="nav-links">
+                <li><a href="/courses">Courses</a></li>
+                <li><a href="/quizzes">Quizzes</a></li>
+            </ul>
+        </div>
+
         <% if(currentUser){ %>
-            <form action="/logout" method="post">
-                <li><button>Logout</button></li>
-            </form>
-            <li><a href="/profile/<%= currentUser %>">Profile</a></li>
-            <% }else{ %>
-                <li><a href="/login">Login</a></li>
-                <li><a href="/register">Register</a></li>
+            <div>
+                <img id="profile-img" src="/images/user.png" alt="">
+            </div>
+            <div class="popup">
+                <a href="/courses/mycourses">My Courses</a>
+                <hr>
+                <a href="/cart">Cart</a>
+                <hr>
+                <a href="/wishlist">Wishlist</a>
+                <hr>
+                <!-- <a href="">Logout</a> -->
+                <form action="/logout" method="POST">
+                    <button>Logout</button>
+                </form>
+            </div>
+            <% }else { %>
+                <div>
+                    <ul class="nav-links">
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/register">Register</a></li>
+                    </ul>
+                </div>
                 <% } %>
-    </ul>
-</div>
+
+    </div>
+</section>
+
+<script src="/javascripts/navbar.js"></script>
