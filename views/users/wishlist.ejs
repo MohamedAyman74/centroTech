@@ -17,21 +17,25 @@
             <% favorites.forEach(favorite=> { %>
                 <div class="cart-data">
                     <div id="delete-div">
-                        <p>
-                            <%= favorite.name %>
-                        </p>
+                        <div style="max-width: 250px; word-wrap: break-word;">
+                            <p>
+                                <%= favorite.name %>
+                            </p>
+                        </div>
                         <form action="/wishlist/delete/<%= favorite._id %>?_method=DELETE" method="POST">
-                            <button><img src="/svgs/closeicon.svg" alt=""></button>
+                            <button id="delete-btn"><i class="fa fa-window-close" aria-hidden="true"></i></button>
                         </form>
-                        <form style="height: 5px; margin-bottom: 15px;" action="/courses/cart/<%= favorite._id %>"
+                        <form action="/courses/cart/<%= favorite._id %>"
                             method="POST">
-                            <button type="submit"><i class="fa fa-solid fa-cart-arrow-down"></i></button>
+                            <button type="submit" id="cart-btn"><i class="fa fa-solid fa-cart-arrow-down"></i></button>
                         </form>
                     </div>
 
-                    <p>
-                        <%= favorite.instructor.fullname %>
-                    </p>
+                    <div style="max-width: 250px; word-wrap: break-word;">
+                        <p style="margin-left: 4em;">
+                            <%= favorite.instructor.fullname %>
+                        </p>
+                    </div>
                     <p>
                         <%= favorite.price %>
                     </p>

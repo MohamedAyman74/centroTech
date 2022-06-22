@@ -19,9 +19,9 @@
                     <p>
                         <%= course.name %>
                     </p>
-                    <form action="/cart/delete/<%= course._id %>" method="POST" style="width: 0px;">
+                    <form action="/cart/delete/<%= course._id %>" method="POST" >
                         <!-- <button type="submit"><i class="fa fa-solid fa-trash-xmark"></i></button> -->
-                        <button type="submit"><i class="fa fa-solid fa-trash"></i></button>
+                        <button type="submit" id="trash-btn"><i class="fa fa-solid fa-trash"></i></button>
                     </form>
                 </div>
 

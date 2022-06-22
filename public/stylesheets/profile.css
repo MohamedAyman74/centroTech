@@ -56,7 +56,6 @@
     position: absolute;
     right: 105%;
     top: -90%;
-    background-color: red;
 }
 
 #img-container img {
@@ -211,7 +210,23 @@ form {
     font-family: sans-serif;
 }
 
+#remove-pic {
+    margin: 0;
+    display: flex;
+    justify-content: flex-start;
+}
+#remove-pic button {
+    background-color: transparent;
+    border: none;
+    color: #4e47ED;
+    font-weight: 500;
+    font-size: 16px;
+}
 
+#remove-pic button:hover {
+    /* text-decoration: underline; */
+    cursor: pointer;
+}
 
 @media (max-width: 1000px) {
     #profile-img {

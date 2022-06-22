@@ -66,6 +66,8 @@ router
   .get(catchAsync(users.renderAnswers))
   .post(catchAsync(users.addAnswer));
 
+router.route("/questions/:Id/lock").post(catchAsync(users.lockQuestion));
+
 router.route("/quizzes").get(catchAsync(users.renderQuizzes));
 
 router.route("/quizzes/solved").get(catchAsync(users.renderSolvedQuizzes));

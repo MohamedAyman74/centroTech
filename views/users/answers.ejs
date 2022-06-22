@@ -2,7 +2,13 @@
 <% layout("layouts/boilerplate") %>
 
     <section class="container">
-        <button id="lock">Lock Topic</button>
+        <form action="/questions/<%= question._id %>/lock" method="POST">
+            <% if(!question.isLocked){ %>
+                <button id="lock">Lock Topic</button>
+                <% } else{ %>
+                    <button id="lock">Unlock Topic</button>
+                    <% } %>
+        </form>
         <div class="main-flex">
             <img src="/images/userimg.png" alt="">
             <div>
@@ -17,7 +23,9 @@
                         <p>
                             <%= question.askedByOAuth.fullname %> - Student
                         </p>
-                        <% } %>
+                        <% } else { %>
+                            <p>Deleted User</p>
+                            <% } %>
             </div>
         </div>
         <p id="reply">
@@ -40,22 +48,24 @@
                             <p>
                                 <%= answer.postedByOAuth.fullname %> - Student
                             </p>
-                            <% } %>
-
+                            <% } else { %>
+                                <p>Deleted User</p>
+                                <% } %>
                 </div>
             </div>
             <p id="reply">
                 <%= answer.reply %>
             </p>
             <% }); %>
-        
-                <form action="/questions/<%= question._id %>" method="POST">
-                    <textarea name="reply" id="" rows="10"></textarea>
-                    <button type="submit">Reply</button>
-                </form>
-
-
- 
-               
-                
+                <% if(!question.isLocked){ %>
+                    <form action="/questions/<%= question._id %>" method="POST">
+                        <textarea name="reply" id="" rows="10"></textarea>
+                        <button type="submit">Reply</button>
+                    </form>
+                    <% } else{ %>
+                        <form>
+                            <textarea name="reply" id="" rows="10" disabled></textarea>
+                            <h4>The topic is locked, you cannot add a reply.</h6>
+                        </form>
+                        <% } %>
     </section>

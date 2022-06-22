@@ -52,7 +52,7 @@ ul li a {
     cursor: pointer;
 }
 
-.popup {
+.nav-popup {
     position: absolute;
     right: 0;
     top: 70%;
@@ -69,22 +69,42 @@ a {
     font-weight: 500;
 }
 
-.popup a {
+.nav-popup a {
     padding: 1em 2em;
     transition: ease-in-out 0.2s;
 }
 
-.popup a:hover{
+.nav-popup a:hover{
     background-color: #4e47ed;
 
     cursor: pointer;
     color: white;
 }
 
-.show {
-    display: flex;
+#logout {
+    background-color: transparent;
+    color: #4e47ed;
+    border: none;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    padding: 1em 2em;
+    width: 100%;
+    text-align: start;
+}
+.nav-popup form:hover {
+    background-color: #4e47ed;
+    cursor: pointer;
 }
 
+.nav-popup form:hover #logout {
+    color: white;
+    cursor: pointer;
+}
+
+.show-nav {
+    display: flex;
+}
 
 .main-flex {
     grid-column: 1/13;

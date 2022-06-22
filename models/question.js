@@ -28,6 +28,7 @@ const QuestionSchema = new Schema({
       ref: "Answer",
     },
   ],
+  isLocked: { type: Boolean, default: false },
 });
 
 // CourseSchema.post("findOneAndDelete", async (doc) => {

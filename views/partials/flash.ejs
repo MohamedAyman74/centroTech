@@ -1,13 +1,42 @@
+<style>
+    * {
+        margin: 0;
+    }
+    #error-flash {
+        color: white;
+        width: 100vw;
+        text-align: center;
+        font-weight: 500;
+        background: rgb(255,0,0);
+background: linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(78,71,237,1) 70%);
+        margin-bottom: 2em;
+        margin-top: -2em;
+        padding: 1em 0;
+    }
+    #success-flash {
+        font-family: 'Poppins', sans-serif;
+        color: white;
+        width: 100vw;
+        text-align: center;
+        font-weight: 500;
+        background: rgb(0,255,0);
+background: linear-gradient(90deg, rgba(0,255,0,1) 0%, rgba(78,71,237,1) 70%);
+        margin-bottom: 2em;
+        margin-top: -2em;
+        padding: 1em 0;
+    }
+</style>
+
 <% if (success && success.length) { %>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div id="success-flash" >
         <%= success %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            
     </div>
     <% } %>
 
         <% if (error && error.length) { %>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div id="error-flash">
                 <%= error %>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              
             </div>
             <% } %>

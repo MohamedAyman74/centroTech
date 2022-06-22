@@ -5,9 +5,10 @@
             <h1>
                 <%= quiz.course.name %>
             </h1>
-            <p>25:38</p>
+            <p id="grade">Quiz total grades is <span>
+                    <%= quiz.totalGrade %>
+                </span> marks</p>
         </div>
-
         <div class="mcq">
             <form action="/quiz/<%= quiz._id %>" method="POST">
                 <% quiz.questions.forEach((question, i)=> { %>

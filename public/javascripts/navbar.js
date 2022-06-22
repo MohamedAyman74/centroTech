@@ -1,6 +1,6 @@
 let profileImg = document.querySelector('#profile-img')
-let popup = document.querySelector('.popup')
+let navPopup = document.querySelector('.nav-popup')
 
 profileImg.addEventListener('click', () => {
-popup.classList.toggle('show')
+navPopup.classList.toggle('show-nav')
 })

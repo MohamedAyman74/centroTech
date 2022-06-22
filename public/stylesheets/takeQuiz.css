@@ -6,36 +6,93 @@
     box-sizing: border-box;
 }
 
-.navbar {
+.nav-container {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    margin-bottom: 3em;
+    font-family: 'Poppins', sans-serif;
+   margin-bottom: 2em;
 
 }
+.navbar {
+   grid-column: 2/12;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   position: relative;
 
-ul {
-    list-style-type: none;
-    grid-column: 10/12;
-    display: flex;
-    align-self: center;
-    justify-content: flex-start;
 }
 
 ul li {
-    margin-right: 3em;
+    list-style: none;
 }
 
-.navbar>a {
-    grid-column: 2/3;
+ul {
+    display: flex;
 }
 
-.navbar a {
+ul li a {
+
+    margin-right: 2em;
+
+}
+
+#profile-img {
+    cursor: pointer;
+}
+
+.nav-popup {
+    position: absolute;
+    right: 0;
+    top: 70%;
+    display: none;
+    flex-direction: column;
+    border: 2px #4e47ed solid;
+    width: 20%;
+    background-color: white;
+}
+
+a {
     text-decoration: none;
-    color: #407BFF;
-    font-family: 'Cabin', sans-serif;
+    color: #4e47ed;
     font-weight: 500;
 }
 
+.nav-popup a {
+    padding: 1em 2em;
+    transition: ease-in-out 0.2s;
+}
+
+.nav-popup a:hover{
+    background-color: #4e47ed;
+
+    cursor: pointer;
+    color: white;
+}
+
+#logout {
+    background-color: transparent;
+    color: #4e47ed;
+    border: none;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    padding: 1em 2em;
+    width: 100%;
+    text-align: start;
+}
+.nav-popup form:hover {
+    background-color: #4e47ed;
+    cursor: pointer;
+}
+
+.nav-popup form:hover #logout {
+    color: white;
+    cursor: pointer;
+}
+
+.show-nav {
+    display: flex;
+}
 section {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -56,6 +113,7 @@ section {
 .mcq {
     grid-row: 2;
     grid-column: 2/12;
+    margin-bottom: 2em;
 }
 
 .mcq p {
@@ -65,4 +123,22 @@ section {
 form {
     margin-top: 0.5em;
     font-size: 18px;
+}
+
+.question {
+    margin-bottom: 1em;
+}
+
+#grade {
+    color: #4e47ed;
+}
+#grade span {
+    font-weight: bold;
+}
+#question-mark {
+
+    color: #4e47ed;
+    font-weight: 500;
+    display: inline-block;
+    margin-left: 1em;
 }

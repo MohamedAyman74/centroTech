@@ -5,13 +5,9 @@
             <h2>Submit ticket reply</h2>
             <form action="/support-tickets/<%= ticket._id %>" method="POST">
                 <div id="email-div">
-                    <!-- <label for="email" id="email-label">Email</label> -->
                     <textarea name="reply" id="" rows="10" placeholder="Type your reply"></textarea>
                 </div>
-
-
                 <button>Submit</button>
-                <!-- <a id="gmail" href="/auth/google" class="btn btn-danger"><span class="fa fa-google"></span> SignIn with Google</a> -->
             </form>
         </div>
         <div class="login-card-2">
@@ -25,19 +21,21 @@
                             </h4>
                             <p id="author">Student - <%= ticket.date %>
                             </p>
-                            <% } if(ticket.sentByOAuth){ %>
+                            <% } else if(ticket.sentByOAuth){ %>
                                 <h4>
                                     <%= ticket.sentByOAuth.fullname %>
                                 </h4>
                                 <p id="author">Student - <%= ticket.date %>
                                 </p>
-                                <% } if(ticket.sentByInstructor){ %>
+                                <% } else if(ticket.sentByInstructor){ %>
                                     <h4>
                                         <%= ticket.sentByInstructor.fullname %>
                                     </h4>
                                     <p id="author">Instructor - <%= ticket.date %>
                                     </p>
-                                    <% } %>
+                                    <% } else{ %>
+                                        <p id="author">Deleted User</p>
+                                        <% } %>
                     </div>
                 </div>
             </div>
@@ -55,25 +53,27 @@
                                 </h4>
                                 <p id="author">Admin - <%= reply.date %>
                                 </p>
-                                <% } if(reply.replyBy){ %>
+                                <% } else if(reply.replyBy){ %>
                                     <h4>
                                         <%= reply.replyBy.fullname %>
                                     </h4>
                                     <p id="author">Student - <%= reply.date %>
                                     </p>
-                                    <% } if(reply.replyByOAuth){ %>
+                                    <% } else if(reply.replyByOAuth){ %>
                                         <h4>
                                             <%= reply.replyByOAuth.fullname %>
                                         </h4>
                                         <p id="author">Student - <%= reply.date %>
                                         </p>
-                                        <% } if(reply.replyByInstructor){ %>
+                                        <% } else if(reply.replyByInstructor){ %>
                                             <h4>
                                                 <%= reply.replyByInstructor.fullname%>
                                             </h4>
                                             <p id="author">Instructor - <%= reply.date %>
                                             </p>
-                                            <% } %>
+                                            <% } else{ %>
+                                                <p id="author">Deleted User</p>
+                                                <% } %>
                         </div>
                     </div>
                 </div>

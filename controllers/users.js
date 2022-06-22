@@ -106,7 +106,10 @@ module.exports.forgotRender = (req, res) => {
 module.exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
   try {
-    const user = await User.findOne({ email });
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await Instructor.findOne({ email });
+    }
     if (!user)
       return res.status(400).send("user with given email doesn't exist");
 
@@ -136,7 +139,10 @@ module.exports.resetRender = (req, res) => {
 module.exports.resetPassword = async (req, res) => {
   try {
     const { userId, tokenId } = req.params;
-    const user = await User.findById(userId);
+    let user = await User.findById(userId);
+    if (!user) {
+      user = await Instructor.findById(userId);
+    }
     if (!user) {
       req.flash("error", "Invalid or expired link.");
       res.redirect(`/password-reset/${userId}/${tokenId}`);
@@ -407,6 +413,15 @@ module.exports.renderQuizzes = async (req, res) => {
 
 module.exports.renderQuizPage = async (req, res) => {
   const { Id } = req.params;
+  const currentUser = req.session.user_id;
+  let user = await User.findById(currentUser);
+  if (!user) {
+    user = await oAuthUser.findById(currentUser);
+  }
+  if (user.quizzes.includes(Id)) {
+    req.flash("error", "You have taken this quiz before");
+    res.redirect("/quizzes");
+  }
   const quiz = await Quiz.findById(Id)
     .populate({
       path: "course",
@@ -414,7 +429,13 @@ module.exports.renderQuizPage = async (req, res) => {
       select: "name",
     })
     .populate("questions");
-  res.render("users/takeQuiz", { quiz });
+  const course = quiz.course._id;
+  if (!user.courses.includes(course)) {
+    req.flash("error", "You should purchase the course first");
+    res.redirect(`/courses/show/${course}`);
+  } else {
+    res.render("users/takeQuiz", { quiz });
+  }
 };
 
 module.exports.takeQuiz = async (req, res) => {
@@ -446,10 +467,12 @@ module.exports.takeQuiz = async (req, res) => {
       newResponse.studentOAuth = currentUser;
     }
   }
+  user.quizzes.push(Id);
+  user.save();
   await newResponse.save();
   // console.log(correctAnswersArr);
   // console.log(quiz.questions);
-  res.redirect(`/quiz/${Id}`);
+  res.redirect(`/quizzes/solved/${Id}`);
 };
 
 module.exports.renderSolvedQuizzes = async (req, res) => {
@@ -528,10 +551,17 @@ module.exports.renderQuizAnswers = async (req, res) => {
     }
   }
   const quiz = await Quiz.findById(Id).populate("questions");
-  const quizResponse = await QuizResponse.find(toBeFound);
-  const answers = quizResponse[0].submittedAnswers;
-  console.log(answers);
-  res.render("users/solvedQuiz", { quiz, answers });
+  const course = quiz.course;
+  if (!user.courses.includes(course)) {
+    req.flash("error", "You should purchase the course first");
+    res.redirect(`/courses/show/${course}`);
+  } else {
+    const quizResponse = await QuizResponse.find(toBeFound);
+    const answers = quizResponse[0].submittedAnswers;
+    const finalGrade = quizResponse[0].finalGrade;
+    console.log(answers);
+    res.render("users/solvedQuiz", { quiz, answers, finalGrade });
+  }
 };
 
 module.exports.renderSupportTickets = async (req, res) => {
@@ -553,7 +583,10 @@ module.exports.renderSupportTickets = async (req, res) => {
     user = await Admin.findById(currentUser);
     if (user) toBeFound = {};
   }
-  const tickets = await Ticket.find(toBeFound);
+  const tickets = await Ticket.find(toBeFound)
+    .populate("sentBy")
+    .populate("sentByOAuth")
+    .populate("sentByInstructor");
   res.render("users/supportTickets", { tickets });
 };
 
@@ -646,4 +679,13 @@ module.exports.sendTicketReply = async (req, res) => {
     req.flash("error", "Something wrong has happened");
     res.redirect("/support-tickets");
   }
+};
+
+module.exports.lockQuestion = async (req, res) => {
+  const { Id } = req.params;
+  const question = await Question.findById(Id);
+  question.isLocked = !question.isLocked;
+  question.save();
+  req.flash("success", "Question has been locked/unlocked successfully.");
+  res.redirect(`/questions/${Id}`);
 };
