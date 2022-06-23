@@ -16,18 +16,20 @@
                 <img id="profile-img" src="/images/user.png" alt="">
             </div>
             <div class="nav-popup">
-                <a href="/profile/<%= currentUser %>">Profile</a>
-                <hr>
-                <a href="/courses/mycourses">My Courses</a>
-                <hr>
-                <a href="/cart">Cart</a>
-                <hr>
-                <a href="/wishlist">Wishlist</a>
-                <hr>
-                <!-- <a href="">Logout</a> -->
-                <form action="/logout" method="POST">
-                    <button id="logout">Logout</button>
-                </form>
+                <% if(!loggedAdmin){ %>
+                    <a href="/profile/<%= currentUser %>">Profile</a>
+                    <hr>
+                    <a href="/courses/mycourses">My Courses</a>
+                    <hr>
+                    <a href="/cart">Cart</a>
+                    <hr>
+                    <a href="/wishlist">Wishlist</a>
+                    <hr>
+                    <% } %>
+                        <!-- <a href="">Logout</a> -->
+                        <form action="/logout" method="POST">
+                            <button id="logout">Logout</button>
+                        </form>
             </div>
             <% }else { %>
                 <div>

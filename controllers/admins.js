@@ -180,4 +180,12 @@ module.exports.loginAdmin = async (req, res) => {
     req.flash("error", "Wrong username or password");
     res.redirect("/admins/login");
   }
+  // const hashed = await bcrypt.hash(password, 10);
+  // const admin = new Admin({
+  //   email,
+  //   fullname: "CentroTech",
+  //   password: hashed,
+  // });
+  // await admin.save();
+  // console.log("done");
 };

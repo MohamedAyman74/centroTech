@@ -1,4 +1,5 @@
 require("dotenv").config();
+
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
@@ -9,7 +10,6 @@ const methodOverride = require("method-override");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const bcrypt = require("bcrypt");
 // require("./config/passport")(passport);
 
 //USER MODEL
@@ -22,12 +22,20 @@ const Course = require("./models/course");
 // Instructor Model
 const Instructor = require("./models/instructor");
 
+//User Model
+const Admin = require("./models/admin");
+
 // ROUTES
 const userRoutes = require("./routes/users");
 const courseRoutes = require("./routes/courses");
 const adminRoutes = require("./routes/admins");
 const instructorRoutes = require("./routes/instructors");
-const oAuthUser = require("./models/oAuthUser");
+
+//Helmet
+const helmet = require("helmet");
+
+//Mongo Injection Prevention -- Sanitization
+const mongoSanitize = require("express-mongo-sanitize");
 
 mongoose.connect("mongodb://localhost:27017/centroTech", {
   useNewUrlParser: true,
@@ -50,13 +58,16 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(mongoSanitize());
 
 const sessionConfig = {
+  name: "session",
   secret: "changetobettersecret",
   resave: false,
   saveUninitialized: true,
   cookie: {
-    // httpOnly: true,
+    httpOnly: true,
+    // secure: true,
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7, //1000 sanya fe 60 d2ee2a, etc
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
@@ -64,6 +75,9 @@ const sessionConfig = {
 
 app.use(session(sessionConfig));
 app.use(flash());
+app.use(
+  helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false })
+);
 
 // PASSPORT CONFIGURATION
 app.use(passport.initialize());
@@ -112,6 +126,25 @@ passport.use(
           return done(null, false, { message: "Wrong username or password" });
         }
         return done(null, instructor);
+      } catch (e) {
+        done(e);
+      }
+    }
+  )
+);
+
+passport.use(
+  "admin-local",
+  new LocalStrategy(
+    { usernameField: "email", passwordField: "password" },
+    async (email, password, done) => {
+      try {
+        const admin = await Admin.findOne({ email });
+        if (!admin) {
+          // console.log(user);
+          return done(null, false, { message: "Wrong username or password" });
+        }
+        return done(null, admin);
       } catch (e) {
         done(e);
       }
@@ -180,7 +213,15 @@ passport.deserializeUser(async (user, done) => {
   }
   if (!loggedUser) {
     loggedUser = await Instructor.findById(user);
-    done(null, loggedUser);
+    if (loggedUser) {
+      done(null, loggedUser);
+    }
+  }
+  if (!loggedUser) {
+    loggedUser = await Admin.findById(user);
+    if (loggedUser) {
+      done(null, loggedUser);
+    }
   }
   // if (!localUser) {
   // console.log(user);
@@ -197,6 +238,8 @@ passport.deserializeUser(async (user, done) => {
 app.use((req, res, next) => {
   res.locals.title = "CentroTech";
   res.locals.currentUser = req.session.user_id;
+  res.locals.loggedAdmin = false;
+  res.locals.loggedInstructor = false;
   if (!res.locals.currentUser) {
     res.locals.currentUser = req.session.instructor_id;
     if (res.locals.currentUser) {
@@ -205,6 +248,9 @@ app.use((req, res, next) => {
   }
   if (!res.locals.currentUser) {
     res.locals.currentUser = req.session.admin_id;
+    if (res.locals.currentUser) {
+      res.locals.loggedAdmin = true;
+    }
   }
   // if (res.locals.currentUser) {
   res.locals.cart = req.session.cart;
@@ -274,7 +320,7 @@ app.get("*", (req, res) => {
 app.use((err, req, res, next) => {
   const { statusCode = "500" } = err;
   if (!err.message) err.message = "Something went wrong!";
-  res.status(statusCode).render("error", { err });
+  if (err) res.status(statusCode).render("error", { err });
 });
 
 app.listen(3000, () => {

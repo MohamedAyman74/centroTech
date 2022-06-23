@@ -2,6 +2,7 @@
     * {
         margin: 0
     }
+
     @import url('https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
 
     .nav-container {
@@ -94,22 +95,26 @@
     .show {
         display: flex;
     }
+
     #error-page {
-    
+
         font-family: 'Poppins', sans-serif;
-       display: flex;
-       flex-direction: column;
-       align-items: center;
-       justify-content: center;
-       height: 40vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 40vh;
 
     }
+
     #error-page h1 {
         color: #4e47ed;
     }
+
     #error-page h2 {
         margin: 2em 0;
     }
+
     #error-page a {
         text-decoration: none;
         color: #4e47ed;
@@ -126,6 +131,7 @@
         <h2>
             <%= err.message %>
         </h2>
-        <a href="">Go back</a>
+        <%= err.stack %>
+            <a href="">Go back</a>
 
     </div>

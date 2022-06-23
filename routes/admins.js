@@ -1,44 +1,53 @@
 const express = require("express");
 const router = express.Router();
+const passport = require("passport");
 const catchAsync = require("../utils/catchAsync");
 const admins = require("../controllers/admins");
 
-router.route("/").get(admins.renderDashboard);
+const { isLoggedIn, isAdmin } = require("../middleware");
+
+router.route("/").get(isAdmin, admins.renderDashboard);
 
 router
   .route("/login")
   .get(admins.renderLogin)
-  .post(catchAsync(admins.loginAdmin));
+  .post(
+    passport.authenticate("admin-local", {
+      failureFlash: true,
+      failureRedirect: "/admins/login",
+    }),
+    catchAsync(admins.loginAdmin)
+  );
 
 router
   .route("/usersmanagement")
-  .get(catchAsync(admins.renderUsersManagement))
-  .post(catchAsync(admins.searchUser));
+  .get(isLoggedIn, isAdmin, catchAsync(admins.renderUsersManagement))
+  .post(isLoggedIn, isAdmin, catchAsync(admins.searchUser));
 
 router
   .route("/usersmanagement/:id")
-  .delete(catchAsync(admins.deleteUser))
-  .put(catchAsync(admins.suspendUser));
+  .delete(isLoggedIn, isAdmin, catchAsync(admins.deleteUser))
+  .put(isLoggedIn, isAdmin, catchAsync(admins.suspendUser));
 
 router
   .route("/appmanagement")
-  .get(catchAsync(admins.renderInstructorsApps))
-  .post(catchAsync(admins.addNewInstructor));
+  .get(isLoggedIn, isAdmin, catchAsync(admins.renderInstructorsApps))
+  .post(isLoggedIn, isAdmin, catchAsync(admins.addNewInstructor));
 
 router
   .route("/appmanagement/accepted")
-  .get(catchAsync(admins.renderAcceptedApplications));
+  .get(isLoggedIn, isAdmin, catchAsync(admins.renderAcceptedApplications));
 
 router
   .route("/appmanagement/rejected")
-  .get(catchAsync(admins.renderRejectedApplications));
+  .get(isLoggedIn, isAdmin, catchAsync(admins.renderRejectedApplications));
 
 router
   .route("/appmanagement/rejected/:Id")
-  .put(catchAsync(admins.rejectApplication));
+  .put(isLoggedIn, isAdmin, catchAsync(admins.rejectApplication));
 
 router
   .route("/appmanagement/delete/:Id")
-  .delete(catchAsync(admins.deleteApplication));
+  .delete(isLoggedIn, isAdmin, catchAsync(admins.deleteApplication));
 
 module.exports = router;

@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const catchAsync = require("../utils/catchAsync");
 const users = require("../controllers/users");
-const { isLoggedIn, isAuthorized } = require("../middleware");
+const { isLoggedIn, isAdmin, isAuthorized } = require("../middleware");
 
 const multer = require("multer");
 const { storage } = require("../cloudinary");
@@ -39,42 +39,50 @@ router
   .get(isLoggedIn, isAuthorized, users.profileRender)
   .put(isLoggedIn, isAuthorized, upload.single("image"), users.updateProfile);
 
-router.route("/wishlist").get(catchAsync(users.renderWishlist));
+router.route("/wishlist").get(isLoggedIn, catchAsync(users.renderWishlist));
 
-router.route("/wishlist/delete/:Id").delete(catchAsync(users.deleteWishlist));
+router
+  .route("/wishlist/delete/:Id")
+  .delete(isLoggedIn, catchAsync(users.deleteWishlist));
 
-router.route("/cart").get(catchAsync(users.renderCart));
-router.route("/cart/delete/:Id").post(users.removeCart);
+router.route("/cart").get(isLoggedIn, catchAsync(users.renderCart));
+router.route("/cart/delete/:Id").post(isLoggedIn, users.removeCart);
 
 router
   .route("/questions")
-  .get(catchAsync(users.renderQuestions))
-  .post(catchAsync(users.addNewQuestion));
+  .get(isLoggedIn, catchAsync(users.renderQuestions))
+  .post(isLoggedIn, catchAsync(users.addNewQuestion));
 
 router
   .route("/support-tickets")
-  .get(catchAsync(users.renderSupportTickets))
-  .post(catchAsync(users.sendSupportTicket));
+  .get(isLoggedIn, catchAsync(users.renderSupportTickets))
+  .post(isLoggedIn, catchAsync(users.sendSupportTicket));
 
 router
   .route("/support-tickets/:Id")
-  .get(catchAsync(users.renderSupportTicket))
-  .post(catchAsync(users.sendTicketReply));
+  .get(isLoggedIn, catchAsync(users.renderSupportTicket))
+  .post(isLoggedIn, catchAsync(users.sendTicketReply));
 
 router
   .route("/questions/:Id")
-  .get(catchAsync(users.renderAnswers))
-  .post(catchAsync(users.addAnswer));
+  .get(isLoggedIn, catchAsync(users.renderAnswers))
+  .post(isLoggedIn, catchAsync(users.addAnswer));
 
-router.route("/questions/:Id/lock").post(catchAsync(users.lockQuestion));
+router
+  .route("/questions/:Id/lock")
+  .post(isLoggedIn, isAdmin, catchAsync(users.lockQuestion));
 
-router.route("/quizzes").get(catchAsync(users.renderQuizzes));
+router.route("/quizzes").get(isLoggedIn, catchAsync(users.renderQuizzes));
 
-router.route("/quizzes/solved").get(catchAsync(users.renderSolvedQuizzes));
-router.route("/quizzes/solved/:Id").get(catchAsync(users.renderQuizAnswers));
+router
+  .route("/quizzes/solved")
+  .get(isLoggedIn, catchAsync(users.renderSolvedQuizzes));
+router
+  .route("/quizzes/solved/:Id")
+  .get(isLoggedIn, catchAsync(users.renderQuizAnswers));
 
 router
   .route("/quiz/:Id")
-  .get(catchAsync(users.renderQuizPage))
-  .post(catchAsync(users.takeQuiz));
+  .get(isLoggedIn, catchAsync(users.renderQuizPage))
+  .post(isLoggedIn, catchAsync(users.takeQuiz));
 module.exports = router;

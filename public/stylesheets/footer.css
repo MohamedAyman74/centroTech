@@ -1,12 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
 
 body {
-  min-height: 100vh;
-  position: relative;
+  min-height: 50vh;
 }
 
 footer {
-  position: absolute;
+  position: relative;
   display: block;
   bottom: 0;
   width: 100%;

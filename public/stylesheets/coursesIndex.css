@@ -14,17 +14,15 @@ section {
 .nav-container {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  font-family: 'Poppins', sans-serif;
- margin-bottom: 2em;
-
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 2em;
 }
 .navbar {
- grid-column: 2/12;
- display: flex;
- justify-content: space-between;
- align-items: center;
- position: relative;
-
+  grid-column: 2/12;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
 }
 
 ul li {
@@ -36,9 +34,7 @@ ul {
 }
 
 ul li a {
-
   margin-right: 2em;
-
 }
 
 #profile-img {
@@ -67,7 +63,7 @@ a {
   transition: ease-in-out 0.2s;
 }
 
-.nav-popup a:hover{
+.nav-popup a:hover {
   background-color: #4e47ed;
 
   cursor: pointer;
@@ -79,7 +75,7 @@ a {
   color: #4e47ed;
   border: none;
   font-size: 16px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 500;
   padding: 1em 2em;
   width: 100%;
@@ -112,48 +108,6 @@ a {
 #search form input:focus {
   outline-color: #4e47ed;
 }
-/* .sidebar {
-
-  background-color: #4e47ed;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 3em;
-  position: fixed;
-  padding: 1em 3em;
-  width: 25%;
-  
-}
-
-.sidebar h1 {
-  font-size: 40px;
-  margin-bottom: 0.5em;
-}
-
-.sidebar input {
-  border: 1px rgba(0, 0, 0, 0.2) solid;
-  border-radius: 10px;
-  width: 100%;
-  padding: 1em;
-  margin-bottom: 1em;
-  outline: none;
-}
-
-.sidebar button {
-  border: none;
-  background-color: white;
-  border-radius: 10px;
-  width: 100%;
-  margin-top: 1em;
-  padding: 1em 0;
-}
-
-.sidebar button:hover {
-  background-color: #4e47ed;
-  color: white;
-  border: 1px white solid;
-} */
 
 .course-list {
   display: flex;
@@ -201,25 +155,14 @@ h5 {
   cursor: pointer;
 }
 
-/* .card-price button:hover {
-  background-color: #4e47ed;
-  color: white;
-} */
-
 .card-price p {
   font-size: 20px;
-  /* font-weight: 500; */
-  /* margin-right: 1em; */
 }
 
-
 .cart-wish button {
-  /* border: 1px #4e47ed solid; */
   border: none;
   color: #4e47ed;
-  /* border-radius: 10px; */
   background-color: transparent;
-  /* padding: 0.7em; */
   font-weight: 500;
   cursor: pointer;
   font-size: 24px;
@@ -235,7 +178,6 @@ h5 {
   display: flex;
   justify-content: space-evenly;
   margin-top: 0.5em;
-  /* align-items: center; */
 }
 @media (max-width: 1270px) {
   .sidebar h1 {
@@ -244,9 +186,6 @@ h5 {
   .course-card {
     flex-basis: calc(27%);
   }
-  /* .card-price {
-    margin: 0 1em;
-  } */
   .card-price p {
     font-size: 16px;
   }
@@ -254,7 +193,7 @@ h5 {
     padding: 0.5em 0.3em;
   }
 }
-@media (max-width:1170px) {
+@media (max-width: 1170px) {
   .sidebar h1 {
     font-size: 30px;
   }
@@ -276,7 +215,6 @@ h5 {
 }
 
 @media (max-width: 1000px) {
-
   .course-card {
     flex-basis: calc(40%);
   }
@@ -287,8 +225,6 @@ h5 {
     padding: 0.5em 1em;
   }
 }
-
-
 
 @media (max-width: 700px) {
   .course-card {
