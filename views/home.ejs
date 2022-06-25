@@ -1,4 +1,5 @@
 <% layout("layouts/boilerplate") %>
+    <link rel="stylesheet" type="text/css" href="css/starability-fade.min.css" />
 
     <link rel="stylesheet" href="/stylesheets/home.css">
     <link rel="stylesheet" href="/stylesheets/stars.css">
@@ -148,77 +149,81 @@
                 <div class="reviews">
                     <h1>What our students said</h1>
                     <div class="reviews-container">
-                        <div class="review">
-                            <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, suscipit? Aspernatur et
-                                quidem,
-                                tempore incidunt iure placeat illum!"</p>
-                            <div id="reviews-flex">
-                                <div id="author">
-                                    <img src="/images/authorimg.png" alt="">
-                                    <p id="author-name">Menna Ahmed</p>
-                                </div>
-                                <div id="stars">
-                                    <img src="/images/starsimg.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="review">
-                            <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, suscipit? Aspernatur et
-                                quidem,
-                                tempore incidunt iure placeat illum!"</p>
-                            <div id="reviews-flex">
-                                <div id="author">
-                                    <img src="/images/authorimg.png" alt="">
-                                    <p id="author-name">Menna Ahmed</p>
-                                </div>
-                                <div id="stars">
-                                    <img src="/images/starsimg.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="review">
-                            <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, suscipit? Aspernatur et
-                                quidem,
-                                tempore incidunt iure placeat illum!"</p>
-                            <div id="reviews-flex">
-                                <div id="author">
-                                    <img src="/images/authorimg.png" alt="">
-                                    <p id="author-name">Menna Ahmed</p>
-                                </div>
-                                <div id="stars">
-                                    <img src="/images/starsimg.png" alt="">
+                        <% reviews.forEach(review=> { %>
+                            <div class="review">
+                                <p>
+                                    <%= review.review %>
+                                </p>
+                                <div id="reviews-flex">
+                                    <div id="author">
+                                        <% if(review.reviewedBy){ %>
+                                            <div class="img-container"><img src="<%= review.reviewedBy.image.url %>"
+                                                    alt=""></div>
+                                            <p id="author-name">
+                                                <%= review.reviewedBy.fullname %>
+                                            </p>
+                                            <% } else if(review.reviewedByOAuth){ %>
+                                                <div class="img-container"><img
+                                                        src="<%= review.reviewedByOAuth.image.url %>" alt=""></div>
+                                                <p id="author-name">
+                                                    <%= review.reviewedByOAuth.fullname %>
+                                                </p>
+                                                <% } else if(review.reviewedByInstructor){ %>
+                                                    <div class="img-container"><img
+                                                            src="<%= review.reviewedByInstructor.image.url %>" alt="">
+                                                    </div>
+                                                    <p id="author-name">
+                                                        <%= review.reviewedByInstructor.fullname %>
+                                                    </p>
+                                                    <% } else{ %>
+                                                        <div class="img-container"><img src="/images/blankProfile.png"
+                                                                alt=""></div>
+                                                        <p id="author-name">Deleted User</p>
+                                                        <% } %>
+                                    </div>
+                                    <div id="stars">
+                                        <p class="starability-result" data-rating="<%= review.rating %>">
+                                            Rated: <%= review.rating %>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="review">
-                            <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, suscipit? Aspernatur et
-                                quidem,
-                                tempore incidunt iure placeat illum!"</p>
-                            <div id="reviews-flex">
-                                <div id="author">
-                                    <img src="/images/authorimg.png" alt="">
-                                    <p id="author-name">Menna Ahmed</p>
-                                </div>
-                                <div id="stars">
-                                    <img src="/images/starsimg.png" alt="">
-                                </div>
-                            </div>
-                        </div>
+                            <% }); %>
                     </div>
-                    <div id="feedback">
-                        <h1 id="feedback-h1">Tell us about your experience!</h1>
-                        <form action="">
-                            <textarea name="" id="" cols="30" rows="10" placeholder="Write your feedback"></textarea>
-                            <button>Submit Feedback</button>
-                        </form>
-                    </div>
+                    <% if(currentUser && !loggedAdmin){ %>
+                        <div id="feedback">
+                            <h1 id="feedback-h1">Tell us about your experience!</h1>
+
+                            <form action="/" method="POST">
+                                <fieldset class="starability-heart">
+                                    <!-- <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" checked
+                                    aria-label="No rating." /> -->
+                                    <input type="radio" id="first-rate1" name="rating" value="1" required />
+                                    <label for="first-rate1" title="Terrible">1 star</label>
+                                    <input type="radio" id="first-rate2" name="rating" value="2" />
+                                    <label for="first-rate2" title="Not good">2 stars</label>
+                                    <input type="radio" id="first-rate3" name="rating" value="3" />
+                                    <label for="first-rate3" title="Average">3 stars</label>
+                                    <input type="radio" id="first-rate4" name="rating" value="4" />
+                                    <label for="first-rate4" title="Very good">4 stars</label>
+                                    <input type="radio" id="first-rate5" name="rating" value="5" />
+                                    <label for="first-rate5" title="Amazing">5 stars</label>
+                                </fieldset>
+                                <textarea id="" cols="30" rows="10" name="review" placeholder="Write your feedback"
+                                    required></textarea>
+                                <button>Submit Feedback</button>
+                            </form>
+                        </div>
+                        <% } %>
                 </div>
                 <div class="payment-methods">
                     <h1>You can pay by</h1>
                     <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos, temporibus aliquam ea eligendi
-                        debitis corporis. Excepturi nisi, asperiores eos tenetur eligendi consequatur fugit inventore
+                        debitis corporis. Excepturi nisi, asperiores eos tenetur eligendi consequatur fugit
+                        inventore
                         fuga adipisci quis doloribus veniam vel!
-                        Totam quod laboriosam ducimus sequi, tempore accusamus dignissimos, placeat iusto cumque eius
+                        Totam quod laboriosam ducimus sequi, tempore accusamus dignissimos, placeat iusto cumque
+                        eius
                         sapiente vel quos animi fugit. Doloremque, eaque laboriosam! Unde molestiae ut animi eaque
                         voluptatibus enim consectetur minus cumque. </p>
                     <div>

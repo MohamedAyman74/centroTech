@@ -5,10 +5,13 @@ const Course = require("./course");
 // const bcrypt = require("bcrypt");
 
 const ImageSchema = new Schema({
-  url: String,
-  filename: String,
+  url: {
+    type: String,
+    default:
+      "https://res.cloudinary.com/dd36t4xod/image/upload/v1656095424/CentroTech/users/blankProfile_mvm787.png",
+  },
+  filename: { type: String, default: "blankProfile" },
 });
-
 ImageSchema.virtual("thumbnail").get(function () {
   return this.url.replace("/upload", "/upload/w_200");
 });

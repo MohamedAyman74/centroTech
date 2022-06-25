@@ -107,6 +107,10 @@ module.exports.addNewInstructor = async (req, res) => {
             phone,
             specialization,
             password: hashed,
+            image: {
+              url: "https://res.cloudinary.com/dd36t4xod/image/upload/v1656095424/CentroTech/users/blankProfile_mvm787.png",
+              filename: "blankProfile",
+            },
           });
           instApp.status = "Accepted";
           await instApp.save();

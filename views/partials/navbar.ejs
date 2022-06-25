@@ -9,6 +9,9 @@
                 <ul class="nav-links">
                     <li><a href="/courses">Courses</a></li>
                     <li><a href="/quizzes">Quizzes</a></li>
+                    <li><a href="/support-tickets">Support</a></li>
+                    <li><a href="/questions">Course Q&A</a></li>
+
                 </ul>
             </div>
 
@@ -18,13 +21,15 @@
             <div class="nav-popup">
                 <% if(!loggedAdmin){ %>
                     <a href="/profile/<%= currentUser %>">Profile</a>
-                    <hr>
+                    <hr style="opacity: 0.4;">
                     <a href="/courses/mycourses">My Courses</a>
-                    <hr>
+                    <hr style="opacity: 0.4;">
                     <a href="/cart">Cart</a>
-                    <hr>
+                    <hr style="opacity: 0.4;">
                     <a href="/wishlist">Wishlist</a>
-                    <hr>
+                    <hr style="opacity: 0.4;">
+                    <a href="/quizzes/solved">Solved Quizzes</a>
+                    <hr style="opacity: 0.4;">
                     <% } %>
                         <!-- <a href="">Logout</a> -->
                         <form action="/logout" method="POST">

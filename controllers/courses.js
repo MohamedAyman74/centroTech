@@ -2,9 +2,12 @@ const Course = require("../models/course");
 const User = require("../models/user");
 const OAuthUser = require("../models/oAuthUser");
 const Instructor = require("../models/instructor");
+const Admin = require("../models/admin");
 const CourseReview = require("../models/courseReview");
 const QuizQuestion = require("../models/quizQuestion");
 const Quiz = require("../models/quiz");
+const Purchase = require("../models/purchase");
+const { cloudinary } = require("../cloudinary");
 
 module.exports.index = async (req, res) => {
   const currentUser = res.locals.currentUser;
@@ -50,8 +53,10 @@ module.exports.index = async (req, res) => {
       const isAdmin = false;
       res.render("courses/index", { courses, user, isInstructor, isAdmin });
     } else {
-      req.flash("error", "You must be logged in to view this page");
-      res.redirect("/");
+      const isInstructor = false;
+      const isAdmin = false;
+      user = false;
+      res.render("courses/index", { courses, user, isInstructor, isAdmin });
     }
   }
 };
@@ -85,13 +90,25 @@ module.exports.addCourse = async (req, res) => {
 module.exports.searchCourse = async (req, res) => {
   const currentUser = res.locals.currentUser;
   const { searched } = req.body;
-  const courses = await Course.find({
-    $or: [{ name: { $regex: searched } }, { subject: { $regex: searched } }],
-  }).populate({
-    path: "instructor",
-    model: "Instructor",
-    select: { fullname: 1, _id: 1 },
-  });
+  let courses;
+  if (searched.length > 0) {
+    courses = await Course.find({
+      $or: [
+        { name: { $regex: searched, $options: "i" } },
+        { subject: { $regex: searched, $options: "i" } },
+      ],
+    }).populate({
+      path: "instructor",
+      model: "Instructor",
+      select: { fullname: 1, _id: 1 },
+    });
+  } else {
+    courses = await Course.find({}).populate({
+      path: "instructor",
+      model: "Instructor",
+      select: { fullname: 1, _id: 1 },
+    });
+  }
   let user = await User.findById(currentUser);
   if (!user) {
     user = await OAuthUser.findById(currentUser);
@@ -110,6 +127,11 @@ module.exports.searchCourse = async (req, res) => {
     // res.render("courses/index", { courses, user, isInstructor, isAdmin });
     res.json({ courses, user, isInstructor, isAdmin });
     // res.send();
+  } else {
+    const isAdmin = false;
+    const isInstructor = false;
+    user = false;
+    res.json({ courses, user, isInstructor, isAdmin });
   }
 };
 
@@ -152,7 +174,10 @@ module.exports.deleteCourse = async (req, res) => {
 module.exports.homePageSearch = async (req, res) => {
   const { search } = req.body;
   const courses = await Course.find({
-    $or: [{ name: { $regex: search } }, { subject: { $regex: search } }],
+    $or: [
+      { name: { $regex: search, $options: "i" } },
+      { subject: { $regex: search, $options: "i" } },
+    ],
   }).populate({
     path: "instructor",
     model: "Instructor",
@@ -277,19 +302,26 @@ module.exports.addReview = async (req, res) => {
 };
 
 module.exports.addQuestion = (req, res) => {
-  if (!req.session.quiz) {
-    req.session.quiz = [];
+  if (req.xhr) {
+    if (!req.session.quiz) {
+      req.session.quiz = [];
+    }
+    // console.log(req.body);
+    const { Id } = req.params;
+    // const question = {};
+    // for (let i in req.body.quiz) {
+    //   question[i] = req.body.quiz[i];
+    // }
+    console.log("the req.body.quiz", req.body.quiz);
+    console.log("the session before", req.session.quiz);
+    req.session.quiz.push(req.body.quiz);
+    console.log(req.session.quiz);
+    // console.log(req.session.quiz);
+    // console.log(req.session.isInstructor);
+    // console.log(req.session.instructor_id);
+    res.json(req.session.quiz);
   }
-  const { Id } = req.params;
-  const question = {};
-  for (let i in req.body.quiz) {
-    question[i] = req.body.quiz[i];
-  }
-  req.session.quiz.push(question);
-  // console.log(req.session.quiz);
-  // console.log(req.session.isInstructor);
-  // console.log(req.session.instructor_id);
-  res.redirect(`/courses/${Id}`);
+  // res.redirect(`/courses/${Id}`);
 };
 
 module.exports.dismissQuiz = (req, res) => {
@@ -333,17 +365,42 @@ module.exports.addQuiz = async (req, res) => {
 };
 
 module.exports.renderPurchasePage = (req, res) => {
-  res.render("courses/purchase");
+  const cart = res.locals.cart;
+  if (cart.length <= 0) {
+    req.flash("error", "You haven't added any item in your cart yet");
+    res.redirect("/cart");
+  } else {
+    res.render("courses/purchase");
+  }
 };
 
 module.exports.makePurchase = async (req, res) => {
+  const { payMethod } = req.body;
   const cart = res.locals.cart;
   const currentUser = res.locals.currentUser;
   const toPurchase = [];
+  const date = new Date().toLocaleString();
+
+  const purchase = new Purchase({ date, paymentMethod: payMethod });
+
+  let totalPrice = 0;
+  cart.forEach(async (purchasedCourse) => {
+    const course = await Course.findById(purchasedCourse);
+    totalPrice += course.price;
+    purchase.purchasedCourses.push(purchasedCourse);
+  });
+
+  purchase.totalPrice = totalPrice;
 
   let user = await User.findById(currentUser);
+  if (user) {
+    purchase.purchasedBy = currentUser;
+  }
   if (!user) {
     user = await OAuthUser.findById(currentUser);
+    if (user) {
+      purchase.purchasedByOAuth = currentUser;
+    }
   }
   if (user) {
     cart.forEach((purchasedCourse) => {
@@ -362,9 +419,10 @@ module.exports.makePurchase = async (req, res) => {
       });
       user.courses.push(...toPurchase);
       await user.save();
+      await purchase.save();
       req.session.cart = [];
       req.flash("success", "Courses purchased successfully");
-      res.redirect("/courses");
+      res.redirect("/courses/mycourses");
     } else {
       req.flash(
         "error",
@@ -417,6 +475,10 @@ module.exports.renderUserCourses = async (req, res) => {
     },
     select: { name: 1, price: 1 },
   });
+  if (user) {
+    const courses = user.courses;
+    res.render("courses/userCourses", { courses });
+  }
   if (!user) {
     user = await OAuthUser.findById(currentUser).populate({
       path: "courses",
@@ -428,17 +490,27 @@ module.exports.renderUserCourses = async (req, res) => {
       },
       select: { name: 1, price: 1 },
     });
+    if (user) {
+      const courses = user.courses;
+      res.render("courses/userCourses", { courses });
+    }
   }
-  const courses = user.courses;
-  res.render("courses/userCourses", { courses });
+  if (!user) {
+    user = await Instructor.findById(currentUser).populate("ownedCourses");
+    if (user) {
+      const courses = user.ownedCourses;
+      res.render("courses/userCourses", { courses });
+    }
+  }
 };
 
 module.exports.deleteReview = async (req, res) => {
   const { Id, userId, reviewId } = req.params;
+  const isAdmin = res.locals.loggedAdmin;
   const currentUser = res.locals.currentUser;
   let user = await User.findById(userId);
   if (user) {
-    if (userId === currentUser) {
+    if (userId === currentUser || isAdmin) {
       await User.findByIdAndUpdate(userId, {
         $pull: { courseReviews: reviewId },
       });
@@ -455,7 +527,7 @@ module.exports.deleteReview = async (req, res) => {
   }
   if (!user) {
     user = await OAuthUser.findById(currentUser);
-    if (userId === currentUser) {
+    if (userId === currentUser || isAdmin) {
       await OAuthUser.findByIdAndUpdate(currentUser, {
         $pull: { courseReviews: reviewId },
       });
@@ -469,5 +541,30 @@ module.exports.deleteReview = async (req, res) => {
       req.flash("error", "Sorry, you are not authorized to delete the review");
       res.redirect(`/courses/show/${Id}`);
     }
+  }
+};
+
+module.exports.editCourse = async (req, res) => {
+  const { Id } = req.params;
+  const course = await Course.findById(Id);
+  const currentUser = res.locals.currentUser;
+  const isAdmin = await Admin.findById(currentUser);
+  if (course.instructor.equals(currentUser) || isAdmin) {
+    const isInstructor = res.locals.loggedInstructor;
+    if (isInstructor) {
+      req.body.price = course.price;
+    }
+    let updatedCourse = await Course.findByIdAndUpdate(Id, req.body, {
+      new: true,
+    });
+    if (req.file) {
+      if (updatedCourse.image && updatedCourse.image.filename !== "") {
+        await cloudinary.uploader.destroy(updatedCourse.image.filename);
+      }
+      updatedCourse.image = { url: req.file.path, filename: req.file.filename };
+      await updatedCourse.save();
+    }
+    req.flash("success", "Course has been updated successfully!");
+    res.redirect(`/courses/${Id}`);
   }
 };

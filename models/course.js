@@ -23,7 +23,7 @@ const CourseSchema = new Schema({
     type: String,
     required: true,
   },
-  images: [ImageSchema],
+  image: ImageSchema,
   videos: [VideoSchema],
   price: {
     type: Number,
@@ -38,6 +38,10 @@ const CourseSchema = new Schema({
     default: 0,
   },
   reviews: [{ type: Schema.Types.ObjectId, ref: "CourseReview" }],
+  about: {
+    type: String,
+    required: false,
+  },
   //   reviews: [
   //     {
   //       type: Schema.Types.ObjectId,

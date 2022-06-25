@@ -62,7 +62,7 @@
                                         <!-- <button class="send-mail" id="accept-btn">Accepted</button> -->
                                         <form action="/admins/appmanagement/rejected/<%= app._id %>?_method=PUT"
                                             method="POST">
-                                            <button id="reject-btn">Rejected</button>
+                                            <button id="reject-btn">Reject</button>
                                         </form>
                                         <form action="/admins/appmanagement/delete/<%= app._id %>?_method=DELETE"
                                             method="POST">
@@ -72,7 +72,7 @@
                                     <div id="accept-popup">
                                         <form action="/admins/appmanagement" method="POST">
                                             <label for="text">Enter password</label>
-                                            <input type="text" name="password">
+                                            <input type="text" name="password" id="pass-input">
                                             <input type="hidden" name="email" value="<%= app.email %>">
                                             <input type="hidden" name="id" value="<%= app._id %>">
                                             <input type="hidden" name="fullname" value="<%= app.fullname %>">

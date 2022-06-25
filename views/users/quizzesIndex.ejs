@@ -2,31 +2,35 @@
     <script src="https://kit.fontawesome.com/62a2a279f8.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/stylesheets/coursesIndex.css">
     <section>
-        
+
         <div id="search">
-            <form action="/courses" method="POST" id="courseSearch">
-                <input type="search" name="searched" id="searchInput" placeholder="Subject/teacher name">
-             
+            <form action="/quizzes" method="POST" id="quizSearch">
+                <input type="search" name="searched" id="searchInput" placeholder="Subject/course name">
             </form>
         </div>
         <div class="course-list">
             <% quizzes.forEach(quiz=> { %>
                 <div class="course-card">
-                    <img src="/images/teacherimg.jpg" alt="">
-                    <h3>
-                        <%= quiz.course.name %>
-                    </h3>
-                    <h5>
-                        <%= quiz.instructor.fullname %>
-                    </h5>
-                    <div class="card-price">
-                        
-                        <a href="/quiz/<%= quiz._id %>"><button>Take Quiz</button></a>
-                    </div>
+                    <% if(quiz.course.image){ %>
+                        <img src="<% quiz.course.image.url %>" alt="">
+                        <% } else{ %>
+                            <img src="https://res.cloudinary.com/dd36t4xod/image/upload/v1656188369/CentroTech/courses/Image_upload-pana_ol1co3.png"
+                                alt="">
+                            <% } %>
+                                <h3>
+                                    <%= quiz.course.name %>
+                                </h3>
+                                <h5>
+                                    <%= quiz.instructor.fullname %>
+                                </h5>
+                                <div class="card-price">
+
+                                    <a href="/quiz/<%= quiz._id %>"><button>Take Quiz</button></a>
+                                </div>
                 </div>
                 <% }); %>
         </div>
     </section>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"
         integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-    <script src="/javascripts/coursesIndex.js"></script>
+    <script src="/javascripts/quizzesIndex.js"></script>

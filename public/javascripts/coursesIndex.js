@@ -11,40 +11,64 @@ $("#searchInput").on("keyup change paste", function (event) {
         const isAdmin = data.isAdmin;
         const isInstructor = data.isInstructor;
         const user = data.user;
-        $("div.course-list").append(`
-        <div class="course-card">
-                    <img src="/images/teacherimg.jpg" alt="">
-                    <h3>
-                        ${course.name}
-                    </h3>
-                    <h5>
-                        ${course.instructor.fullname}
-                    </h5>
-                    <div class="card-price">
-                        <p>
-                            ${course.price} L.E
-                        </p>
-                          ${
-                            !isAdmin &&
-                            !isInstructor &&
-                            !user.courses.includes(course._id)
-                              ? `
-                            <form style="height: 5px; margin-bottom: 15px;"
-                                action="/courses/wishlist/${course._id}?_method=PUT" method="POST">
-                                <button type="submit"><i class="fa fa-solid fa-heart"></i></button>
-                            </form>
-                            <form style="height: 5px; margin-bottom: 15px;" action="/courses/cart/${course._id}"
-                                method="POST">
-                                <button type="submit"><i class="fa fa-solid fa-cart-arrow-down"></i></button>
-                            </form>`
-                              : ``
-                          }
-                          <a href="/courses/show/${
-                            course._id
-                          }"><button>View Course</button></a>
-                    </div>
-                </div>
-                `);
+        $("div.course-list").append(
+          `<div class="course-card">
+          <img src="/images/teacherimg.jpg" alt="">
+          <div class="course-card-flex">
+              ${
+                user &&
+                !isAdmin &&
+                !isInstructor &&
+                !user.courses.includes(course._id)
+                  ? `<div class="cart-wish">
+                      <form action="/courses/wishlist/${course._id}?_method=PUT" method="POST">
+                          <button type="submit"><i class="fa fa-solid fa-heart"></i></button>
+                      </form>
+                  </div>`
+                  : ``
+              }
+                      <div>
+                          <h3>
+                              ${course.name}
+                          </h3>
+                          <h5>
+                              ${course.instructor.fullname}
+                          </h5>
+                      </div>
+                      ${
+                        user &&
+                        !isAdmin &&
+                        !isInstructor &&
+                        !user.courses.includes(course._id)
+                          ? `<div class="cart-wish">
+                              <form action="/courses/cart/${course._id}" method="POST">
+                                  <button type="submit"><i
+                                          class="fa fa-solid fa-cart-arrow-down"></i></button>
+                              </form>
+                          </div>`
+                          : ``
+                      }
+          </div>
+
+          <div class="card-price">
+              <p>
+                  ${course.price} L.E
+              </p>
+              ${
+                user &&
+                !isAdmin &&
+                !isInstructor &&
+                !user.courses.includes(course._id)
+                  ? ``
+                  : ``
+              }
+                      <a href="/courses/show/${
+                        course._id
+                      }"><button>View Course</button></a>
+          </div>
+
+      </div>`
+        );
       });
     } else {
       $("div.course-list").empty();

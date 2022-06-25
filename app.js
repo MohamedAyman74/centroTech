@@ -96,7 +96,12 @@ passport.use(
         }
         if (user.isSuspended) {
           return done(null, false, {
-            message: "Sorry, your account has been suspended",
+            message: `Sorry, your account has been suspended. Suspend reason is: ${user.suspendReason}.`,
+          });
+        }
+        if (!user.isActivated) {
+          return done(null, false, {
+            message: "Sorry, your account has not been activated yet.",
           });
         }
         // console.log(user);

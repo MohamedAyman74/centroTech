@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Answer = require("./answer");
 
 const QuestionSchema = new Schema({
   title: {
@@ -31,14 +32,14 @@ const QuestionSchema = new Schema({
   isLocked: { type: Boolean, default: false },
 });
 
-// CourseSchema.post("findOneAndDelete", async (doc) => {
-//   if (doc) {
-//     await Review.deleteMany({
-//       _id: {
-//         $in: doc.reviews,
-//       },
-//     });
-//   }
-// });
+QuestionSchema.post("findOneAndDelete", async (doc) => {
+  if (doc) {
+    await Answer.deleteMany({
+      _id: {
+        $in: doc.replies,
+      },
+    });
+  }
+});
 
 module.exports = mongoose.model("Question", QuestionSchema);

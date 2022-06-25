@@ -21,12 +21,17 @@
         <div class="cards">
             <% instructor.ownedCourses.forEach(course=> { %>
                 <div class="card">
-                    <img src="germanflag.png" alt="">
-                    <h3>
-                        <%= course.name %>
-                    </h3>
-                    <!-- <button>View Course</button> -->
-                    <a href="/courses/<%= course._id %>">View</a>
+                    <% if(course.image){ %>
+                        <img src="<%= course.image.url %>" alt="">
+                        <% } else{ %>
+                            <img src="https://res.cloudinary.com/dd36t4xod/image/upload/v1656188369/CentroTech/courses/Image_upload-pana_ol1co3.png"
+                                alt="">
+                            <% } %>
+                                <h3>
+                                    <%= course.name %>
+                                </h3>
+                                <!-- <button>View Course</button> -->
+                                <a href="/courses/<%= course._id %>">View</a>
                 </div>
                 <% }); %>
         </div>

@@ -10,6 +10,11 @@ const { storage } = require("../cloudinary");
 const upload = multer({ storage });
 
 router
+  .route("/")
+  .get(catchAsync(users.renderHomePage))
+  .post(catchAsync(users.websiteReview));
+
+router
   .route("/register")
   .get(users.renderRegister)
   .post(catchAsync(users.register));
@@ -24,6 +29,10 @@ router
     }),
     users.login
   );
+
+router
+  .route("/verify/:userId/:verifyToken")
+  .get(catchAsync(users.verifyAccount));
 
 router.post("/logout", users.logout);
 
@@ -71,6 +80,14 @@ router
 router
   .route("/questions/:Id/lock")
   .post(isLoggedIn, isAdmin, catchAsync(users.lockQuestion));
+
+router
+  .route("/questions/:Id/delete")
+  .delete(isLoggedIn, isAdmin, catchAsync(users.deleteQuestion));
+
+router
+  .route("/questions/:Id/:replyId/:userId/delete")
+  .delete(isLoggedIn, catchAsync(users.deleteReply));
 
 router.route("/quizzes").get(isLoggedIn, catchAsync(users.renderQuizzes));
 

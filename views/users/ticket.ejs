@@ -1,5 +1,10 @@
 <% layout("layouts/boilerplate") %>
     <link rel="stylesheet" href="/stylesheets/ticket.css">
+
+    <form action="" id="lock">
+        <button id="lock">Lock</button>
+
+    </form>
     <section class="container">
         <div class="login-card">
             <h2>Submit ticket reply</h2>
@@ -13,72 +18,108 @@
         <div class="login-card-2">
             <div class="main-flex">
                 <div class="main-flex">
-                    <img src="/images/userimg.png" alt="">
-                    <div>
-                        <% if(ticket.sentBy){ %>
+                    <% if(ticket.sentBy){ %>
+                        <div class="img-container">
+                            <img src="<%= ticket.sentBy.image.url %>" alt="">
+                        </div>
+                        <div>
                             <h4>
                                 <%= ticket.sentBy.fullname %>
                             </h4>
                             <p id="author">Student - <%= ticket.date %>
                             </p>
                             <% } else if(ticket.sentByOAuth){ %>
-                                <h4>
-                                    <%= ticket.sentByOAuth.fullname %>
-                                </h4>
-                                <p id="author">Student - <%= ticket.date %>
-                                </p>
-                                <% } else if(ticket.sentByInstructor){ %>
+                                <div class="img-container">
+                                    <img src="<%= ticket.sentByOAuth.image.url %>" alt="">
+                                </div>
+                                <div>
                                     <h4>
-                                        <%= ticket.sentByInstructor.fullname %>
+                                        <%= ticket.sentByOAuth.fullname %>
                                     </h4>
-                                    <p id="author">Instructor - <%= ticket.date %>
+                                    <p id="author">Student - <%= ticket.date %>
                                     </p>
-                                    <% } else{ %>
-                                        <p id="author">Deleted User</p>
-                                        <% } %>
-                    </div>
-                </div>
-            </div>
-            <p id="reply">
-                <%= ticket.details %>
-            </p>
-            <% ticket.replies.forEach(reply=> { %>
-                <div class="main-flex">
-                    <div class="main-flex">
-                        <img src="userimg.png" alt="">
-                        <div>
-                            <% if(reply.replyByAdmin){ %>
-                                <h4>
-                                    <%= reply.replyByAdmin.fullname %>
-                                </h4>
-                                <p id="author">Admin - <%= reply.date %>
-                                </p>
-                                <% } else if(reply.replyBy){ %>
-                                    <h4>
-                                        <%= reply.replyBy.fullname %>
-                                    </h4>
-                                    <p id="author">Student - <%= reply.date %>
-                                    </p>
-                                    <% } else if(reply.replyByOAuth){ %>
-                                        <h4>
-                                            <%= reply.replyByOAuth.fullname %>
-                                        </h4>
-                                        <p id="author">Student - <%= reply.date %>
-                                        </p>
-                                        <% } else if(reply.replyByInstructor){ %>
+                                    <% } else if(ticket.sentByInstructor){ %>
+                                        <div class="img-container">
+                                            <img src="<%= ticket.sentByInstructor.image.url %>" alt="">
+                                        </div>
+                                        <div>
                                             <h4>
-                                                <%= reply.replyByInstructor.fullname%>
+                                                <%= ticket.sentByInstructor.fullname %>
                                             </h4>
-                                            <p id="author">Instructor - <%= reply.date %>
+                                            <p id="author">Instructor - <%= ticket.date %>
                                             </p>
                                             <% } else{ %>
-                                                <p id="author">Deleted User</p>
-                                                <% } %>
-                        </div>
-                    </div>
-                </div>
-                <p id="reply">
-                    <%= reply.reply %>
-                </p>
-                <% }); %>
+                                                <div class="img-container">
+                                                    <img src="/images/blankProfile.png" alt="">
+                                                </div>
+                                                <div>
+                                                    <p id="author">Deleted User</p>
+                                                    <% } %>
+                                                </div>
+                                        </div>
+                                </div>
+                                <p id="reply">
+                                    <%= ticket.details %>
+                                </p>
+                                <% ticket.replies.forEach(reply=> { %>
+                                    <div class="main-flex">
+                                        <div class="main-flex">
+                                            <% if(reply.replyByAdmin){ %>
+                                                <div class="img-container">
+                                                    <img src="/images/blankProfile.png" alt="">
+                                                </div>
+                                                <div>
+                                                    <h4>
+                                                        <%= reply.replyByAdmin.fullname %>
+                                                    </h4>
+                                                    <p id="author">Admin - <%= reply.date %>
+                                                    </p>
+                                                    <% } else if(reply.replyBy){ %>
+                                                        <div class="img-container"><img
+                                                                src="<%= reply.replyBy.image.url %>" alt=""></div>
+                                                        <div>
+                                                            <h4>
+                                                                <%= reply.replyBy.fullname %>
+                                                            </h4>
+                                                            <p id="author">Student - <%= reply.date %>
+                                                            </p>
+                                                            <% } else if(reply.replyByOAuth){ %>
+                                                                <div class="img-container"><img
+                                                                        src="<%= reply.replyByOAuth.image.url %>"
+                                                                        alt=""></div>
+                                                                <div>
+                                                                    <h4>
+                                                                        <%= reply.replyByOAuth.fullname %>
+                                                                    </h4>
+                                                                    <p id="author">Student - <%= reply.date %>
+                                                                    </p>
+                                                                    <% } else if(reply.replyByInstructor){ %>
+                                                                        <div class="img-container">
+                                                                            <% console.log(reply); %>
+                                                                                <img src="<%= reply.replyByInstructor.image.url %>"
+                                                                                    alt="">
+                                                                        </div>
+                                                                        <div>
+                                                                            <h4>
+                                                                                <%= reply.replyByInstructor.fullname%>
+                                                                            </h4>
+                                                                            <p id="author">Instructor - <%= reply.date
+                                                                                    %>
+                                                                            </p>
+                                                                            <% } else{ %>
+                                                                                <div class="img-container">
+                                                                                    <img src="/images/blankProfile.png"
+                                                                                        alt="">
+                                                                                </div>
+                                                                                <div>
+                                                                                    <p id="author">Deleted User</p>
+                                                                                    <% } %>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                                <p id="reply">
+                                                                    <%= reply.reply %>
+                                                                </p>
+                                                                <% }); %>
+
     </section>
