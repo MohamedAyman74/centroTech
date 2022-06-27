@@ -424,6 +424,7 @@ module.exports.makePurchase = async (req, res) => {
       });
       user.courses.push(...toPurchase);
       await user.save();
+      await purchase.save();
       req.session.cart = [];
       req.flash("success", "Courses purchased successfully");
       res.redirect("/courses/mycourses");

@@ -93,6 +93,14 @@ router
   .route("/questions/:Id/:replyId/:userId/delete")
   .delete(isLoggedIn, catchAsync(users.deleteReply));
 
+router
+  .route("/questions/:Id/delete")
+  .delete(isLoggedIn, isAdmin, catchAsync(users.deleteQuestion));
+
+router
+  .route("/questions/:Id/:replyId/:userId/delete")
+  .delete(isLoggedIn, catchAsync(users.deleteReply));
+
 router.route("/quizzes").get(isLoggedIn, catchAsync(users.renderQuizzes));
 
 router

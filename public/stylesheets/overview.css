@@ -257,6 +257,23 @@ height: 100%;
   margin-bottom: 10px;
 }
 
+.delete-form button {
+  border: none;
+  color: white;
+  background-color: #4e47ed;
+  padding: 0.7em 2em;
+  /* margin-top: 1em; */
+  border-radius: 10px;
+}
+
+.delete-form {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-right: 2rem;
+  margin-bottom: 10px;
+}
+
 .show-more {
   grid-column: 1/13;
   text-align: center;
