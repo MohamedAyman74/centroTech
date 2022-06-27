@@ -5,7 +5,7 @@
             <h1>
                 <%= quiz.course.name %>
             </h1>
-            <p id="grade">Quiz total grades is <span>
+            <p class="grade">Quiz total grades is <span>
                     <%= quiz.totalGrade %>
                 </span> marks</p>
         </div>
@@ -13,8 +13,16 @@
             <form action="/quiz/<%= quiz._id %>" method="POST">
                 <% quiz.questions.forEach((question, i)=> { %>
                     <div class="question">
-                        <p>Q<%= ++i %>) <%= question.question %>
+                        
+
+                        
+                        <p> <span class="grade">Q<%= ++i %>) </span> <%= question.question %>
+                            <span class="grade">
+                            <%= question.grade %> Marks
+                        </span>
+
                         </p>
+
                         <div>
                             <input type="radio" name="correctAnswers[<%= i %>]" value="answer1">
                             <label for="">
@@ -40,9 +48,8 @@
                             </label>
                         </div>
                     </div>
-                    <%= question.grade %> Marks
                         <% }); %>
-                            <button>Submit</button>
+                            <button id="submit">Submit</button>
             </form>
         </div>
     </section>

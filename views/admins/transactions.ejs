@@ -1,0 +1,63 @@
+<% layout("layouts/boilerplate") %>
+    <link rel="stylesheet" href="/stylesheets/transactions.css">
+    <section>
+        <div class="first-item">
+            <h2>User Transactions</h2>
+            <h4 id="revenue">Total Revenues/Sales: <%= totalProfit %>
+            </h4>
+            <i class="fas fa-search"></i>
+            <!-- <form action="/admins/usersmanagement/" id="search" method="POST">
+                <input type="search" name="searched" id="searchInput" placeholder="Search by any field">
+            </form> -->
+        </div>
+        <div class="accounts-container">
+            <table id="usersTable">
+                <thead>
+                    <tr class="headers">
+                        <th>Transaction ID</th>
+                        <th>User E-mail</th>
+                        <th>Course Name</th>
+                        <th>Price</th>
+                        <th>Payment Method</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <div>
+                        <% transactions.forEach(transaction=> { %>
+                            <tr class="data">
+                                <td id="userId">
+                                    <%= transaction._id %>
+                                </td>
+                                <% if(transaction.purchasedBy){ %>
+                                    <td>
+                                        <%= transaction.purchasedBy.email %>
+                                    </td>
+                                    <% } else if(transaction.purchasedByOAuth){ %>
+                                        <td>
+                                            <%= transaction.purchasedByOAuth.email %>
+                                        </td>
+                                        <% } %>
+                                            <td>
+                                                <%= transaction.purchasedCourse.name %>
+                                            </td>
+                                            <td>
+                                                <%= transaction.amount %>
+                                            </td>
+                                            <td>
+                                                <%= transaction.paymentMethod %>
+                                            </td>
+                                            <td>
+                                                <form
+                                                    action="/admins/users-transactions/refund/<%= transaction._id %>?_method=PUT"
+                                                    method="POST">
+                                                    <button id="refund">refund</button>
+                                                </form>
+                                            </td>
+                            </tr>
+                            <% }); %>
+                    </div>
+                </tbody>
+            </table>
+        </div>
+    </section>

@@ -1,230 +1,211 @@
 <% layout("layouts/boilerplate") %>
+    <link rel="stylesheet" type="text/css" href="css/starability-fade.min.css" />
 
     <link rel="stylesheet" href="/stylesheets/home.css">
     <link rel="stylesheet" href="/stylesheets/stars.css">
-    <% if(currentUser){ %>
-        <!-- <p>
-            <%= currentUser %>
-        </p> -->
+    <section class="home">
+        <div class="hero">
+            <h1>You can learn better when <span>we are together</span></h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Temporibus animi ratione repudiandae
+                enim omnis
+                illo corrupti odio eaque pariatur accusamus velit accusantium, asperiores veritatis iusto, ut
+                similique
+                itaque, maxime alias?</p>
+            <% if(currentUser){ %>
+                <div>
+                    <form action="/courses/search" method="POST">
+                        <input type="text" name="search" placeholder="Search course subject">
+                        <button><svg width="32" height="32" viewBox="0 0 32 32" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <g id="icon/action/search_24px">
+                                    <path id="icon/action/search_24px_2" fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M20.2488 19.2954H21.3021L26.9554 24.9754C27.5021 25.5221 27.5021 26.4154 26.9554 26.9621C26.4088 27.5088 25.5154 27.5088 24.9688 26.9621L19.3021 21.2954V20.2421L18.9421 19.8688C17.0754 21.4688 14.5288 22.2954 11.8221 21.8421C8.11542 21.2154 5.15542 18.1221 4.70208 14.3888C4.00875 8.74875 8.75542 4.00209 14.3954 4.69542C18.1288 5.14875 21.2221 8.10875 21.8488 11.8154C22.3021 14.5221 21.4754 17.0688 19.8754 18.9354L20.2488 19.2954ZM7.30208 13.2954C7.30208 16.6154 9.98208 19.2954 13.3021 19.2954C16.6221 19.2954 19.3021 16.6154 19.3021 13.2954C19.3021 9.97542 16.6221 7.29542 13.3021 7.29542C9.98208 7.29542 7.30208 9.97542 7.30208 13.2954Z"
+                                        fill="white" />
+                                </g>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+                <% } %>
+        </div>
+        <div class="homepic">
+            <img src="/svgs/homepic.svg" alt="">
+        </div>
 
-        <!-- <a href="/profile/<%= currentUser %>">profile</a> -->
+    </section>
 
-        <% } %>
-            <section class="home">
-                <div class="hero">
-                    <h1>You can learn better when <span>we are together</span></h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Temporibus animi ratione repudiandae
-                        enim omnis
-                        illo corrupti odio eaque pariatur accusamus velit accusantium, asperiores veritatis iusto, ut
-                        similique
-                        itaque, maxime alias?</p>
-                    <% if(currentUser){ %>
-
-                        <div>
-                            <form action="/courses/search" method="POST">
-                                <input type="text" name="search">
-                                <button><svg width="32" height="32" viewBox="0 0 32 32" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <g id="icon/action/search_24px">
-                                            <path id="icon/action/search_24px_2" fill-rule="evenodd" clip-rule="evenodd"
-                                                d="M20.2488 19.2954H21.3021L26.9554 24.9754C27.5021 25.5221 27.5021 26.4154 26.9554 26.9621C26.4088 27.5088 25.5154 27.5088 24.9688 26.9621L19.3021 21.2954V20.2421L18.9421 19.8688C17.0754 21.4688 14.5288 22.2954 11.8221 21.8421C8.11542 21.2154 5.15542 18.1221 4.70208 14.3888C4.00875 8.74875 8.75542 4.00209 14.3954 4.69542C18.1288 5.14875 21.2221 8.10875 21.8488 11.8154C22.3021 14.5221 21.4754 17.0688 19.8754 18.9354L20.2488 19.2954ZM7.30208 13.2954C7.30208 16.6154 9.98208 19.2954 13.3021 19.2954C16.6221 19.2954 19.3021 16.6154 19.3021 13.2954C19.3021 9.97542 16.6221 7.29542 13.3021 7.29542C9.98208 7.29542 7.30208 9.97542 7.30208 13.2954Z"
-                                                fill="white" />
-                                        </g>
-                                    </svg>
-                                </button>
-                            </form>
+    <section class="body">
+        <div class="statistics">
+            <div>
+                <!-- <p>1028+ Active Student</p> -->
+                <p>
+                    <%= studentsCount %>+ Active Student
+                </p>
+            </div>
+            <div>
+                <!-- <p>1028+ Active Mentor</p> -->
+                <p>
+                    <%= instructorsCount %>+ Active Mentor
+                </p>
+            </div>
+            <div>
+                <!-- <p>1028+ Total Courses</p> -->
+                <p>
+                    <%= coursesCount %>+ Total Courses
+                </p>
+            </div>
+        </div>
+        <div class="about-us">
+            <h1>What We Offer</h1>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos error rerum asperiores mollitia
+                nisi rem
+                nam nihil libero deleniti expedita nesciunt earum natus fuga saepe officiis necessitatibus,
+                architecto
+                esse qui.
+                Quibusdam soluta tenetur hic! Nam, tempore cum facere sed excepturi, culpa ad provident eaque id
+                natus
+                tempora officia dolor aliquid exercitationem debitis? Neque, eaque aut! Totam officia cumque
+                reiciendis
+                delectus! Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab sed molestiae sapiente
+                iure nemo
+                iste rem deleniti quo porro odit ipsum ipsam dolorum ipsa molestias, in voluptatibus voluptates
+                alias
+                laudantium?
+                Rerum quaerat officiis cupiditate, illo, earum minus, nemo vitae a expedita asperiores porro
+                dolorem
+                soluta animi eaque est reiciendis praesentium quam doloremque at quis. Voluptates placeat maxime
+                alias
+                eius officia.</p>
+        </div>
+        <div class="teachers">
+            <div class="teachers-intro">
+                <h1>Our Top Enrolled-in Courses!</h1>
+                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos error rerum asperiores mollitia
+                    nisi
+                    rem
+                    nam nihil libero deleniti expedita nesciunt earum natus fuga saepe officiis necessitatibus,
+                    architecto
+                    esse qui.
+                    Quibusdam soluta tenetur hic! Nam, tempore cum facere sed excepturi, culpa ad provident
+                    eaque id
+                    natus
+                    tempora</p>
+            </div>
+            <div class="teachers-content">
+                <div class="teacher-cards">
+                    <% topRatedCourses.forEach(course=> { %>
+                        <div class="teacher-card">
+                            <% if(course.image){ %>
+                                <div class="default-img-container">
+                                    <img src="/images/teacherimg.jpg" alt="">
+                                </div>
+                                <% }else{ %>
+                                    <div class="default-img-container">
+                                        <img src="https://res.cloudinary.com/dd36t4xod/image/upload/v1656188369/CentroTech/courses/Image_upload-pana_ol1co3.png"
+                                            alt="">
+                                    </div>
+                                    <% } %>
+                                        <h3>
+                                            <%= course.name %>
+                                        </h3>
+                                        <div class="card-price">
+                                            <p>
+                                                <%= course.price %>
+                                            </p>
+                                            <a href="/courses/show/<%= course._id %> "><button>View Course</button></a>
+                                        </div>
                         </div>
-                        <% } %>
+                        <% }); %>
                 </div>
-                <div class="homepic">
-                    <img src="/svgs/homepic.svg" alt="">
+                <div class="seemore-btn">
+                    <a href="/courses"><button>All Courses</button></a>
                 </div>
-
-            </section>
-
-            <section class="body">
-                <div class="statistics">
-                    <div>
-                        <!-- <p>1028+ Active Student</p> -->
+            </div>
+        </div>
+        <div class="reviews">
+            <h1>What our students said</h1>
+            <div class="reviews-container">
+                <% reviews.forEach(review=> { %>
+                    <div class="review">
                         <p>
-                            <%= studentsCount %>+ Active Student
+                            <%= review.review %>
                         </p>
-                    </div>
-                    <div>
-                        <!-- <p>1028+ Active Mentor</p> -->
-                        <p>
-                            <%= instructorsCount %>+ Active Mentor
-                        </p>
-                    </div>
-                    <div>
-                        <!-- <p>1028+ Total Courses</p> -->
-                        <p>
-                            <%= coursesCount %>+ Total Courses
-                        </p>
-                    </div>
-                </div>
-                <div class="about-us">
-                    <h1>What We Offer</h1>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos error rerum asperiores mollitia
-                        nisi rem
-                        nam nihil libero deleniti expedita nesciunt earum natus fuga saepe officiis necessitatibus,
-                        architecto
-                        esse qui.
-                        Quibusdam soluta tenetur hic! Nam, tempore cum facere sed excepturi, culpa ad provident eaque id
-                        natus
-                        tempora officia dolor aliquid exercitationem debitis? Neque, eaque aut! Totam officia cumque
-                        reiciendis
-                        delectus! Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab sed molestiae sapiente
-                        iure nemo
-                        iste rem deleniti quo porro odit ipsum ipsam dolorum ipsa molestias, in voluptatibus voluptates
-                        alias
-                        laudantium?
-                        Rerum quaerat officiis cupiditate, illo, earum minus, nemo vitae a expedita asperiores porro
-                        dolorem
-                        soluta animi eaque est reiciendis praesentium quam doloremque at quis. Voluptates placeat maxime
-                        alias
-                        eius officia.</p>
-                </div>
-                <div class="teachers">
-                    <div class="teachers-intro">
-                        <h1>Our best teachers</h1>
-                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos error rerum asperiores mollitia
-                            nisi
-                            rem
-                            nam nihil libero deleniti expedita nesciunt earum natus fuga saepe officiis necessitatibus,
-                            architecto
-                            esse qui.
-                            Quibusdam soluta tenetur hic! Nam, tempore cum facere sed excepturi, culpa ad provident
-                            eaque id
-                            natus
-                            tempora</p>
-                    </div>
-                    <div class="teachers-content">
-                        <div class="subject-btn">
-                            <button>Biology</button>
-                            <button>English</button>
-                            <button>Chemistry</button>
-                            <button>Math</button>
-                            <button>Physics</button>
-                            <button>Geology</button>
-                            <button>Geology</button>
-                            <button>Geology</button>
-                            <button>Geology</button>
-                        </div>
-                        <div class="teacher-cards">
-                            <div class="teacher-card">
-                                <img src="/images/teacherimg.jpg" alt="">
-                                <h3>Mr. Reda El Farouk</h3>
-                                <div class="card-price">
-                                    <p>1250L.E</p>
-                                    <button>Enroll Now</button>
-                                </div>
+                        <div id="reviews-flex">
+                            <div id="author">
+                                <% if(review.reviewedBy){ %>
+                                    <div class="img-container"><img src="<%= review.reviewedBy.image.url %>" alt="">
+                                    </div>
+                                    <p id="author-name">
+                                        <%= review.reviewedBy.fullname %>
+                                    </p>
+                                    <% } else if(review.reviewedByOAuth){ %>
+                                        <div class="img-container"><img src="<%= review.reviewedByOAuth.image.url %>"
+                                                alt=""></div>
+                                        <p id="author-name">
+                                            <%= review.reviewedByOAuth.fullname %>
+                                        </p>
+                                        <% } else if(review.reviewedByInstructor){ %>
+                                            <div class="img-container"><img
+                                                    src="<%= review.reviewedByInstructor.image.url %>" alt="">
+                                            </div>
+                                            <p id="author-name">
+                                                <%= review.reviewedByInstructor.fullname %>
+                                            </p>
+                                            <% } else{ %>
+                                                <div class="img-container"><img src="/images/blankProfile.png" alt="">
+                                                </div>
+                                                <p id="author-name">Deleted User</p>
+                                                <% } %>
                             </div>
-                            <div class="teacher-card">
-                                <img src="/images/teacherimg.jpg" alt="">
-                                <h3>Mr. Reda El Farouk</h3>
-                                <div class="card-price">
-                                    <p>1250L.E</p>
-                                    <button>Enroll Now</button>
-                                </div>
+                            <div id="stars">
+                                <p class="starability-result" data-rating="<%= review.rating %>">
+                                    Rated: <%= review.rating %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+            </div>
+            <% if(currentUser && !loggedAdmin){ %>
+                <div id="feedback">
+                    <h1 id="feedback-h1">Tell us about your experience!</h1>
 
-                            </div>
-                            <div class="teacher-card">
-                                <img src="/images/teacherimg.jpg" alt="">
-                                <h3>Mr. Reda El Farouk</h3>
-                                <div class="card-price">
-                                    <p>1250L.E</p>
-                                    <button>Enroll Now</button>
-                                </div>
-
-                            </div>
-
-                        </div>
-                        <div class="seemore-btn">
-                            <button>All Courses</button>
-                        </div>
-                    </div>
+                    <form action="/" method="POST">
+                        <fieldset class="starability-heart">
+                            <!-- <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" checked
+                                    aria-label="No rating." /> -->
+                            <input type="radio" id="first-rate1" name="rating" value="1" required />
+                            <label for="first-rate1" title="Terrible">1 star</label>
+                            <input type="radio" id="first-rate2" name="rating" value="2" />
+                            <label for="first-rate2" title="Not good">2 stars</label>
+                            <input type="radio" id="first-rate3" name="rating" value="3" />
+                            <label for="first-rate3" title="Average">3 stars</label>
+                            <input type="radio" id="first-rate4" name="rating" value="4" />
+                            <label for="first-rate4" title="Very good">4 stars</label>
+                            <input type="radio" id="first-rate5" name="rating" value="5" />
+                            <label for="first-rate5" title="Amazing">5 stars</label>
+                        </fieldset>
+                        <textarea id="" cols="30" rows="10" name="review" placeholder="Write your feedback"
+                            required></textarea>
+                        <button>Submit Feedback</button>
+                    </form>
                 </div>
-                <div class="reviews">
-                    <h1>What our students said</h1>
-                    <div class="reviews-container">
-                        <div class="review">
-                            <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, suscipit? Aspernatur et
-                                quidem,
-                                tempore incidunt iure placeat illum!"</p>
-                            <div id="reviews-flex">
-                                <div id="author">
-                                    <img src="/images/authorimg.png" alt="">
-                                    <p id="author-name">Menna Ahmed</p>
-                                </div>
-                                <div id="stars">
-                                    <img src="/images/starsimg.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="review">
-                            <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, suscipit? Aspernatur et
-                                quidem,
-                                tempore incidunt iure placeat illum!"</p>
-                            <div id="reviews-flex">
-                                <div id="author">
-                                    <img src="/images/authorimg.png" alt="">
-                                    <p id="author-name">Menna Ahmed</p>
-                                </div>
-                                <div id="stars">
-                                    <img src="/images/starsimg.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="review">
-                            <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, suscipit? Aspernatur et
-                                quidem,
-                                tempore incidunt iure placeat illum!"</p>
-                            <div id="reviews-flex">
-                                <div id="author">
-                                    <img src="/images/authorimg.png" alt="">
-                                    <p id="author-name">Menna Ahmed</p>
-                                </div>
-                                <div id="stars">
-                                    <img src="/images/starsimg.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="review">
-                            <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, suscipit? Aspernatur et
-                                quidem,
-                                tempore incidunt iure placeat illum!"</p>
-                            <div id="reviews-flex">
-                                <div id="author">
-                                    <img src="/images/authorimg.png" alt="">
-                                    <p id="author-name">Menna Ahmed</p>
-                                </div>
-                                <div id="stars">
-                                    <img src="/images/starsimg.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="feedback">
-                        <h1 id="feedback-h1">Tell us about your experience!</h1>
-                        <form action="">
-                            <textarea name="" id="" cols="30" rows="10" placeholder="Write your feedback"></textarea>
-                            <button>Submit Feedback</button>
-                        </form>
-                    </div>
-                </div>
-                <div class="payment-methods">
-                    <h1>You can pay by</h1>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos, temporibus aliquam ea eligendi
-                        debitis corporis. Excepturi nisi, asperiores eos tenetur eligendi consequatur fugit inventore
-                        fuga adipisci quis doloribus veniam vel!
-                        Totam quod laboriosam ducimus sequi, tempore accusamus dignissimos, placeat iusto cumque eius
-                        sapiente vel quos animi fugit. Doloremque, eaque laboriosam! Unde molestiae ut animi eaque
-                        voluptatibus enim consectetur minus cumque. </p>
-                    <div>
-                        <img src="images/visa.png" alt="">
-                        <img src="images/fawry.png" alt="">
-                        <img src="images/Aman.png" alt="">
-                    </div>
-                </div>
-            </section>
+                <% } %>
+        </div>
+        <div class="payment-methods">
+            <h1>You can pay by</h1>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos, temporibus aliquam ea eligendi
+                debitis corporis. Excepturi nisi, asperiores eos tenetur eligendi consequatur fugit
+                inventore
+                fuga adipisci quis doloribus veniam vel!
+                Totam quod laboriosam ducimus sequi, tempore accusamus dignissimos, placeat iusto cumque
+                eius
+                sapiente vel quos animi fugit. Doloremque, eaque laboriosam! Unde molestiae ut animi eaque
+                voluptatibus enim consectetur minus cumque. </p>
+            <div>
+                <img src="images/visa.png" alt="">
+                <img src="images/fawry.png" alt="">
+                <img src="images/Aman.png" alt="">
+            </div>
+        </div>
+    </section>

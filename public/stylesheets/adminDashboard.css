@@ -1,96 +1,95 @@
-@import url('https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
 
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 .nav-container {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    font-family: 'Poppins', sans-serif;
-   margin-bottom: 2em;
-
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 2em;
 }
 .navbar {
-   grid-column: 2/12;
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   position: relative;
-
+  grid-column: 2/12;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
 }
 
 ul li {
-    list-style: none;
+  list-style: none;
 }
 
 ul {
-    display: flex;
+  display: flex;
 }
 
 ul li a {
-
-    margin-right: 2em;
-
+  margin-right: 2em;
 }
 
 #profile-img {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .nav-popup {
-    position: absolute;
-    right: 0;
-    top: 70%;
-    display: none;
-    flex-direction: column;
-    border: 2px #4e47ed solid;
-    width: 20%;
-    background-color: white;
+  position: absolute;
+  right: 0;
+  top: 70%;
+  display: none;
+  flex-direction: column;
+  border: 2px #4e47ed solid;
+  width: 20%;
+  background-color: white;
+  z-index: 1;
 }
 
 a {
-    text-decoration: none;
-    color: #4e47ed;
-    font-weight: 500;
+  text-decoration: none;
+  color: #4e47ed;
+  font-weight: 500;
 }
 
 .nav-popup a {
-    padding: 1em 2em;
-    transition: ease-in-out 0.2s;
+  padding: 1em 2em;
+  transition: ease-in-out 0.2s;
 }
 
-.nav-popup a:hover{
-    background-color: #4e47ed;
+.nav-popup a:hover {
+  background-color: #4e47ed;
 
-    cursor: pointer;
-    color: white;
+  cursor: pointer;
+  color: white;
 }
-
+#logout-form {
+  margin: 0;
+}
 #logout {
-    background-color: transparent;
-    color: #4e47ed;
-    border: none;
-    font-size: 16px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    padding: 1em 2em;
-    width: 100%;
-    text-align: start;
+  background-color: transparent;
+  color: #4e47ed;
+  border: none;
+  font-size: 16px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  padding: 1em 2em;
+  width: 100%;
+  text-align: start;
 }
 .nav-popup form:hover {
-    background-color: #4e47ed;
-    cursor: pointer;
+  background-color: #4e47ed;
+  cursor: pointer;
 }
 
 .nav-popup form:hover #logout {
-    color: white;
-    cursor: pointer;
+  color: white;
+  cursor: pointer;
 }
 
 .show-nav {
-    display: flex;
+  display: flex;
 }
 /* .navbar {
     display: grid;
@@ -122,69 +121,73 @@ ul li {
     font-weight: 500;
 } */
 
-
 section {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    row-gap: 2em;
-    column-gap: 2em;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  row-gap: 2em;
+  column-gap: 2em;
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .dashboard div {
-    width: 100%;
-    height: 20vh;
-    /* background-color: #4e47ed; */
-    /* color: white; */
-    color: #4e47ed;
-    background-color: white;
-    border: 2px #4e47ed solid;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5em;
-    font-family: 'Poppins', sans-serif;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: ease-in-out 0.2s;
+  width: 100%;
+  height: 20vh;
+  /* background-color: #4e47ed; */
+  /* color: white; */
+  color: #4e47ed;
+  background-color: white;
+  border: 2px #4e47ed solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em;
+  font-family: "Poppins", sans-serif;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
 }
 
 .dashboard div:hover {
-    transform: scale(0.9);
-    background-color: #4e47ed;
-    color: white;
+  transform: scale(0.9);
+  background-color: #4e47ed;
+  color: white;
 }
 
 #account {
-    grid-column: 2/12;
-    grid-row: 1;
-    text-align: center;
+  grid-column: 2/12;
+  grid-row: 1;
+  text-align: center;
 }
 
 #course {
-    grid-row: 2;
-    grid-column: 2/7;
-    text-align: center;
+  grid-row: 2;
+  grid-column: 2/7;
+  text-align: center;
 }
 
 #accepted {
-    grid-row: 2;
-    grid-column: 7/12;
-    text-align: center;
-
+  grid-row: 2;
+  grid-column: 7/12;
+  text-align: center;
 }
 
 #rejected {
-    grid-row: 3;
-    grid-column: 2/7;
-    text-align: center;
+  grid-row: 3;
+  grid-column: 2/7;
+  text-align: center;
 }
 
 #pending {
-    grid-row: 3;
-    grid-column: 7/12;
-    text-align: center;
+  grid-row: 3;
+  grid-column: 7/12;
+  text-align: center;
+}
+
+#transactions {
+  grid-column: 2/12;
+  grid-row: 4;
+  text-align: center;
 }

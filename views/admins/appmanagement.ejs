@@ -1,6 +1,9 @@
 <% layout("layouts/boilerplate") %>
     <link rel="stylesheet" href="/stylesheets/showApplications.css">
     <section>
+        <form action="/admins/appmanagement" id="search" method="POST">
+            <input type="search" name="searched" id="searchInput" placeholder="Search by any field">
+        </form>
         <div class="accept-popup">
             <form action="">
                 <label for="text">Enter password</label>
@@ -57,22 +60,11 @@
                                     <p id="textarea">
                                         <%= app.appReason %>
                                     </p>
-                                    <div class="btns">
-                                        <!-- <button id="cv-btn">Download CV</button> -->
-                                        <!-- <button class="send-mail" id="accept-btn">Accepted</button> -->
-                                        <form action="/admins/appmanagement/rejected/<%= app._id %>?_method=PUT"
-                                            method="POST">
-                                            <button id="reject-btn">Rejected</button>
-                                        </form>
-                                        <form action="/admins/appmanagement/delete/<%= app._id %>?_method=DELETE"
-                                            method="POST">
-                                            <button id="reject-btn">Delete</button>
-                                        </form>
-                                    </div>
+
                                     <div id="accept-popup">
-                                        <form action="/admins/appmanagement" method="POST">
+                                        <form action="/admins/appmanagement/accept" method="POST">
                                             <label for="text">Enter password</label>
-                                            <input type="text" name="password">
+                                            <input type="text" name="password" id="pass-input">
                                             <input type="hidden" name="email" value="<%= app.email %>">
                                             <input type="hidden" name="id" value="<%= app._id %>">
                                             <input type="hidden" name="fullname" value="<%= app.fullname %>">
@@ -80,6 +72,18 @@
                                             <input type="hidden" name="specialization"
                                                 value="<%= app.specialization %>">
                                             <button id="accept-btn">Accept & Send Mail</button>
+                                        </form>
+
+                                        <form action="/admins/appmanagement/reject/<%= app._id %>?_method=PUT"
+                                            method="POST" id="reject-form">
+                                            <input type="hidden" name="email" value="<%= app.email %>">
+                                            <label for="">Enter Reason</label>
+                                            <input type="text" name="rejectReason">
+                                            <button id="reject-btn">Reject</button>
+                                        </form>
+                                        <form action="/admins/appmanagement/delete/<%= app._id %>?_method=DELETE"
+                                            method="POST">
+                                            <button id="reject-btn">Delete</button>
                                         </form>
                                     </div>
                                 </div>

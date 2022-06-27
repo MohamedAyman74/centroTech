@@ -14,6 +14,14 @@ const AnswerSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "OAuth",
   },
+  postedByInstructor: {
+    type: Schema.Types.ObjectId,
+    ref: "Instructor",
+  },
+  postedByAdmin: {
+    type: Schema.Types.ObjectId,
+    ref: "Admin",
+  },
   date: {
     type: String,
     required: true,

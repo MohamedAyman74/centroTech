@@ -49,6 +49,7 @@ ul li a {
     border: 2px #4e47ed solid;
     width: 20%;
     background-color: white;
+    z-index: 1;
 }
 
 a {
@@ -68,7 +69,9 @@ a {
     cursor: pointer;
     color: white;
 }
-
+#logout-form {
+    margin: 0;
+}
 #logout {
     background-color: transparent;
     color: #4e47ed;
@@ -128,12 +131,15 @@ form {
 .question {
     margin-bottom: 1em;
 }
-
-#grade {
+.question div {
+    margin: 0.5em 0;
+}
+.grade {
     color: #4e47ed;
 }
 #grade span {
     font-weight: bold;
+    color: #4e47ed;
 }
 #question-mark {
 
@@ -141,4 +147,14 @@ form {
     font-weight: 500;
     display: inline-block;
     margin-left: 1em;
+}
+
+#submit {
+    border: none;
+    color: white;
+    background-color: #4e47ed;
+    border-radius: 15px;
+    padding: 1em 2em;
+    display: block;
+    margin: 1em 0;
 }

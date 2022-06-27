@@ -11,11 +11,40 @@ const Admin = require("../models/admin");
 const Ticket = require("../models/supportTicket");
 const TicketAnswer = require("../models/ticketAnswer");
 const ExpressError = require("../utils/ExpressError");
+const VerificationToken = require("../models/verificationToken");
+const WebsiteReview = require("../models/review");
 const bcrypt = require("bcrypt");
 const { sendEmail } = require("../utils/sendMail");
 const crypto = require("crypto");
-
 const { cloudinary } = require("../cloudinary");
+
+module.exports.renderHomePage = async (req, res) => {
+  let studentsCount = 0;
+  const localUsers = await User.find({});
+  studentsCount += localUsers.length;
+  const onlineAuthUsers = await oAuthUser.find({});
+  studentsCount += onlineAuthUsers.length;
+  const courses = await Course.find({});
+  const coursesCount = courses.length;
+  const instructors = await Instructor.find({});
+  const instructorsCount = instructors.length;
+  const reviews = await WebsiteReview.find({})
+    .limit(4)
+    .populate("reviewedBy")
+    .populate("reviewedByOAuth")
+    .populate("reviewedByInstructor");
+
+  const topRatedCourses = await Course.find({})
+    .sort({ enrolled: "desc" })
+    .limit(3);
+  res.render("home", {
+    studentsCount,
+    coursesCount,
+    instructorsCount,
+    reviews,
+    topRatedCourses,
+  });
+};
 
 module.exports.renderRegister = (req, res) => {
   res.render("users/register", { title: "CentroTech - Register" });
@@ -46,16 +75,34 @@ module.exports.register = async (req, res, next) => {
           email,
           fullname,
           password: hashed,
+          image: {
+            url: "https://res.cloudinary.com/dd36t4xod/image/upload/v1656095424/CentroTech/users/blankProfile_mvm787.png",
+            filename: "blankProfile",
+          },
         });
         // console.log(user);
         // res.redirect("/register");
         // console.log(user);
         // const registeredUser = await User.register(user, password);
         const newUser = await user.save();
-        // // console.log(registeredUser);
+        let verificationToken = await VerificationToken.findOne({
+          userId: user._id,
+        });
+        if (!verificationToken) {
+          verificationToken = await new VerificationToken({
+            userId: user._id,
+            token: crypto.randomBytes(32).toString("hex"),
+          }).save();
+        }
+        const link = `http://localhost:3000/verify/${user._id}/${verificationToken.token}`;
+        await sendEmail(user.email, "Email Verification", link);
+
         req.login(newUser, (err) => {
           if (err) return next(err);
-          req.flash("success", "Your account has been successfully created!");
+          req.flash(
+            "success",
+            "A verification email has been sent to your email. Account successfully created!"
+          );
           res.redirect("/login");
         });
       }
@@ -68,6 +115,27 @@ module.exports.register = async (req, res, next) => {
     req.flash("error", e.message);
     // next(new ExpressError("Cannot find the required page destination.", 404));
     res.redirect("register");
+  }
+};
+
+module.exports.verifyAccount = async (req, res) => {
+  const { userId, verifyToken } = req.params;
+  const user = await User.findById(userId);
+  if (user) {
+    const token = await VerificationToken.findOne({
+      userId,
+      token: verifyToken,
+    });
+    if (token) {
+      user.isActivated = true;
+      await user.save();
+      await token.delete();
+      req.flash("success", "Your account has been successfully activated.");
+      res.redirect("/login");
+    }
+  } else {
+    req.flash("error", "Invalid or expired verification link.");
+    res.redirect("/");
   }
 };
 
@@ -210,7 +278,6 @@ module.exports.updateProfile = async (req, res) => {
     user.image = { url: req.file.path, filename: req.file.filename };
     await user.save();
   }
-
   req.flash("success", "Your profile has been updated successfully!");
   res.redirect(`/profile/${id}`);
 };
@@ -323,7 +390,9 @@ module.exports.renderAnswers = async (req, res) => {
     .populate("askedByOAuth");
   const answers = await Answer.find({ question: Id })
     .populate("postedBy")
-    .populate("postedByOAuth");
+    .populate("postedByOAuth")
+    .populate("postedByInstructor")
+    .populate("postedByAdmin");
   res.render("users/answers", { question, answers });
 };
 
@@ -335,15 +404,36 @@ module.exports.addAnswer = async (req, res) => {
   const question = await Question.findById(Id);
   if (question) {
     const answer = new Answer({ reply, date, question: Id });
-    const searchUser = await User.findById(currentUser);
+    let searchUser = await User.findById(currentUser);
     if (searchUser) {
       answer.postedBy = currentUser;
-    } else {
-      answer.postedByOAuth = currentUser;
     }
-    await answer.save();
-    req.flash("success", "Your reply has been added");
-    res.redirect(`/questions/${Id}`);
+    if (!searchUser) {
+      searchUser = await oAuthUser.findById(currentUser);
+      if (searchUser) {
+        answer.postedByOAuth = currentUser;
+      }
+    }
+    if (!searchUser) {
+      searchUser = await Instructor.findById(currentUser);
+      if (searchUser) {
+        answer.postedByInstructor = currentUser;
+      }
+    }
+    if (!searchUser) {
+      searchUser = await Admin.findById(currentUser);
+      if (searchUser) {
+        answer.postedByAdmin = currentUser;
+      }
+    }
+    if (searchUser) {
+      await answer.save();
+      req.flash("success", "Your reply has been added");
+      res.redirect(`/questions/${Id}`);
+    } else {
+      req.flash("error", "Something wrong has happened");
+      res.redirect("/questions");
+    }
   } else {
     req.flash("error", "Something wrong has happened");
     res.redirect("/questions");
@@ -376,7 +466,7 @@ module.exports.renderQuizzes = async (req, res) => {
   }
   if (!user) {
     user = await Instructor.findById(currentUser);
-    if (user) toBeFound = { instrucotr: user._id };
+    if (user) toBeFound = { instructor: user._id };
   }
   if (!user) {
     user = await Admin.findById(currentUser);
@@ -635,10 +725,22 @@ module.exports.renderSupportTicket = async (req, res) => {
         date: 1,
       },
       populate: [
-        { path: "replyBy", model: "User", select: "fullname" },
-        { path: "replyByOAuth", model: "OAuth", select: "fullname" },
-        { path: "replyByInstructor", model: "Instructor", select: "fullname" },
-        { path: "replyByAdmin", model: "Admin", select: "fullname" },
+        { path: "replyBy", model: "User", select: { fullname: 1, image: 1 } },
+        {
+          path: "replyByOAuth",
+          model: "OAuth",
+          select: { fullname: 1, image: 1 },
+        },
+        {
+          path: "replyByInstructor",
+          model: "Instructor",
+          select: { fullname: 1, image: 1 },
+        },
+        {
+          path: "replyByAdmin",
+          model: "Admin",
+          select: { fullname: 1, image: 1 },
+        },
       ],
     });
   res.render("users/ticket", { ticket });
@@ -688,4 +790,74 @@ module.exports.lockQuestion = async (req, res) => {
   question.save();
   req.flash("success", "Question has been locked/unlocked successfully.");
   res.redirect(`/questions/${Id}`);
+};
+
+module.exports.deleteQuestion = async (req, res) => {
+  const { Id } = req.params;
+  await Question.findByIdAndDelete(Id);
+  req.flash("success", "Successfully deleted the question");
+  res.redirect("/questions");
+};
+
+module.exports.deleteReply = async (req, res) => {
+  const { Id, userId, replyId } = req.params;
+  const isAdmin = res.locals.loggedAdmin;
+  const currentUser = res.locals.currentUser;
+  let question = await Question.findById(Id);
+  if (question) {
+    if (userId === currentUser || isAdmin) {
+      await Question.findByIdAndUpdate(Id, {
+        $pull: { replies: replyId },
+      });
+      await Answer.findByIdAndDelete(replyId);
+      // await CourseReview.findByIdAndDelete(reviewId);
+      req.flash("success", "Successfully deleted the review");
+      res.redirect(`/questions/${Id}`);
+    } else {
+      req.flash("error", "Sorry, you are not authorized to delete the review");
+      res.redirect(`/questions/${Id}`);
+    }
+  } else {
+    req.flash("error", "Sorry, you are not authorized to delete the review");
+    res.redirect(`/questions/${Id}`);
+  }
+};
+
+module.exports.websiteReview = async (req, res) => {
+  const currentUser = res.locals.currentUser;
+  const { rating, review } = req.body;
+  const userReview = new WebsiteReview({
+    rating,
+    review,
+  });
+  let user = await User.findById(currentUser);
+  if (user) {
+    userReview.reviewedBy = currentUser;
+  }
+  if (!user) {
+    user = await oAuthUser.findById(currentUser);
+    if (user) {
+      userReview.reviewedByOAuth = currentUser;
+    }
+  }
+  if (!user) {
+    user = await Instructor.findById(currentUser);
+    if (user) {
+      userReview.reviewedByInstructor = currentUser;
+    }
+  }
+  if (user) {
+    userReview.save();
+  }
+  req.flash("success", "Successfully posted your review");
+  res.redirect("/");
+};
+
+module.exports.lockTicket = async (req, res) => {
+  const { Id } = req.params;
+  const ticket = await Ticket.findById(Id);
+  ticket.isLocked = !ticket.isLocked;
+  ticket.save();
+  req.flash("success", "Ticket has been locked/unlocked successfully.");
+  res.redirect(`/support-tickets/${Id}`);
 };

@@ -24,8 +24,18 @@ const videoStorage = new CloudinaryStorage({
   },
 });
 
+const courseImageStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "CentroTech/courses",
+    // allowedFormat: ["mp4"],
+    allowedFormat: ["jpeg", "png", "jpg"],
+  },
+});
+
 module.exports = {
   cloudinary,
   storage,
   videoStorage,
+  courseImageStorage,
 };

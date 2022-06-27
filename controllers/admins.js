@@ -6,6 +6,7 @@ const { sendEmail } = require("../utils/sendMail");
 const bcrypt = require("bcrypt");
 const instructorApp = require("../models/instructorApp");
 const Admin = require("../models/admin");
+const Transactions = require("../models/purchase");
 
 module.exports.renderUsersManagement = async (req, res) => {
   const users = await User.find({});
@@ -36,7 +37,10 @@ module.exports.suspendUser = async (req, res) => {
     : (user.suspendReason = "");
   user.isSuspended = !user.isSuspended;
   await user.save();
-  req.flash("success", "The account has been successfully suspended");
+  req.flash(
+    "success",
+    "The account has been successfully suspended/unsuspended"
+  );
   if (req.xhr) {
     res.json(user);
   } else {
@@ -46,34 +50,72 @@ module.exports.suspendUser = async (req, res) => {
 
 module.exports.searchUser = async (req, res) => {
   const { searched } = req.body;
-  // await User.find;
   const user = await User.find({
     $or: [
-      { email: { $regex: searched } },
-      { fullname: { $regex: searched } },
-      { phone: { $regex: searched } },
-      { parentPhone: { $regex: searched } },
+      { email: { $regex: searched, $options: "i" } },
+      { fullname: { $regex: searched, $options: "i" } },
+      { phone: { $regex: searched, $options: "i" } },
+      { parentPhone: { $regex: searched, $options: "i" } },
     ],
   });
   const authUser = await oAuthUser.find({
     $or: [
-      { email: { $regex: searched } },
-      { fullname: { $regex: searched } },
-      { phone: { $regex: searched } },
-      { parentPhone: { $regex: searched } },
+      { email: { $regex: searched, $options: "i" } },
+      { fullname: { $regex: searched, $options: "i" } },
+      { phone: { $regex: searched, $options: "i" } },
+      { parentPhone: { $regex: searched, $options: "i" } },
     ],
   });
-  // console.log("auth user", authUser);
   const searchedUsers = user.concat(authUser);
-  // if (user.length <= 0) {
-  //   user = await User.find({ fullname: { $regex: searched } });
-  // }
-  // if (user.length <= 0) {
-  //   user = await oAuthUser.find({ fullname: { $regex: searched } });
-  // }
-  // console.log(searchedUsers);
-  // res.redirect("/admins/usersmanagement");
   res.json(searchedUsers);
+};
+
+module.exports.searchAcceptedApps = async (req, res) => {
+  const { searched } = req.body;
+  const acceptedApps = await InstructorApp.find({
+    $and: [
+      { status: "Accepted" },
+      {
+        $or: [
+          { email: { $regex: searched, $options: "i" } },
+          { fullname: { $regex: searched, $options: "i" } },
+        ],
+      },
+    ],
+  });
+  res.json(acceptedApps);
+};
+
+module.exports.searchPendingApps = async (req, res) => {
+  const { searched } = req.body;
+  const acceptedApps = await InstructorApp.find({
+    $and: [
+      { status: "Pending" },
+      {
+        $or: [
+          { email: { $regex: searched, $options: "i" } },
+          { fullname: { $regex: searched, $options: "i" } },
+        ],
+      },
+    ],
+  });
+  res.json(acceptedApps);
+};
+
+module.exports.searchRejectedApps = async (req, res) => {
+  const { searched } = req.body;
+  const acceptedApps = await InstructorApp.find({
+    $and: [
+      { status: "Rejected" },
+      {
+        $or: [
+          { email: { $regex: searched, $options: "i" } },
+          { fullname: { $regex: searched, $options: "i" } },
+        ],
+      },
+    ],
+  });
+  res.json(acceptedApps);
 };
 
 module.exports.renderInstructorsApps = async (req, res) => {
@@ -107,6 +149,10 @@ module.exports.addNewInstructor = async (req, res) => {
             phone,
             specialization,
             password: hashed,
+            image: {
+              url: "https://res.cloudinary.com/dd36t4xod/image/upload/v1656095424/CentroTech/users/blankProfile_mvm787.png",
+              filename: "blankProfile",
+            },
           });
           instApp.status = "Accepted";
           await instApp.save();
@@ -131,9 +177,15 @@ module.exports.addNewInstructor = async (req, res) => {
 
 module.exports.rejectApplication = async (req, res) => {
   const { Id } = req.params;
+  const { email, rejectReason } = req.body;
   const instApp = await InstructorApp.findById(Id);
   instApp.status = "Rejected";
   await instApp.save();
+  await sendEmail(
+    email,
+    "Your instructor application status",
+    `Your instructor application has been rejected because of: <br> ${rejectReason}`
+  );
   res.redirect("/admins/appmanagement/rejected");
 };
 
@@ -188,4 +240,40 @@ module.exports.loginAdmin = async (req, res) => {
   // });
   // await admin.save();
   // console.log("done");
+};
+
+module.exports.usersTransactionsRender = async (req, res) => {
+  let totalProfit = 0;
+  const transactions = await Transactions.find({})
+    .populate("purchasedBy")
+    .populate("purchasedByOAuth")
+    .populate("purchasedCourse");
+
+  transactions.forEach((transaction) => {
+    totalProfit += transaction.amount;
+  });
+  res.render("admins/transactions", { transactions, totalProfit });
+};
+
+module.exports.refundCourse = async (req, res) => {
+  const { Id } = req.params;
+  const transaction = await Transactions.findById(Id);
+  let user = await User.findById(transaction.purchasedBy);
+  if (!user) {
+    user = await oAuthUser.findById(transaction.purchasedByOAuth);
+  }
+  if (user) {
+    const idx = user.courses.indexOf(transaction.purchasedCourse);
+    user.courses.splice(idx, 1);
+    await user.save();
+    await transaction.delete();
+    req.flash(
+      "success",
+      "Successfully removed course from user and refund notice sent"
+    );
+    res.redirect("/admins/users-transactions");
+  } else {
+    req.flash("error", "User not found or unauthorized.");
+    res.redirect("/admins/users-transactions");
+  }
 };

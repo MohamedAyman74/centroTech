@@ -32,22 +32,36 @@ router
 router
   .route("/appmanagement")
   .get(isLoggedIn, isAdmin, catchAsync(admins.renderInstructorsApps))
+  .post(isLoggedIn, isAdmin, catchAsync(admins.searchPendingApps));
+
+router
+  .route("/appmanagement/accept")
   .post(isLoggedIn, isAdmin, catchAsync(admins.addNewInstructor));
 
 router
   .route("/appmanagement/accepted")
-  .get(isLoggedIn, isAdmin, catchAsync(admins.renderAcceptedApplications));
+  .get(isLoggedIn, isAdmin, catchAsync(admins.renderAcceptedApplications))
+  .post(isAdmin, catchAsync(admins.searchAcceptedApps));
 
 router
   .route("/appmanagement/rejected")
-  .get(isLoggedIn, isAdmin, catchAsync(admins.renderRejectedApplications));
+  .get(isLoggedIn, isAdmin, catchAsync(admins.renderRejectedApplications))
+  .post(isLoggedIn, isAdmin, catchAsync(admins.searchRejectedApps));
 
 router
-  .route("/appmanagement/rejected/:Id")
+  .route("/appmanagement/reject/:Id")
   .put(isLoggedIn, isAdmin, catchAsync(admins.rejectApplication));
 
 router
   .route("/appmanagement/delete/:Id")
   .delete(isLoggedIn, isAdmin, catchAsync(admins.deleteApplication));
+
+router
+  .route("/users-transactions")
+  .get(catchAsync(admins.usersTransactionsRender));
+
+router
+  .route("/users-transactions/refund/:Id")
+  .put(catchAsync(admins.refundCourse));
 
 module.exports = router;

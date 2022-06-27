@@ -59,6 +59,7 @@ ul li a {
   border: 2px #4e47ed solid;
   width: 20%;
   background-color: white;
+  z-index: 1;
 }
 
 a {
@@ -78,7 +79,9 @@ a {
   cursor: pointer;
   color: white;
 }
-
+#logout-form {
+  margin: 0;
+}
 #logout {
   background-color: transparent;
   color: #4e47ed;

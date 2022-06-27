@@ -6,15 +6,16 @@ const courses = require("../controllers/courses");
 const { isLoggedIn, isAdmin, validateCourse } = require("../middleware");
 
 const multer = require("multer");
-const { videoStorage } = require("../cloudinary");
+const { videoStorage, courseImageStorage } = require("../cloudinary");
 const upload = multer({ storage: videoStorage });
+const uploadImage = multer({ storage: courseImageStorage });
 
 router
   .route("/")
-  .get(isLoggedIn, catchAsync(courses.index))
-  .post(isLoggedIn, catchAsync(courses.searchCourse));
+  .get(catchAsync(courses.index))
+  .post(catchAsync(courses.searchCourse));
 
-router.route("/search").post(isLoggedIn, catchAsync(courses.homePageSearch));
+router.route("/search").post(catchAsync(courses.homePageSearch));
 
 router
   .route("/new")
@@ -39,12 +40,20 @@ router
 
 router
   .route("/show/:Id/reviews/:userId/delete/:reviewId")
-  .delete(catchAsync(isLoggedIn, courses.deleteReview));
+  .delete(isLoggedIn, catchAsync(courses.deleteReview));
+
+router
+  .route("/:Id/edit")
+  .put(isLoggedIn, uploadImage.single("image"), catchAsync(courses.editCourse));
 
 router
   .route("/:Id")
   .get(isLoggedIn, catchAsync(courses.renderCoursePage))
   .put(isLoggedIn, upload.array("videos"), catchAsync(courses.updateCourse));
+
+router
+  .route("/:Id/video/:videoNum/delete")
+  .put(isLoggedIn, catchAsync(courses.deleteLecture));
 
 router
   .route("/wishlist/:Id")

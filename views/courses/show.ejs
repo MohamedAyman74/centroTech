@@ -1,10 +1,15 @@
 <% layout("layouts/boilerplate") %>
     <link rel="stylesheet" href="/stylesheets/showCourse.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/starability-fade.min.css" />
+
     <section>
         <div class="container">
             <div class="left-side">
                 <h1>
-                    <%= course.instructor.fullname %> : <%= course.name %>
+                    <a href="/instructor/profile/<%= course.instructor._id %>">
+                        <%= course.instructor.fullname %>
+                    </a> : <%= course.name %>
                 </h1>
                 <% if(course.videos.length> 0){ %>
                     <!-- <iframe id="video-player" width="560" height="315" src="<%= course.videos[0].url %>"
@@ -19,74 +24,176 @@
                     <% } else{ %>
                         <h3>NO VIDEOS UPLOADED YET</h3>
                         <% } %>
-                            <button id="quiz-btn">Publish Quiz</button>
+                            <% if(course.instructor._id.equals(currentUser) || loggedAdmin){ %>
+                                <div class="btn-div">
+                                    <% if(!loggedAdmin){ %>
+                                        <button id="quiz-btn">Publish Quiz</button>
+                                        <% } %>
+                                            <button id="edit-btn">Edit Course</button>
+                                </div>
+                                <% } %>
             </div>
             <div class="right-side">
                 <div class="lectures-container">
                     <% course.videos.forEach((video, i)=> { %>
                         <div class="lectures">
-                            <p><a class="lecture-link" href="<%= video.url %> "
-                                    style="text-decoration: none; color: black;">Lecture <%= ++i %>
+                            <p><a class="lecture-link" href="<%= video.url %> " style="text-decoration: none;">Lecture
+                                    <span class="lec-number">
+                                        <%= ++i %>
+                                    </span>
                                 </a>
                             </p>
-                            <!-- <img src="playicon.svg" alt=""> -->
+                            <% if(course.instructor._id.equals(currentUser) || loggedAdmin){ %>
+                                <form action="/courses/<%= course._id %>/video/<%= i %>/delete?_method=PUT"
+                                    method="POST">
+                                    <button class="lecture-video">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </button>
+                                </form>
+                                <% } %>
+                                    <!-- <img src="playicon.svg" alt=""> -->
                         </div>
                         <% }); %>
-
                 </div>
-                <form action="/courses/<%= course._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
-                    <input type="file" name="videos" id="videos" multiple>
-                    <button id="upload">Upload Lecture</button>
-                </form>
+                <% if(course.instructor._id.equals(currentUser) || loggedAdmin){ %>
+                    <form action="/courses/<%= course._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                        <input type="file" name="videos" id="videos" multiple>
+                        <button id="upload">Upload Lecture</button>
+                    </form>
+                    <% } %>
             </div>
         </div>
         <div class="content">
-            <h1>Lecture Content</h1>
-            <ul id="content-ul">
-                <li>lorem ipsum dolor sit amet</li>
-                <li>lorem ipsum dolor sit amet</li>
-                <li>lorem ipsum dolor sit amet</li>
-                <li>lorem ipsum dolor sit amet</li>
-            </ul>
+            <h1>Lecture <span id="lecture-number"></span></h1>
         </div>
     </section>
-    <div class="popup">
-        <form action="" method="POST">
-            <div id="question">
-                <label for="">Q1)</label>
-                <input type="text" name="quiz[question]">
+    <!-- Edit popup -->
+    <% if(course.instructor._id.equals(currentUser) || loggedAdmin){ %>
+        <div class="edit-popup">
+            <h1>Edit Course</h1>
+            <form action="/courses/<%= course._id %>/edit?_method=PUT" method="POST" enctype="multipart/form-data">
+                <label for="name">Name</label>
+                <input type="text" placeholder="Course name" id="name" name="name" value="<%= course.name %>">
+                <label for="subject">Subject</label>
+                <input type="text" placeholder="Course subject" id="subject" name="subject"
+                    value="<%= course.subject %>">
+                <label for="about">About</label>
+                <br>
+                <textarea name="about" cols="30" rows="7"
+                    placeholder="Enter your course's about"><%= course.about %></textarea>
+                <!-- <input type="text" placeholder="Teacher name"> -->
+                <% if(loggedAdmin){ %>
+                    <label for="price"></label>
+                    <input type="number" id="price" placeholder="Course fees" name="price" value="<%= course.price %>">
+                    <% } %>
+                        <input type="file" name="image" id="image">
+                        <button id="popup-btn">Edit Course</button>
+            </form>
+        </div>
+        <% } %>
+            <div class="popup">
+                <form action="" id="questions-form" method="POST">
+                    <div id="question">
+                        <label for="">Q<span id="question-number"></span>)</label>
+                        <input type="text" id="questiontag" name="quiz[question]" required>
+                    </div>
+                    <div class="mcq">
+                        <input type="radio" name="quiz[correctAnswers]" id="radio1" value="answer1" required>
+                        <label for="">Choice 1</label>
+                        <input type="text" name="quiz[answer1]" id="question1" required>
+                    </div>
+                    <div class="mcq">
+                        <input type="radio" name="quiz[correctAnswers]" id="radio2" value="answer2" required>
+                        <label for="">Choice 2</label>
+                        <input type="text" name="quiz[answer2]" id="question2" required>
+                    </div>
+                    <div class="mcq">
+                        <input type="radio" name="quiz[correctAnswers]" id="radio3" value="answer3" required>
+                        <label for="">Choice 3</label>
+                        <input type="text" name="quiz[answer3]" id="question3" required>
+                    </div>
+                    <div class="mcq">
+                        <input type="radio" name="quiz[correctAnswers]" id="radio4" value="answer4" required>
+                        <label for="">Choice 4</label>
+                        <input type="text" name="quiz[answer4]" id="question4" required>
+                    </div>
+                    <div class="grade">
+                        <label for="">Question Grade</label>
+                        <input type="number" name="quiz[grade]" id="grade" required>
+                    </div>
+                    <div class="popup-btns">
+                        <button id="next" type="submit" name="next" formaction="/courses/<%= course._id %>/add">Next
+                            Q</button>
+                </form>
+                <form action="" method="POST">
+                    <button type="submit" id="publish" name="publish"
+                        formaction="/courses/<%= course._id %>/submit">Publish</button>
+                    <button type="submit" id="dismiss" name="dismiss"
+                        formaction="/courses/<%= course._id %>/delete">Dismiss</button>
+                </form>
             </div>
-            <div class="mcq">
-                <input type="radio" name="quiz[correctAnswers]" value="answer1">
-                <label for="">Choice 1</label>
-                <input type="text" name="quiz[answer1]">
             </div>
-            <div class="mcq">
-                <input type="radio" name="quiz[correctAnswers]" value="answer2">
-                <label for="">Choice 2</label>
-                <input type="text" name="quiz[answer2]">
-            </div>
-            <div class="mcq">
-                <input type="radio" name="quiz[correctAnswers]" value="answer3">
-                <label for="">Choice 3</label>
-                <input type="text" name="quiz[answer3]">
-            </div>
-            <div class="mcq">
-                <input type="radio" name="quiz[correctAnswers]" value="answer4">
-                <label for="">Choice 4</label>
-                <input type="text" name="quiz[answer4]">
-            </div>
-            <div class="grade">
-                <label for="">Question Grade</label>
-                <input type="number" name="quiz[grade]">
-            </div>
-            <div class="popup-btns">
-                <button type="submit" formaction="/courses/<%= course._id %>/delete">Dismiss</button>
-                <button type="submit" formaction="/courses/<%= course._id %>/submit">Publish</button>
-                <button type="submit" formaction="/courses/<%= course._id %>/add">Next Q</button>
-            </div>
-        </form>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-    <script src="/javascripts/showCourse.js"></script>
+            <input type="hidden" id="hidden-id" name="" disabled value="<%= course._id %>">
+            <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+                integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+            <script src="/javascripts/showCourse.js"></script>
+
+            <script>
+                const editPopup = document.querySelector(".edit-popup");
+                const editButton = document.querySelector("#edit-btn");
+                editButton.addEventListener("click", () => {
+                    setTimeout(() => {
+                        if (!editPopup.classList.contains("show")) {
+                            // Add class `show` to filterList element
+                            editPopup.classList.add("show");
+                        }
+                    }, 150);
+                });
+
+                document.addEventListener("click", (e) => {
+                    const isClosest = e.target.closest(".edit-popup");
+                    if (!isClosest && editPopup.classList.contains("show")) {
+                        editPopup.classList.remove("show");
+                    }
+                });
+
+                const courseId = $("#hidden-id").val();
+                let questionNumber = 1;
+                $("#question-number").text(`${questionNumber}`);
+                $("#next").click(function (e) {
+                    $("#questions-form").submit(function (e) {
+                        let correctAnswers = 2;
+                        e.preventDefault();
+                        questionNumber++;
+                        // for (let i = 1; i <= 4; i++) {
+                        //     if ($(`#radio${i}`).is(":checked"));
+                        //     correctAnswers = `answer${i}`;
+                        //     break;
+                        // }
+                        // const question = {
+                        //     question: $("#questiontag").val(""),
+                        //     answer1: $("#question1").val(""),
+                        //     answer2: $("#question2").val(""),
+                        //     answer3: $("#question3").val(""),
+                        //     answer4: $("#question4").val(""),
+                        //     grade: $("#grade").val(""),
+                        //     correctAnswers
+                        // }
+                        const data = $(this).serialize();
+                        $.post(`/courses/${courseId}/add`, data, function () {
+                        });
+                        $("#question-number").text(`${questionNumber}`);
+                        $("#radio1").prop("checked", false);
+                        $("#radio2").prop("checked", false);
+                        $("#radio3").prop("checked", false);
+                        $("#radio4").prop("checked", false);
+                        $("#questiontag").val("");
+                        $("#question1").val("");
+                        $("#question2").val("");
+                        $("#question3").val("");
+                        $("#question4").val("");
+                        $("#grade").val("");
+                        $("#next").unbind();
+                    });
+                })
+            </script>

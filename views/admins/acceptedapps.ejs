@@ -9,6 +9,9 @@
             </form>
         </div>
         <h1>Accepted Applications</h1>
+        <form action="/admins/appmanagement/accepted" id="search" method="POST">
+            <input type="search" name="searched" id="searchInput" placeholder="Search by any field">
+        </form>
         <table id="usersTable">
             <thead>
                 <tr class="headers">
@@ -18,7 +21,7 @@
                     <th>Number</th>
                     <th>Field</th>
                     <th>Application</th>
-                    <th></th>
+                    <th>Delete Application</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,7 +31,7 @@
                             <td class="info">
                                 <div class="popup">
                                     <h2>
-                                        <%= app.fullname %> 's Application
+                                        <%= app.fullname %>'s Application
                                     </h2>
                                     <div>
                                         <p>Fullname:</p>
@@ -73,6 +76,11 @@
                             <td>
                                 <button class="infobtn" id="popup-btn">View Application</button>
                             </td>
+                            <td>
+                                <form action="" id="delete-btn-form">
+                                    <button id="deleteapp-btn">Delete</button>
+                                </form>
+                            </td>
                         </tr>
                     </div>
                     <% }); %>
@@ -82,4 +90,4 @@
     </section>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"
         integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-    <script src="/javascripts/showApplications.js"></script>
+    <script src="/javascripts/acceptedapps.js"></script>

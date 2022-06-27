@@ -11,9 +11,12 @@ module.exports.sendApplication = async (req, res) => {
   try {
     const { email } = req.body;
     const doesExist = await Instructor.findOne({ email });
-    console.log(doesExist);
+    const hasApp = await InstructorApp.findOne({ email, status: "Pending" });
     if (doesExist) {
-      req.flash("error", "The email already exists as an instructor");
+      req.flash("error", "The email already exists as an instructor.");
+      res.redirect("/instructor/apply");
+    } else if (hasApp) {
+      req.flash("error", "The email already has a pending application.");
       res.redirect("/instructor/apply");
     } else {
       const application = new InstructorApp(req.body);

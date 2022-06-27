@@ -50,6 +50,7 @@ ul li a {
     border: 2px #4e47ed solid;
     width: 20%;
     background-color: white;
+    z-index: 1;
 }
 
 a {
@@ -69,7 +70,9 @@ a {
     cursor: pointer;
     color: white;
 }
-
+#logout-form {
+    margin: 0;
+}
 #logout {
     background-color: transparent;
     color: #4e47ed;
@@ -117,6 +120,7 @@ input {
     border: 1px rgba(0, 0, 0, 0.2) solid;
     border-radius: 10px;
     padding: 1em;
+    outline-color: #4e47ed;
 }
 
 label {
@@ -153,6 +157,7 @@ form button {
     border-radius: 10px;
     margin-top: 1em;
     font-size: 16px;
+    cursor: pointer;
 }
 
 
@@ -176,6 +181,7 @@ textarea {
     border-radius: 10px;
     padding-top: 1em;
     padding-left: 1em;
+    outline-color: #4e47ed;
 }
 .upload-group {
     display: flex;
@@ -199,6 +205,7 @@ textarea {
     margin: 0;
     /* text-align: center; */
     padding: 0.6em 0;
+    cursor: pointer;
 }
 
 .upload-group label {

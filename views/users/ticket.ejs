@@ -1,84 +1,142 @@
 <% layout("layouts/boilerplate") %>
     <link rel="stylesheet" href="/stylesheets/ticket.css">
-    <section class="container">
-        <div class="login-card">
-            <h2>Submit ticket reply</h2>
-            <form action="/support-tickets/<%= ticket._id %>" method="POST">
-                <div id="email-div">
-                    <textarea name="reply" id="" rows="10" placeholder="Type your reply"></textarea>
+
+
+    <% if(loggedAdmin){ %>
+        <form action="/support-tickets/<%= ticket._id %>/lock?_method=PUT" method="POST" id="lock">
+            <% if(!ticket.isLocked){ %>
+                <button id="lock">Lock Ticket</button>
+                <% } else{ %>
+                    <button id="lock">Unlock Ticket</button>
+                    <% } %>
+        </form>
+        <% } %>
+            <section class="container">
+                <div class="login-card">
+                    <h2>Submit ticket reply</h2>
+                    <% if(!ticket.isLocked){ %>
+                        <form action="/support-tickets/<%= ticket._id %>" method="POST">
+                            <div id="email-div">
+                                <textarea name="reply" id="" rows="10" placeholder="Type your reply"></textarea>
+                            </div>
+                            <button>Submit</button>
+                        </form>
+                        <% }else{ %>
+                            <form>
+                                <textarea name="reply" id="" rows="10" disabled></textarea>
+                                <h4 style="color: #4e47ed;">
+                                    The ticket is locked, you cannot add a reply.
+                                    </h6>
+                            </form>
+                            <% } %>
                 </div>
-                <button>Submit</button>
-            </form>
-        </div>
-        <div class="login-card-2">
-            <div class="main-flex">
-                <div class="main-flex">
-                    <img src="/images/userimg.png" alt="">
-                    <div>
-                        <% if(ticket.sentBy){ %>
-                            <h4>
-                                <%= ticket.sentBy.fullname %>
-                            </h4>
-                            <p id="author">Student - <%= ticket.date %>
-                            </p>
-                            <% } else if(ticket.sentByOAuth){ %>
-                                <h4>
-                                    <%= ticket.sentByOAuth.fullname %>
-                                </h4>
-                                <p id="author">Student - <%= ticket.date %>
-                                </p>
-                                <% } else if(ticket.sentByInstructor){ %>
-                                    <h4>
-                                        <%= ticket.sentByInstructor.fullname %>
-                                    </h4>
-                                    <p id="author">Instructor - <%= ticket.date %>
-                                    </p>
-                                    <% } else{ %>
-                                        <p id="author">Deleted User</p>
-                                        <% } %>
-                    </div>
-                </div>
-            </div>
-            <p id="reply">
-                <%= ticket.details %>
-            </p>
-            <% ticket.replies.forEach(reply=> { %>
-                <div class="main-flex">
+                <div class="login-card-2">
                     <div class="main-flex">
-                        <img src="userimg.png" alt="">
-                        <div>
-                            <% if(reply.replyByAdmin){ %>
-                                <h4>
-                                    <%= reply.replyByAdmin.fullname %>
-                                </h4>
-                                <p id="author">Admin - <%= reply.date %>
-                                </p>
-                                <% } else if(reply.replyBy){ %>
+                        <div class="main-flex">
+                            <% if(ticket.sentBy){ %>
+                                <div class="img-container">
+                                    <img src="<%= ticket.sentBy.image.url %>" alt="">
+                                </div>
+                                <div>
                                     <h4>
-                                        <%= reply.replyBy.fullname %>
+                                        <%= ticket.sentBy.fullname %>
                                     </h4>
-                                    <p id="author">Student - <%= reply.date %>
+                                    <p id="author">Student - <%= ticket.date %>
                                     </p>
-                                    <% } else if(reply.replyByOAuth){ %>
-                                        <h4>
-                                            <%= reply.replyByOAuth.fullname %>
-                                        </h4>
-                                        <p id="author">Student - <%= reply.date %>
-                                        </p>
-                                        <% } else if(reply.replyByInstructor){ %>
+                                    <% } else if(ticket.sentByOAuth){ %>
+                                        <div class="img-container">
+                                            <img src="<%= ticket.sentByOAuth.image.url %>" alt="">
+                                        </div>
+                                        <div>
                                             <h4>
-                                                <%= reply.replyByInstructor.fullname%>
+                                                <%= ticket.sentByOAuth.fullname %>
                                             </h4>
-                                            <p id="author">Instructor - <%= reply.date %>
+                                            <p id="author">Student - <%= ticket.date %>
                                             </p>
-                                            <% } else{ %>
-                                                <p id="author">Deleted User</p>
-                                                <% } %>
-                        </div>
-                    </div>
-                </div>
-                <p id="reply">
-                    <%= reply.reply %>
-                </p>
-                <% }); %>
-    </section>
+                                            <% } else if(ticket.sentByInstructor){ %>
+                                                <div class="img-container">
+                                                    <img src="<%= ticket.sentByInstructor.image.url %>" alt="">
+                                                </div>
+                                                <div>
+                                                    <h4>
+                                                        <%= ticket.sentByInstructor.fullname %>
+                                                    </h4>
+                                                    <p id="author">Instructor - <%= ticket.date %>
+                                                    </p>
+                                                    <% } else{ %>
+                                                        <div class="img-container">
+                                                            <img src="/images/blankProfile.png" alt="">
+                                                        </div>
+                                                        <div>
+                                                            <p id="author">Deleted User</p>
+                                                            <% } %>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <p id="reply">
+                                            <%= ticket.details %>
+                                        </p>
+                                        <% ticket.replies.forEach(reply=> { %>
+                                            <div class="main-flex">
+                                                <div class="main-flex">
+                                                    <% if(reply.replyByAdmin){ %>
+                                                        <div class="img-container">
+                                                            <img src="/images/blankProfile.png" alt="">
+                                                        </div>
+                                                        <div>
+                                                            <h4>
+                                                                <%= reply.replyByAdmin.fullname %>
+                                                            </h4>
+                                                            <p id="author">Admin - <%= reply.date %>
+                                                            </p>
+                                                            <% } else if(reply.replyBy){ %>
+                                                                <div class="img-container"><img
+                                                                        src="<%= reply.replyBy.image.url %>" alt="">
+                                                                </div>
+                                                                <div>
+                                                                    <h4>
+                                                                        <%= reply.replyBy.fullname %>
+                                                                    </h4>
+                                                                    <p id="author">Student - <%= reply.date %>
+                                                                    </p>
+                                                                    <% } else if(reply.replyByOAuth){ %>
+                                                                        <div class="img-container"><img
+                                                                                src="<%= reply.replyByOAuth.image.url %>"
+                                                                                alt=""></div>
+                                                                        <div>
+                                                                            <h4>
+                                                                                <%= reply.replyByOAuth.fullname %>
+                                                                            </h4>
+                                                                            <p id="author">Student - <%= reply.date %>
+                                                                            </p>
+                                                                            <% } else if(reply.replyByInstructor){ %>
+                                                                                <div class="img-container">
+                                                                                    <img src="<%= reply.replyByInstructor.image.url %>"
+                                                                                        alt="">
+                                                                                </div>
+                                                                                <div>
+                                                                                    <h4>
+                                                                                        <%=
+                                                                                            reply.replyByInstructor.fullname%>
+                                                                                    </h4>
+                                                                                    <p id="author">Instructor - <%=
+                                                                                            reply.date %>
+                                                                                    </p>
+                                                                                    <% } else{ %>
+                                                                                        <div class="img-container">
+                                                                                            <img src="/images/blankProfile.png"
+                                                                                                alt="">
+                                                                                        </div>
+                                                                                        <div>
+                                                                                            <p id="author">Deleted User
+                                                                                            </p>
+                                                                                            <% } %>
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
+                                                                        <p id="reply">
+                                                                            <%= reply.reply %>
+                                                                        </p>
+                                                                        <% }); %>
+
+            </section>

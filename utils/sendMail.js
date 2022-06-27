@@ -8,7 +8,7 @@ module.exports.sendEmail = async (email, subject, text) => {
       auth: {
         user: "centrotech2022@outlook.com",
 
-        pass: "a7alol123",
+        pass: "CentroTechpass123",
       },
     });
 
