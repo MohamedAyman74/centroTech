@@ -1,0 +1,311 @@
+@import url('https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+
+.container {
+    max-width: 1440px;
+    /* margin: 0 auto; */
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    row-gap: 1em;
+    padding: 0 5em;
+    /* align-content: center;
+    justify-items: center; */
+
+}
+
+.nav-container {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    font-family: 'Poppins', sans-serif;
+   margin-bottom: 2em;
+
+}
+.navbar {
+   grid-column: 2/12;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   position: relative;
+
+}
+
+ul li {
+    list-style: none;
+}
+
+ul {
+    display: flex;
+}
+
+ul li a {
+
+    margin-right: 2em;
+
+}
+
+#profile-img {
+    cursor: pointer;
+}
+
+.nav-popup {
+    position: absolute;
+    right: 0;
+    top: 70%;
+    display: none;
+    flex-direction: column;
+    border: 2px #4e47ed solid;
+    width: 20%;
+    background-color: white;
+    z-index: 1;
+}
+
+a {
+    text-decoration: none;
+    color: #4e47ed;
+    font-weight: 500;
+}
+
+.nav-popup a {
+    padding: 1em 2em;
+    transition: ease-in-out 0.2s;
+}
+
+.nav-popup a:hover{
+    background-color: #4e47ed;
+
+    cursor: pointer;
+    color: white;
+}
+#logout-form {
+    margin: 0;
+}
+#logout {
+    background-color: transparent;
+    color: #4e47ed;
+    border: none;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    padding: 1em 2em;
+    width: 100%;
+    text-align: start;
+}
+.nav-popup form:hover {
+    background-color: #4e47ed;
+    cursor: pointer;
+}
+
+.nav-popup form:hover #logout {
+    color: white;
+    cursor: pointer;
+}
+
+.show-nav {
+    display: flex;
+}
+
+.tab-container {
+    grid-column: 1/13;
+    display: flex;
+    /* justify-content: center; */
+    /* position: relative; */
+
+}
+
+.tab {
+    margin-right: 2em;
+    color: gray;
+    transition: ease-in-out 0.2s;
+    font-size: 20px;
+    font-weight: 500;
+    border-bottom: 3px transparent solid;
+
+}
+
+.tab:hover {
+    color: #4e47ed;
+    cursor: pointer;
+    border-bottom: 3px #4e47ed solid;
+}
+
+.active {
+    color: #4e47ed;
+    cursor: pointer;
+    border-bottom: 3px #4e47ed solid;
+}
+
+
+.visa-details {
+    grid-column: 1/5;
+    margin-top: 2em;
+
+}
+
+
+.visa-details form label {
+    display: block;
+}
+.visa-details form input {
+    width: 100%;
+    border: 1px rgba(79, 71, 237, 0.316) solid;
+    padding: 1em;
+    border-radius: 10px;
+    margin: 0.5em 0;
+    outline-color: #4e47ed;
+}
+
+#pay-button {
+/* text-align: center; */
+margin-top: 1em;
+}
+
+#pay-button button {
+    font-size: 15px;
+    width: fit-content;
+    border: none;
+    color: white;
+    background-color: #4e47ed;
+    padding: 1em;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+select {
+    border: 1px rgba(79, 71, 237, 0.316) solid;
+    padding: 1em 3em 1em 1em;
+    border-radius: 10px;
+    appearance: none;     
+    background-image: url(arrow.svg);   
+    background-repeat: no-repeat;
+    background-position: right;
+    outline-color: #4e47ed;
+    margin: 1em 1em 1em 0;
+}
+
+.select-flex {
+    display: flex;
+    justify-content: flex-start;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.hide {
+    display: none;
+}
+
+
+
+@media(max-width: 950px) {
+  
+    .nav-links a {
+      font-size: 14px;
+    }
+    .footer-links a:not(.footer-links a:nth-child(3)) {
+      margin-right: 2em;
+    }
+    .nav-popup {
+      width: auto;
+    }
+    .visa-details {
+        grid-column: 1/7;
+    }
+}
+@media(max-width: 778px) {
+    .tab {
+        font-size: 16px;
+    }
+    .visa-details h1 {
+        font-size: 2em;
+    }
+    .container {
+        padding: 0 3em;
+    }
+}
+@media (max-width: 700px) {
+    .nav-links a {
+      font-size: 12px;
+      margin-right: 1em;
+    }
+    .logo {
+      width: 100px;
+    }
+    .footer-links a:not(.footer-links a:nth-child(3)) {
+      margin-right: 1em;
+    }
+    .footer-links a {
+      font-size: 14px;
+    }
+    .footer-social img {
+      width: 20px;
+    }
+    .visa-details {
+        grid-column: 1/9;
+    }
+  }
+  @media (max-width: 590px) {
+    .container {
+        padding: 0 1em;
+    }
+    .tab {
+        font-size: 14px;
+        text-align: center;
+    }
+    .visa-details h1 {
+        font-size: 1.5em;
+    }
+  }
+  @media (max-width: 560px) {
+ 
+    .nav-links a {
+      margin-right: 0.5em;
+      font-size: 10px;
+    }
+    .footer-social img {
+      margin-right: 0.5em;
+      width: 16px;
+    }
+    .logo {
+      width: 70px;
+    }
+    #profile-img {
+      width: 18px;
+    }
+    #pay-button button {
+        font-size: 10px;
+    }
+ 
+  }
+  
+  @media (max-width: 420px) {
+
+    .footer-links a:not(.footer-links a:nth-child(3)) {
+      margin-right: 0.5em;
+    }
+    .logo {
+      width: 50px;
+    }
+    .footer-social img {
+      width: 14px;
+    }
+    .rights div {
+      font-size: 12px;
+    }
+    .nav-links a {
+      font-size: 8px;
+    }
+    .visa-details {
+        grid-column: 1/12;
+    }
+
+  }

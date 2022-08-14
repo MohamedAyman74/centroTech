@@ -1,0 +1,54 @@
+<% layout("layouts/boilerplate") %>
+    <link rel="stylesheet" href="/stylesheets/takeQuiz.css">
+    <section>
+        <div class="header">
+            <h1>
+                <%= quiz.course.name %>
+            </h1>
+            <p class="grade">Quiz total grades is <span>
+                    <%= quiz.totalGrade %>
+                </span> marks</p>
+        </div>
+        <div class="mcq">
+            <form action="/quiz/<%= quiz._id %>" method="POST">
+                <% quiz.questions.forEach((question, i)=> { %>
+                    <div class="question">
+
+
+
+                        <p> <span class="grade">Q<%= ++i %>) </span>
+                            <%= question.question %>
+                                <span class="grade">
+                                    <%= question.grade %> Marks
+                                </span>
+                        </p>
+                        <div>
+                            <input type="radio" name="correctAnswers[<%= i %>]" value="answer1" required>
+                            <label for="">
+                                <%= question.answer1 %>
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" name="correctAnswers[<%= i %>]" value="answer2">
+                            <label for="">
+                                <%= question.answer2 %>
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" name="correctAnswers[<%= i %>]" value="answer3">
+                            <label for="">
+                                <%= question.answer3 %>
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" name="correctAnswers[<%= i %>]" value="answer4">
+                            <label for="">
+                                <%= question.answer4 %>
+                            </label>
+                        </div>
+                    </div>
+                    <% }); %>
+                        <button id="submit">Submit</button>
+            </form>
+        </div>
+    </section>

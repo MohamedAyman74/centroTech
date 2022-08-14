@@ -1,0 +1,117 @@
+<% layout("layouts/boilerplate") %>
+    <link rel="stylesheet" href="/stylesheets/showApplications.css">
+    <section>
+        <form action="/admins/appmanagement" id="search" method="POST">
+            <input type="search" name="searched" id="searchInput" placeholder="Search by any field">
+        </form>
+        <div class="accept-popup">
+            <form action="">
+                <label for="text">Enter password</label>
+                <input type="text">
+                <button>Send Mail</button>
+            </form>
+        </div>
+        <h1>Pending Applications</h1>
+        <div class="table-container">
+        <table id="usersTable">
+            <thead>
+                <tr class="headers">
+                    <th></th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Number</th>
+                    <th>Field</th>
+                    <th>Application</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <% apps.forEach(app=> { %>
+                    <div>
+                        <tr class="data">
+                            <td class="info">
+                                <div class="popup">
+                                    <h2>
+                                        <%= app.fullname %> 's Application
+                                    </h2>
+                                    <div>
+                                        <p>Fullname:</p>
+                                        <p>
+                                            <%= app.fullname %>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p>Email:</p>
+                                        <p>
+                                            <%= app.email %>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p>Mobile Number:</p>
+                                        <p>
+                                            <%= app.phone %>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p>Speciality:</p>
+                                        <p>
+                                            <%= app.specialization %>
+                                        </p>
+                                    </div>
+                                    <p id="textarea"
+                                        style="width: 250px; word-wrap: break-word; margin-left: auto; margin-right: auto;">
+                                        <%= app.appReason %>
+                                    </p>
+                                    <div id="accept-popup">
+                                        <form action="/admins/appmanagement/accept" method="POST">
+                                            <label for="text">Enter password</label>
+                                            <input type="text" name="password" id="pass-input" required>
+                                            <input type="hidden" name="email" value="<%= app.email %>">
+                                            <input type="hidden" name="id" value="<%= app._id %>">
+                                            <input type="hidden" name="fullname" value="<%= app.fullname %>">
+                                            <input type="hidden" name="phone" value="<%= app.phone %>">
+                                            <input type="hidden" name="specialization"
+                                                value="<%= app.specialization %>">
+                                            <button id="accept-btn">Accept & Send Mail</button>
+                                        </form>
+
+                                        <form action="/admins/appmanagement/reject/<%= app._id %>?_method=PUT"
+                                            method="POST" id="reject-form">
+                                            <input type="hidden" name="email" value="<%= app.email %>">
+                                            <label for="">Enter Reason</label>
+                                            <input type="text" name="rejectReason" required>
+                                            <button id="reject-btn">Reject</button>
+                                        </form>
+                                        <form action="/admins/appmanagement/delete/<%= app._id %>?_method=DELETE"
+                                            method="POST">
+                                            <button  id="reject-btn" style="background-color: red;">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </td>
+                            <td data-label="Username">
+                                <%= app.fullname %>
+                            </td>
+                            <td data-label="Email">
+                                <%= app.email %>
+                            </td>
+                            <td data-label="Number">
+                                <%= app.phone %>
+                            </td>
+                            <td data-label="Specialization">
+                                <%= app.specialization %>
+                            </td>
+                            <td data-label="View App">
+                                <button class="infobtn" id="popup-btn">View Application</button>
+                            </td>
+                        </tr>
+                    </div>
+                    <% }); %>
+
+            </tbody>
+        </table>
+    </div>
+    </section>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="/javascripts/showApplications.js"></script>

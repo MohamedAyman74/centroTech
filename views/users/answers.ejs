@@ -1,0 +1,214 @@
+<link rel="stylesheet" href="/stylesheets/answers.css">
+<% layout("layouts/boilerplate"); %>
+
+    <section class="container">
+        <% if(loggedAdmin){ %>
+            <form action="/questions/<%= question._id %>/lock?_method=PUT" method="POST">
+                <% if(!question.isLocked){ %>
+                    <button id="lock">Lock Topic</button>
+                    <% } else{ %>
+                        <button id="lock">Unlock Topic</button>
+                        <% } %>
+            </form>
+            <% } %>
+                <div class="main-flex">
+                    <% if(question.askedBy){ %>
+                        <div class="img-container">
+                            <img src="<%= question.askedBy.image.url %>" alt="">
+
+                        </div>
+                        <div>
+                            <h4>
+                                <%= question.title %>
+                            </h4>
+                            <p>
+                                <%= question.askedBy.fullname %> - Student
+                            </p>
+                            <% } else if(question.askedByOAuth){ %>
+                                <div class="img-container">
+                                    <img src="<%= question.askedByOAuth.image.url %>" alt="">
+                                </div>
+                                <div>
+                                    <h4>
+                                        <%= question.title %>
+                                    </h4>
+                                    <p>
+                                        <%= question.askedByOAuth.fullname %> - Student
+                                    </p>
+
+                                    <% } else { %>
+                                        <div class="img-container">
+                                            <img src="/images/blankProfile.png" alt="">
+                                        </div>
+                                        <div>
+                                            <h4>
+                                                <%= question.title %>
+                                            </h4>
+                                            <p>Deleted User</p>
+                                            <% } %>
+                                        </div>
+                                </div>
+                                <p id="reply">
+                                    <%= question.details %>
+                                </p>
+                                <% if(loggedAdmin){ %>
+                                    <form action="/questions/<%= question._id %>/delete?_method=DELETE" method="POST">
+                                        <button id="delete-btn">Delete Question</button>
+                                    </form>
+                                    <% } %>
+
+                                        <% answers.forEach((answer, i)=> { %>
+                                            <div class="main-flex">
+                                                <% if(answer.postedBy){ %>
+                                                    <div class="img-container">
+                                                        <% console.log(answer.postedBy); %>
+                                                            <img src="<%= answer.postedBy.image.url %>" alt="">
+                                                    </div>
+                                                    <div>
+                                                        <h4>
+                                                            Reply Number: #<%= ++i %> -
+                                                                <%= question.title %>
+                                                        </h4>
+                                                        <p>
+                                                            <%= answer.postedBy.fullname %> - Student
+                                                        </p>
+                                                        <% } else if(answer.postedByOAuth){ %>
+                                                            <div class="img-container">
+                                                                <img src="<%= answer.postedByOAuth.image.url %>" alt="">
+                                                            </div>
+                                                            <div>
+                                                                <h4>
+                                                                    Reply Number: #<%= ++i %> -
+                                                                        <%= question.title %>
+                                                                </h4>
+                                                                <p>
+                                                                    <%= answer.postedByOAuth.fullname %> -
+                                                                        Student
+                                                                </p>
+                                                                <% } else if(answer.postedByInstructor){ %>
+                                                                    <div class="img-container">
+                                                                        <img src="<%= answer.postedByInstructor.image.url %>"
+                                                                            alt="">
+                                                                    </div>
+                                                                    <div>
+                                                                        <h4>
+                                                                            Reply Number: #<%= ++i %> -
+                                                                                <%= question.title %>
+                                                                        </h4>
+                                                                        <p>
+                                                                            <%= answer.postedByInstructor.fullname %> -
+                                                                                Instructor
+                                                                        </p>
+                                                                        <% } else if(answer.postedByAdmin){ %>
+                                                                            <div class="img-container">
+                                                                                <img src="/images/blankProfile.png"
+                                                                                    alt="">
+                                                                            </div>
+                                                                            <div>
+                                                                                <h4>
+                                                                                    Reply Number: #<%= ++i %> -
+                                                                                        <%= question.title %>
+                                                                                </h4>
+                                                                                <p>
+                                                                                    <%= answer.postedByAdmin.fullname %>
+                                                                                        -
+                                                                                        Admin
+                                                                                </p>
+                                                                                <% }else { %>
+                                                                                    <div class="img-container">
+                                                                                        <img src="/images/blankProfile.png"
+                                                                                            alt="">
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <h4>
+                                                                                            Reply Number: #<%= ++i %> -
+                                                                                                <%= question.title %>
+                                                                                        </h4>
+                                                                                        <p>Deleted User</p>
+                                                                                        <% } %>
+                                                                                    </div>
+                                                                            </div>
+                                                                            <p id="reply">
+                                                                                <%= answer.reply %>
+                                                                            </p>
+                                                                            <% if(answer.postedBy){
+                                                                                if(answer.postedBy._id.equals(currentUser)
+                                                                                || loggedAdmin){ %>
+                                                                                <form
+                                                                                    action="/questions/<%= question._id %>/<%= answer._id %>/<%= answer.postedBy._id %>/delete?_method=DELETE"
+                                                                                    method="POST">
+                                                                                    <button id="delete-btn">Delete
+                                                                                        Reply</button>
+                                                                                </form>
+                                                                                <% } } else if(answer.postedByOAuth){ %>
+                                                                                    <% if(answer.postedByOAuth._id.equals(currentUser)
+                                                                                        || loggedAdmin){ %>
+                                                                                        <form
+                                                                                            action="/questions/<%= question._id %>/<%= answer._id %>/<%= answer.postedByOAuth._id %>/delete?_method=DELETE"
+                                                                                            method="POST">
+                                                                                            <button
+                                                                                                id="delete-btn">Delete
+                                                                                                Reply</button>
+                                                                                        </form>
+                                                                                        <% } } else
+                                                                                            if(answer.postedByInstructor){
+                                                                                            %>
+                                                                                            <% if(answer.postedByInstructor._id.equals(currentUser)
+                                                                                                || loggedAdmin){ %>
+                                                                                                <form
+                                                                                                    action="/questions/<%= question._id %>/<%= answer._id %>/<%= answer.postedByInstructor._id %>/delete?_method=DELETE"
+                                                                                                    method="POST">
+                                                                                                    <button
+                                                                                                        id="delete-btn">Delete
+                                                                                                        Reply</button>
+                                                                                                </form>
+                                                                                                <% } } else
+                                                                                                    if(loggedAdmin){ %>
+                                                                                                    <form
+                                                                                                        action="/questions/<%= question._id %>/<%= answer._id %>/<%= currentUser %>/delete?_method=DELETE"
+                                                                                                        method="POST">
+                                                                                                        <button
+                                                                                                            id="delete-btn">Delete
+                                                                                                            Reply</button>
+                                                                                                    </form>
+                                                                                                    <% } %>
+                                                                                                        <% }); %>
+                                                                                                            <% if(!question.isLocked){
+                                                                                                                %>
+                                                                                                                <form
+                                                                                                                    action="/questions/<%= question._id %>"
+                                                                                                                    method="POST"
+                                                                                                                    id="textarea-form">
+                                                                                                                    <textarea
+                                                                                                                        name="reply"
+                                                                                                                        id=""
+                                                                                                                        rows="10"
+                                                                                                                        placeholder="Reply"
+                                                                                                                        required></textarea>
+                                                                                                                    <button
+                                                                                                                        type="submit">Reply</button>
+                                                                                                                </form>
+                                                                                                                <% } else{
+                                                                                                                    %>
+                                                                                                                    <form>
+                                                                                                                        <textarea
+                                                                                                                            name="reply"
+                                                                                                                            id=""
+                                                                                                                            rows="10"
+                                                                                                                            disabled></textarea>
+                                                                                                                        <h4
+                                                                                                                            style="color: #4e47ed;">
+                                                                                                                            The
+                                                                                                                            topic
+                                                                                                                            is
+                                                                                                                            locked,
+                                                                                                                            you
+                                                                                                                            cannot
+                                                                                                                            add
+                                                                                                                            a
+                                                                                                                            reply.
+                                                                                                                            </h6>
+                                                                                                                    </form>
+                                                                                                                    <% }
+                                                                                                                        %>
+    </section>

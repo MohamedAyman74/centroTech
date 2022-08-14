@@ -1,0 +1,74 @@
+<link rel="stylesheet" href="/stylesheets/purchase.css">
+<% layout("layouts/boilerplate") %>
+    <div class="container">
+        <div class="tab-container">
+            <div class="tab active">Visa/Master Card</div>
+            <div class="tab">Vodafone Cash</div>
+            <div class="tab">Fawry</div>
+            <div class="tab">Aman</div>
+        </div>
+
+        <div class="visa-details">
+            <h1>Card Details</h1>
+            <form action="/courses/purchase" method="POST">
+                <div>
+                    <label for="">Name on card</label>
+                    <input type="text" required>
+                </div>
+                <div>
+                    <label for="">Card Number</label>
+                    <input type="text" required>
+                </div>
+
+
+                <div>
+                    <label for="">Expiry Date</label>
+                    <select name='expireMM' id='expireMM' required>
+                        <option value=''>Month</option>
+                        <option value='01'>January</option>
+                        <option value='02'>February</option>
+                        <option value='03'>March</option>
+                        <option value='04'>April</option>
+                        <option value='05'>May</option>
+                        <option value='06'>June</option>
+                        <option value='07'>July</option>
+                        <option value='08'>August</option>
+                        <option value='09'>September</option>
+                        <option value='10'>October</option>
+                        <option value='11'>November</option>
+                        <option value='12'>December</option>
+                    </select>
+                    <select name='expireYY' id='expireYY' required>
+                        <option value=''>Year</option>
+                        <% for(let i=22; i < 30; i++){ %>
+                            <option value='<%= i %>'>20<%= i %>
+                            </option>
+                            <% } %>
+                    </select>
+                    <input class="inputCard" type="hidden" value="Bank Card (Visa/MasterCard/American Express)"
+                        name="payMethod" id="expiry" required />
+                </div>
+                <div>
+                    <label for="">CCV</label>
+                    <input type="number" required>
+                </div>
+                <!-- <input type="hidden" name="paymentMethod" value="Bank Card (Visa/MasterCard/American Express)"> -->
+                <div id="pay-button">
+                    <button>Purchase Course</button>
+                </div>
+            </form>
+        </div>
+        <div class="vodafone">
+            <h1>Vodafone Cash</h1>
+            Coming Soon
+        </div>
+        <div class="fawry">
+            <h1>Fawry</h1>
+            Coming Soon
+        </div>
+        <div class="aman">
+            <h1>Aman</h1>
+            Coming Soon
+        </div>
+    </div>
+    <script src="/javascripts/purchase.js"></script>

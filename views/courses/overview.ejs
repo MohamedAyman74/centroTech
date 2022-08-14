@@ -1,0 +1,119 @@
+<link rel="stylesheet" href="/stylesheets/overview.css">
+<% layout("layouts/boilerplate") %>
+    <div class="container">
+        <div class="banner">
+            <div class="data">
+                <h1>
+                    <%= course.name %>
+                </h1>
+                <div class="price">
+                    <h3>
+                        <a href="/instructor/profile/<%= course.instructor._id %>">
+                            <%= course.instructor.fullname %>
+                        </a>
+                    </h3>
+                    <p>
+                        <%= course.price %> EGP
+                    </p>
+
+                </div>
+                <p id="details">
+                    <%= course.about %>
+                </p>
+                <p id="enrolled">Enrolled students: <%= course.enrolled %>
+                </p>
+                <div class="purchase-div">
+                    <% if((isAdmin || (isInstructor && user._id.equals(course.instructor._id))) ||
+                        user.courses.includes(course._id)){ %>
+                        <a href="/courses/<%= course._id %>"><button id="purchase">Open
+                                Lectures</button></a>
+                        <% } else if(!isInstructor && user.courses.indexOf(course._id) <=0){ %>
+                            <form action="/courses/cart/<%= course._id %>" method="POST">
+                                <button type="submit" id="purchase">Purchase</button>
+                            </form>
+                            <% } else{} %>
+                </div>
+            </div>
+            <% if(course.image){ %>
+                <div class="course-img">
+                    <img src="<%= course.image.url %>" alt="">
+                </div>
+                <% } else{ %>
+                    <div class="course-img">
+                        <img src="https://res.cloudinary.com/dd36t4xod/image/upload/v1656188369/CentroTech/courses/Image_upload-pana_ol1co3.png"
+                            alt="">
+                    </div>
+                    <% } %>
+        </div>
+        <h1 id="reviews-header">Course Reviews</h1>
+        <% reviews.slice().reverse().forEach((review, i)=> { %>
+            <div class="topic-container <%= i < 3 ? " active" : "" %>">
+                <% if(review.reviewedBy){ %>
+                    <div class="main-flex">
+                        <div class="img-container">
+                            <img src="<%= review.reviewedBy.image.url %>" alt="">
+                        </div>
+                        <div>
+                            <h4>
+                                <%= review.reviewedBy.fullname %>
+                            </h4>
+                            <% } else if(review.reviewedByOAuth){ %>
+
+                                <div class="main-flex">
+                                    <div class="img-container">
+                                        <img src="<%= review.reviewedByOAuth.image.url %>" alt="">
+                                    </div>
+                                    <div>
+                                        <h4>
+                                            <%= review.reviewedByOAuth.fullname %>
+                                        </h4>
+                                        <% } %>
+                                            <p id="author">
+                                                <%= review.review %>
+                                            </p>
+                                    </div>
+                                    <p id="time">
+                                        <%= review.date %>
+                                    </p>
+                                    <% if(review.reviewedBy){ %>
+                                        <% if((review.reviewedBy._id.equals(currentUser)) || isAdmin){ %>
+                                            <form class="delete-form"
+                                                action="/courses/show/<%= course._id %>/reviews/<%= review.reviewedBy._id %>/delete/<%= review._id%>?_method=DELETE"
+                                                method="POST">
+                                                <button>Delete</button>
+                                            </form>
+                                            <% } %>
+                                                <% } else if(review.reviewedByOAuth){ %>
+                                                    <% if(review.reviewedByOAuth._id.equals(currentUser) || isAdmin){ %>
+                                                        <form class="delete-form"
+                                                            action="/courses/show/<%= course._id %>/reviews/<%= review.reviewedByOAuth._id %>/delete/<%= review._id %>?_method=DELETE"
+                                                            method="POST">
+                                                            <button>Delete</button>
+                                                        </form>
+                                                        <% } %>
+                                                            <% } %>
+                                </div>
+                        </div>
+                        <% }); %>
+
+                            <% if(reviews.length> 3){ %>
+                                <div class="show-more">
+                                    <button class="show-more">Show more</button>
+                                </div>
+                                <% } %>
+                                    <% if((!isAdmin && !isInstructor && user.courses.includes(course._id))){ %>
+                                        <div class="give-review">
+
+                                            <form action="/courses/show/<%= course._id %>" method="POST">
+
+                                                <textarea name="review" id="feedback" rows="10"></textarea>
+                                                <button>Submit Review</button>
+                                            </form>
+                                        </div>
+                                        <% } %>
+
+                    </div>
+                    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+                        integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+                        crossorigin="anonymous"></script>
+                    <script src="/javascripts/courseOverview.js"></script>

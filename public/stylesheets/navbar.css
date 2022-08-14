@@ -1,0 +1,21 @@
+.responsive-hidden {
+    display: none;
+}
+
+@media(max-width: 700px) {
+    .responsive-hidden {
+        display: block;
+    }
+    .responsive-shown {
+        display: none;
+    }
+    .nav-popup a {
+        font-size: 12px;
+        padding: 0.8em 1em !important;
+    }
+    #logout {
+        font-size: 12px !important;
+        padding: 0.8em 1em !important;
+
+    }
+}

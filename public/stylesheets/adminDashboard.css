@@ -1,0 +1,285 @@
+@import url("https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+.nav-container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 2em;
+}
+.navbar {
+  grid-column: 2/12;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+ul li {
+  list-style: none;
+}
+
+ul {
+  display: flex;
+}
+
+ul li a {
+  margin-right: 2em;
+}
+
+#profile-img {
+  cursor: pointer;
+}
+
+.nav-popup {
+  position: absolute;
+  right: 0;
+  top: 70%;
+  display: none;
+  flex-direction: column;
+  border: 2px #4e47ed solid;
+  width: 20%;
+  background-color: white;
+  z-index: 1;
+}
+
+a {
+  text-decoration: none;
+  color: #4e47ed;
+  font-weight: 500;
+}
+
+.nav-popup a {
+  padding: 1em 2em;
+  transition: ease-in-out 0.2s;
+}
+
+.nav-popup a:hover {
+  background-color: #4e47ed;
+
+  cursor: pointer;
+  color: white;
+}
+#logout-form {
+  margin: 0;
+}
+#logout {
+  background-color: transparent;
+  color: #4e47ed;
+  border: none;
+  font-size: 16px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  padding: 1em 2em;
+  width: 100%;
+  text-align: start;
+}
+.nav-popup form:hover {
+  background-color: #4e47ed;
+  cursor: pointer;
+}
+
+.nav-popup form:hover #logout {
+  color: white;
+  cursor: pointer;
+}
+
+.show-nav {
+  display: flex;
+}
+/* .navbar {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    margin-bottom: 3em;
+
+}
+
+ul {
+    list-style-type: none;
+    grid-column: 10/12;
+    display: flex;
+    align-self: center;
+    justify-content: flex-start;
+}
+
+ul li {
+    margin-right: 3em;
+}
+
+.navbar>a {
+    grid-column: 2/3;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #407BFF;
+    font-family: 'Cabin', sans-serif;
+    font-weight: 500;
+} */
+
+section {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  row-gap: 2em;
+  column-gap: 2em;
+}
+
+a {
+  text-decoration: none;
+}
+
+.dashboard div {
+  width: 100%;
+  height: 20vh;
+  /* background-color: #4e47ed; */
+  /* color: white; */
+  color: #4e47ed;
+  background-color: white;
+  border: 2px #4e47ed solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em;
+  font-family: "Poppins", sans-serif;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+}
+
+.dashboard div:hover {
+  transform: scale(0.9);
+  background-color: #4e47ed;
+  color: white;
+}
+
+#account {
+  grid-column: 2/12;
+  grid-row: 1;
+  text-align: center;
+}
+
+#course {
+  grid-row: 2;
+  grid-column: 2/7;
+  text-align: center;
+}
+
+#accepted {
+  grid-row: 2;
+  grid-column: 7/12;
+  text-align: center;
+}
+
+#rejected {
+  grid-row: 3;
+  grid-column: 2/7;
+  text-align: center;
+}
+
+#pending {
+  grid-row: 3;
+  grid-column: 7/12;
+  text-align: center;
+}
+
+#transactions {
+  grid-column: 2/12;
+  grid-row: 4;
+  text-align: center;
+}
+
+
+
+@media(max-width: 950px) {
+  
+  .nav-links a {
+    font-size: 14px;
+  }
+  .footer-links a:not(.footer-links a:nth-child(3)) {
+    margin-right: 2em;
+  }
+  .nav-popup {
+    width: auto;
+  }
+  .dashboard div {
+    height: 15vh;
+  }
+}
+@media(max-width: 800px) {
+ .dashboard div {
+  font-size: 20px;
+ }
+
+}
+@media (max-width: 700px) {
+  .nav-links a {
+    font-size: 12px;
+    margin-right: 1em;
+  }
+  .logo {
+    width: 100px;
+  }
+  .footer-links a:not(.footer-links a:nth-child(3)) {
+    margin-right: 1em;
+  }
+  .footer-links a {
+    font-size: 14px;
+  }
+  .footer-social img {
+    width: 20px;
+  }
+  .dashboard div {
+    font-size: 16px;
+   }
+}
+
+@media (max-width: 560px) {
+
+  .nav-links a {
+    margin-right: 0.5em;
+    font-size: 10px;
+  }
+  .footer-social img {
+    margin-right: 0.5em;
+    width: 16px;
+  }
+  .logo {
+    width: 70px;
+  }
+  #profile-img {
+    width: 18px;
+  }
+  .dashboard div {
+    height: 10vh;
+    padding: 0 1em;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+
+  .footer-links a:not(.footer-links a:nth-child(3)) {
+    margin-right: 0.5em;
+  }
+  .logo {
+    width: 50px;
+  }
+  .footer-social img {
+    width: 14px;
+  }
+  .rights div {
+    font-size: 12px;
+  }
+  .nav-links a {
+    font-size: 8px;
+  }
+  .dashboard div {
+    font-size: 10px;
+  }
+
+
+}

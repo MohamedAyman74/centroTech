@@ -1,0 +1,94 @@
+<% layout("layouts/boilerplate") %>
+    <link rel="stylesheet" href="/stylesheets/questions.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+
+    <div class="top-grid">
+        <div class="top-flex">
+            <h1>Support Tickets</h1>
+            <% if(!loggedAdmin){ %>
+                <button id="new-topic">New Ticket</button>
+                <% } %>
+        </div>
+    </div>
+    <section class="container">
+        <% tickets.slice().reverse().forEach(ticket=> { %>
+            <div class="topic-container">
+                <a href="/support-tickets/<%= ticket._id %>">
+                    <div class="main-flex">
+                        <% if(ticket.sentBy){ %>
+                            <div class="img-container">
+                                <img src="<%= ticket.sentBy.image.url %>" alt="">
+
+                            </div>
+                            <div>
+                                <h4>
+                                    <%= ticket.title %>
+                                </h4>
+                                <p id="author">
+                                    <%= ticket.sentBy.fullname %>
+                                </p>
+                                <% } else if(ticket.sentByOAuth){ %>
+                                    <div class="img-container">
+                                        <img src="<%= ticket.sentByOAuth.image.url %>" alt="">
+                                    </div>
+                                    <div>
+                                        <h4>
+                                            <%= ticket.title %>
+                                        </h4>
+                                        <p id="author">
+                                            <%= ticket.sentByOAuth.fullname %>
+                                        </p>
+                                        <% } else if(ticket.sentByInstructor){ %>
+                                            <% console.log(ticket); %>
+                                                <div class="img-container">
+                                                    <img src="<%= ticket.sentByInstructor.image.url %>" alt="">
+
+                                                </div>
+                                                <div>
+                                                    <h4>
+                                                        <%= ticket.title %>
+                                                    </h4>
+                                                    <p id="author">
+                                                        <%= ticket.sentByInstructor.fullname %>
+                                                    </p>
+                                                    <% } else{ %>
+                                                        <div class="img-container">
+                                                            <img src="/images/blankProfile.png" alt="">
+
+                                                        </div>
+                                                        <div>
+                                                            <h4>
+                                                                <%= ticket.title %>
+                                                            </h4>
+                                                            <p>Deleted User</p>
+                                                            <% } %>
+                                                        </div>
+                                                        <p id="time">
+                                                            <%= ticket.date %>
+                                                                <% if(ticket.isLocked){ %>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                        viewBox="0 0 30 30" width="30px" height="30px">
+                                                                        <g id="surface21154549">
+                                                                            <path
+                                                                                style=" stroke:none;fill-rule:nonzero;fill-opacity:1;"
+                                                                                d="M 15 2 C 11.144531 2 8 5.144531 8 9 L 8 11 L 6 11 C 4.894531 11 4 11.894531 4 13 L 4 25 C 4 26.105469 4.894531 27 6 27 L 24 27 C 25.105469 27 26 26.105469 26 25 L 26 13 C 26 11.894531 25.105469 11 24 11 L 22 11 L 22 9 C 22 5.273438 19.035156 2.269531 15.355469 2.074219 C 15.242188 2.027344 15.121094 2.003906 15 2 Z M 15 4 C 17.773438 4 20 6.226562 20 9 L 20 11 L 10 11 L 10 9 C 10 6.226562 12.226562 4 15 4 Z M 15 4 " />
+                                                                        </g>
+                                                                    </svg>
+                                                                    <% } %>
+                                                        </p>
+                                                </div>
+                </a>
+            </div>
+            <% }); %>
+                <div class="popup">
+                    <h1>Open A Ticket</h1>
+                    <form action="/support-tickets" method="POST">
+                        <input type="text" name="title" id="title" placeholder="Enter your ticket title" required>
+                        <textarea name="details" id="details" cols="30" rows="10"
+                            placeholder="Enter your ticket details" required></textarea>
+                        <button id="popup-btn" type="submit">Open Ticket</button>
+                    </form>
+                </div>
+    </section>
+    <script src="/javascripts/supportTickets.js"></script>

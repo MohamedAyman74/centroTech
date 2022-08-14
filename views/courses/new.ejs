@@ -1,0 +1,55 @@
+<% layout("layouts/boilerplate") %>
+    <link rel="stylesheet" href="/stylesheets/newCourse.css">
+
+    <section>
+        <form id="courseSearch" action="/new/search" method="POST" style="margin-left: 40%;">
+            <input class="input-search" id="searchInput" name="searched" type="search"
+                placeholder="Teacher/subject name">
+        </form>
+        <button id="popup-btn">Add New Course</button>
+        <div class="course-list">
+            <% courses.forEach(course=> { %>
+                <div class="course-card">
+                    <% if(course.image){ %>
+                        <div class="default-img-container">
+                            <img src="<%= course.image.url %>" alt="">
+                        </div>
+                        <% } else{ %>
+                            <div class="default-img-container">
+                                <img src="https://res.cloudinary.com/dd36t4xod/image/upload/v1656188369/CentroTech/courses/Image_upload-pana_ol1co3.png"
+                                    alt="">
+                            </div>
+                            <% } %>
+                                <h3>
+                                    <%= course.name %>
+                                </h3>
+                                <h5>
+                                    <%= course.instructor.fullname %>
+                                </h5>
+                                <p>
+                                    <%= course.price %> L.E
+                                </p>
+                                <div class="card-btns">
+                                    <form action="/courses/delete/<%= course._id %>?_method=DELETE" method="POST">
+                                        <button>Delete</button>
+                                    </form>
+                                    <a href="/courses/<%= course._id %>"><button>Edit</button></a>
+                                </div>
+                </div>
+                <% }); %>
+        </div>
+        <div class="popup">
+            <h1>Add Course</h1>
+            <form action="/courses/new" method="POST">
+                <input type="text" placeholder="Course name" name="course[name]" required>
+                <input type="text" placeholder="Course subject" name="course[subject]" required>
+                <input type="text" placeholder="Instructor E-mail" name="course[email]" required>
+                <!-- <input type="text" placeholder="Teacher name"> -->
+                <input type="number" placeholder="Course fees" name="course[price]" required>
+                <button id="popup-btn">Add Course</button>
+            </form>
+        </div>
+    </section>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="/javascripts/newCourse.js"></script>

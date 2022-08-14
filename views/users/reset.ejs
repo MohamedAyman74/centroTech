@@ -1,0 +1,15 @@
+<% layout("layouts/boilerplate") %>
+    <link rel="stylesheet" href="/stylesheets/forgot.css">
+    <section>
+        <div class="login-card">
+            <h1>Reset your password</h1>
+            <form action="/password-reset/<%= userId %>/<%= tokenId %>" method="POST">
+                <input type="password" name="password" minlength="8" required>
+                <button>Reset</button>
+            </form>
+
+        </div>
+        <div class="login-img">
+            <img src="/images/loginimg.png" alt="">
+        </div>
+    </section>

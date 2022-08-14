@@ -1,0 +1,79 @@
+
+<section class="nav-container">
+    <div class="navbar">
+        <div>
+            <a href="/"><img class="logo" src="/svgs/logo.svg" alt=""></a>
+        </div>
+
+        <% if(currentUser){ %>
+            <div>
+                <ul class="nav-links">
+                    <% if(loggedAdmin){ %>
+                        <li class="responsive-shown"><a href="/admins">Admin Dashboard</a></li>
+                        <% } %>
+                            <li class="responsive-shown"><a href="/courses">Courses</a></li>
+                            <% if(!loggedInstructor && !loggedAdmin){ %>
+                                <li class="responsive-shown"><a href="/quizzes">Quizzes</a></li>
+                                <% } %>
+                                    <li class="responsive-shown"><a href="/support-tickets">Contact Admin</a></li>
+                                    <li class="responsive-shown"><a href="/questions">Q&A Section</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <img id="profile-img" src="/images/user.png" alt="">
+            </div>
+            <div class="nav-popup">
+                <% if(!loggedAdmin){ %>
+                    <a href="/profile/<%= currentUser %>">Profile</a>
+                    <hr style="opacity: 0.2;">
+                    <a href="/courses/mycourses">My Courses</a>
+                    <hr style="opacity: 0.2;">
+                    <% if(!loggedInstructor){ %>
+                        <a href="/quizzes/solved">Solved Quizzes</a>
+                        <hr style="opacity: 0.2;">
+                        <a href="/cart">Cart</a>
+                        <hr style="opacity: 0.2;">
+                        <a href="/wishlist">Wishlist</a>
+                        <hr style="opacity: 0.2;">
+                        <% } %>
+                            <% } %>
+                            <% if(loggedAdmin){ %>
+                                <a class="responsive-hidden" href="/admins">Admin Dashboard</a>
+                        <hr class="responsive-hidden" style="opacity: 0.2;">
+                               
+                                <% } %>
+                                    <a class="responsive-hidden" href="/courses">Courses</a>
+                        <hr class="responsive-hidden" style="opacity: 0.2;">
+
+                                    <% if(!loggedInstructor && !loggedAdmin){ %>
+                                        <a class="responsive-hidden" href="/quizzes">Quizzes</a>
+                        <hr class="responsive-hidden" style="opacity: 0.2;">
+
+                                        <% } %>
+                                            <a class="responsive-hidden" href="/support-tickets">Contact Admin</a>
+                        <hr class="responsive-hidden" style="opacity: 0.2;">
+
+                                            <a class="responsive-hidden" href="/questions">Q&A Section</a>
+                        <hr class="responsive-hidden" style="opacity: 0.2;">
+
+                                <!-- <a href="">Logout</a> -->
+                                <form action="/logout" method="POST" id="logout-form">
+                                    <button id="logout">Logout</button>
+                                </form>
+            </div>
+            <% }else { %>
+                <div>
+                    <ul class="nav-links">
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/instructor/login">Instructor Login</a></li>
+                        <li><a href="/register">Register</a></li>
+                        <li><a href="/instructor/apply">Become an Instructor</a></li>
+                    </ul>
+                </div>
+                <% } %>
+
+    </div>
+</section>
+
+<script src="/javascripts/navbar.js"></script>
