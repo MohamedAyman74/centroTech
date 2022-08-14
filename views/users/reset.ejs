@@ -1,6 +1,0 @@
-<% layout("layouts/boilerplate") %>
-    <h1>Reset your password</h1>
-    <form action="/password-reset/<%= userId %>/<%= tokenId %>" method="POST">
-        <input type="password" name="password">
-        <button>Reset</button>
-    </form>

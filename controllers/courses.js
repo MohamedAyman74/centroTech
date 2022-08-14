@@ -62,7 +62,7 @@ module.exports.index = async (req, res) => {
 };
 
 module.exports.renderNewCourseForm = async (req, res) => {
-  const courses = await Course.find({}); //instructor: "62659507fc327af0b5bbe0cf"
+  const courses = await Course.find({}).populate("instructor"); //instructor: "62659507fc327af0b5bbe0cf"
   res.render("courses/new", { courses });
 };
 
@@ -215,9 +215,13 @@ module.exports.addToCart = async (req, res) => {
     req.flash("error", "The course already exists in your cart");
     res.redirect("/courses");
   } else {
-    req.session.cart.push(Id);
-    req.flash("success", "The course has been successfully added to your cart");
-    res.redirect("/cart");
+    if (req.session.cart.push(Id)) {
+      req.flash(
+        "success",
+        "The course has been successfully added to your cart"
+      );
+      res.redirect("/courses");
+    }
   }
 };
 
@@ -306,22 +310,13 @@ module.exports.addQuestion = (req, res) => {
     if (!req.session.quiz) {
       req.session.quiz = [];
     }
-    // console.log(req.body);
     const { Id } = req.params;
-    // const question = {};
-    // for (let i in req.body.quiz) {
-    //   question[i] = req.body.quiz[i];
-    // }
     console.log("the req.body.quiz", req.body.quiz);
     console.log("the session before", req.session.quiz);
     req.session.quiz.push(req.body.quiz);
     console.log(req.session.quiz);
-    // console.log(req.session.quiz);
-    // console.log(req.session.isInstructor);
-    // console.log(req.session.instructor_id);
     res.json(req.session.quiz);
   }
-  // res.redirect(`/courses/${Id}`);
 };
 
 module.exports.dismissQuiz = (req, res) => {
@@ -384,24 +379,24 @@ module.exports.makePurchase = async (req, res) => {
   let user = await User.findById(currentUser);
   if (user) {
     cart.forEach(async (purchasedCourse) => {
-      const purchase = new Purchase({ date, paymentMethod: payMethod });
+      const transaction = new Purchase({ date, paymentMethod: payMethod });
       const course = await Course.findById(purchasedCourse);
-      purchase.purchasedCourse = purchasedCourse;
-      purchase.purchasedBy = currentUser;
-      purchase.amount = course.price;
-      await purchase.save();
+      transaction.purchasedCourse = purchasedCourse;
+      transaction.purchasedBy = currentUser;
+      transaction.amount = course.price;
+      await transaction.save();
     });
   }
   if (!user) {
     user = await OAuthUser.findById(currentUser);
     if (user) {
       cart.forEach(async (purchasedCourse) => {
-        const purchase = new Purchase({ date, paymentMethod: payMethod });
+        const transaction = new Purchase({ date, paymentMethod: payMethod });
         const course = await Course.findById(purchasedCourse);
-        purchase.purchasedCourses = purchasedCourse;
-        purchase.purchasedByOAuth = currentUser;
-        purchase.amount = course.price;
-        await purchase.save();
+        transaction.purchasedCourse = purchasedCourse;
+        transaction.purchasedByOAuth = currentUser;
+        transaction.amount = course.price;
+        await transaction.save();
       });
     }
   }
@@ -424,7 +419,6 @@ module.exports.makePurchase = async (req, res) => {
       });
       user.courses.push(...toPurchase);
       await user.save();
-      await purchase.save();
       req.session.cart = [];
       req.flash("success", "Courses purchased successfully");
       res.redirect("/courses/mycourses");

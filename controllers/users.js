@@ -28,7 +28,7 @@ module.exports.renderHomePage = async (req, res) => {
   const coursesCount = courses.length;
   const instructors = await Instructor.find({});
   const instructorsCount = instructors.length;
-  const reviews = await WebsiteReview.find({})
+  const reviews = await WebsiteReview.find({ rating: 5 })
     .limit(4)
     .populate("reviewedBy")
     .populate("reviewedByOAuth")
@@ -54,10 +54,18 @@ module.exports.renderLogin = (req, res) => {
   // if (req.user) {
   // console.log(req.user);
   // }
-  res.render("users/login", { title: "CentroTech - Login" });
+  if (res.locals.currentUser) {
+    req.flash(
+      "error",
+      "You cannot access this page, you are already logged in."
+    );
+    res.redirect("/");
+  } else {
+    res.render("users/login", { title: "CentroTech - Login" });
+  }
 };
+
 module.exports.register = async (req, res, next) => {
-  // console.log(req.body);
   try {
     const { email, fullname, password } = req.body;
     const doesExistLocal = await User.findOne({ email });
@@ -80,10 +88,6 @@ module.exports.register = async (req, res, next) => {
             filename: "blankProfile",
           },
         });
-        // console.log(user);
-        // res.redirect("/register");
-        // console.log(user);
-        // const registeredUser = await User.register(user, password);
         const newUser = await user.save();
         let verificationToken = await VerificationToken.findOne({
           userId: user._id,
@@ -94,7 +98,8 @@ module.exports.register = async (req, res, next) => {
             token: crypto.randomBytes(32).toString("hex"),
           }).save();
         }
-        const link = `http://localhost:3000/verify/${user._id}/${verificationToken.token}`;
+        const host = process.env.VERIFICATION_MAIL || `http://localhost:3000/`;
+        const link = `${host}verify/${user._id}/${verificationToken.token}`;
         await sendEmail(user.email, "Email Verification", link);
 
         req.login(newUser, (err) => {
@@ -113,7 +118,6 @@ module.exports.register = async (req, res, next) => {
       e.message = "The email has been registered with before";
     }
     req.flash("error", e.message);
-    // next(new ExpressError("Cannot find the required page destination.", 404));
     res.redirect("register");
   }
 };
@@ -178,8 +182,10 @@ module.exports.forgotPassword = async (req, res) => {
     if (!user) {
       user = await Instructor.findOne({ email });
     }
-    if (!user)
-      return res.status(400).send("user with given email doesn't exist");
+    if (!user) {
+      req.flash("error", "User with given email doesn't exist");
+      return res.status(400).redirect("/forgot");
+    }
 
     let token = await Token.findOne({ userId: user._id });
     if (!token) {
@@ -188,13 +194,19 @@ module.exports.forgotPassword = async (req, res) => {
         token: crypto.randomBytes(32).toString("hex"),
       }).save();
     }
-
-    const link = `http://localhost:3000/password-reset/${user._id}/${token.token}`;
+    // const link = `${host}verify/${user._id}/${verificationToken.token}`;
+    const host = process.env.VERIFICATION_MAIL || `http://localhost:3000/`;
+    const link = `${host}password-reset/${user._id}/${token.token}`;
     await sendEmail(user.email, "Password reset", link);
 
-    res.send("password reset link sent to your email account");
+    req.flash("success", "Successfully sent you email reset password");
+    res.redirect("/login");
   } catch (error) {
-    res.send("An error occured");
+    req.flash(
+      "error",
+      "An error has occurred, email may not be existing or token invalid."
+    );
+    res.redirect("/login");
     console.log(error);
   }
 };
@@ -205,34 +217,30 @@ module.exports.resetRender = (req, res) => {
 };
 
 module.exports.resetPassword = async (req, res) => {
-  try {
-    const { userId, tokenId } = req.params;
-    let user = await User.findById(userId);
-    if (!user) {
-      user = await Instructor.findById(userId);
-    }
-    if (!user) {
-      req.flash("error", "Invalid or expired link.");
-      res.redirect(`/password-reset/${userId}/${tokenId}`);
-    }
-    const token = await Token.findOne({
-      userId,
-      token: tokenId,
-    });
-    if (!token) {
-      req.flash("error", "Invalid or expred link");
-      res.redirect(`/password-reset/${userId}/${tokenId}`);
-    }
-    const { password } = req.body;
-    const hashed = await bcrypt.hash(password, 10);
-    user.password = hashed;
-    await user.save();
-    await token.delete();
-    req.flash("success", "Successfully reset your password.");
-    res.redirect(`/password-reset/${userId}/${tokenId}`);
-  } catch (e) {
-    console.log(error, "error occured");
+  const { userId, tokenId } = req.params;
+  let user = await User.findById(userId);
+  if (!user) {
+    user = await Instructor.findById(userId);
   }
+  if (!user) {
+    req.flash("error", "Invalid or expired link.");
+    res.redirect(`/password-reset/${userId}/${tokenId}`);
+  }
+  const token = await Token.findOne({
+    userId,
+    token: tokenId,
+  });
+  if (!token) {
+    req.flash("error", "Invalid or expred link");
+    res.redirect(`/password-reset/${userId}/${tokenId}`);
+  }
+  const { password } = req.body;
+  const hashed = await bcrypt.hash(password, 10);
+  user.password = hashed;
+  await user.save();
+  await token.delete();
+  req.flash("success", "Successfully reset your password.");
+  res.redirect("/login");
 };
 
 module.exports.profileRender = async (req, res) => {
@@ -640,8 +648,8 @@ module.exports.renderQuizAnswers = async (req, res) => {
       toBeFound = { quiz: Id, studentOAuth: currentUser };
     }
   }
-  const quiz = await Quiz.findById(Id).populate("questions");
-  const course = quiz.course;
+  const quiz = await Quiz.findById(Id).populate("questions").populate("course");
+  const course = quiz.course._id;
   if (!user.courses.includes(course)) {
     req.flash("error", "You should purchase the course first");
     res.redirect(`/courses/show/${course}`);
@@ -649,8 +657,10 @@ module.exports.renderQuizAnswers = async (req, res) => {
     const quizResponse = await QuizResponse.find(toBeFound);
     const answers = quizResponse[0].submittedAnswers;
     const finalGrade = quizResponse[0].finalGrade;
-    console.log(answers);
-    res.render("users/solvedQuiz", { quiz, answers, finalGrade });
+    console.log(quiz);
+    if (quiz) {
+      res.render("users/solvedQuiz", { quiz, answers, finalGrade });
+    }
   }
 };
 
@@ -811,7 +821,7 @@ module.exports.deleteReply = async (req, res) => {
       });
       await Answer.findByIdAndDelete(replyId);
       // await CourseReview.findByIdAndDelete(reviewId);
-      req.flash("success", "Successfully deleted the review");
+      req.flash("success", "Successfully deleted the reply");
       res.redirect(`/questions/${Id}`);
     } else {
       req.flash("error", "Sorry, you are not authorized to delete the review");

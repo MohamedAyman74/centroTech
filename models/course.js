@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const User = require("./user");
 const courseReview = require("./courseReview");
 const oAuthUser = require("./oAuthUser");
+const Quiz = require("./quiz");
 
 const ImageSchema = new Schema({
   url: String,
@@ -67,6 +68,9 @@ CourseSchema.post("findOneAndDelete", async (doc) => {
         $pull: { courses: doc._id },
       }
     );
+    await Quiz.deleteMany({
+      course: doc._id,
+    });
   }
 });
 

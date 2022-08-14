@@ -33,7 +33,15 @@ module.exports.sendApplication = async (req, res) => {
 };
 
 module.exports.renderLogin = (req, res) => {
-  res.render("instructors/login");
+  if (res.locals.currentUser) {
+    req.flash(
+      "error",
+      "You cannot access this page, you are already logged in."
+    );
+    res.redirect("/");
+  } else {
+    res.render("instructors/login");
+  }
 };
 
 module.exports.login = async (req, res) => {

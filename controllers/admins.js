@@ -6,6 +6,7 @@ const { sendEmail } = require("../utils/sendMail");
 const bcrypt = require("bcrypt");
 const instructorApp = require("../models/instructorApp");
 const Admin = require("../models/admin");
+const Course = require("../models/course");
 const Transactions = require("../models/purchase");
 
 module.exports.renderUsersManagement = async (req, res) => {
@@ -209,7 +210,15 @@ module.exports.renderDashboard = (req, res) => {
 };
 
 module.exports.renderLogin = (req, res) => {
-  res.render("admins/login");
+  if (res.locals.currentUser) {
+    req.flash(
+      "error",
+      "You cannot access this page, you are already logged in."
+    );
+    res.redirect("/");
+  } else {
+    res.render("admins/login");
+  }
 };
 
 module.exports.loginAdmin = async (req, res) => {
@@ -252,12 +261,16 @@ module.exports.usersTransactionsRender = async (req, res) => {
   transactions.forEach((transaction) => {
     totalProfit += transaction.amount;
   });
-  res.render("admins/transactions", { transactions, totalProfit });
+  if (transactions) {
+    res.render("admins/transactions", { transactions, totalProfit });
+  }
 };
 
 module.exports.refundCourse = async (req, res) => {
   const { Id } = req.params;
   const transaction = await Transactions.findById(Id);
+  const course = await Course.findById(transaction.purchasedCourse);
+  course.enrolled -= 1;
   let user = await User.findById(transaction.purchasedBy);
   if (!user) {
     user = await oAuthUser.findById(transaction.purchasedByOAuth);
@@ -267,6 +280,7 @@ module.exports.refundCourse = async (req, res) => {
     user.courses.splice(idx, 1);
     await user.save();
     await transaction.delete();
+    await course.save();
     req.flash(
       "success",
       "Successfully removed course from user and refund notice sent"
